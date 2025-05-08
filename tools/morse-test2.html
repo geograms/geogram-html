@@ -60,6 +60,20 @@
       font-size: 18px;
       margin-top: 15px;
     }
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background-color: #333;
+      border-radius: 5px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 0;
+      background-color: #44cc44;
+      transition: width 0.1s linear;
+    }
   </style>
 </head>
 <body>
@@ -97,6 +111,9 @@
     </div>
 
     <div id="morseOutput">Morse: </div>
+    <div class="progress-bar" id="progressBar" style="display: none;">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
 
     <button onclick="sendMorse()" style="background-color: #228822;">Send</button>
     <button onclick="stopMorse()" style="background-color: #663333;">Stop</button>
@@ -108,6 +125,7 @@
     let oscillators = [];
     const CUSTOM_SPACE = '--..-';
     const SAMPLE_RATE = 44100;
+    let progressTimer = null;
 
     const morseCodeMap = {
       'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
@@ -154,6 +172,8 @@
     function stopMorse() {
       oscillators.forEach(osc => osc.stop());
       oscillators = [];
+      clearInterval(progressTimer);
+      document.getElementById('progressBar').style.display = 'none';
     }
 
     function sendMorse() {
@@ -170,6 +190,29 @@
       const morse = `${warmup} ${trigger} ${textToMorse(input)}`;
       let time = 0;
 
+      const totalTime = morse.split('').reduce((t, char) => {
+        if (char === '.') return t + dot + symbolGap;
+        if (char === '-') return t + dash + symbolGap;
+        if (char === ' ') return t + charGap;
+        return t;
+      }, 0);
+
+      const progressBar = document.getElementById('progressBar');
+      const progressFill = document.getElementById('progressFill');
+      progressBar.style.display = 'block';
+      progressFill.style.width = '0%';
+
+      let elapsed = 0;
+      progressTimer = setInterval(() => {
+        elapsed += 100;
+        const percent = Math.min(100, (elapsed / totalTime) * 100);
+        progressFill.style.width = percent + '%';
+        if (elapsed >= totalTime) {
+          clearInterval(progressTimer);
+          setTimeout(() => progressBar.style.display = 'none', 300);
+        }
+      }, 100);
+
       for (let i = 0; i < morse.length; i++) {
         const char = morse[i];
         if (char === '.') {
@@ -182,71 +225,6 @@
           time += charGap;
         }
       }
-    }
-
-    function downloadMP3() {
-      const dot = parseInt(document.getElementById('dotDuration').value);
-      const dash = parseInt(document.getElementById('dashDuration').value);
-      const symbolGap = parseInt(document.getElementById('symbolGap').value);
-      const charGap = parseInt(document.getElementById('charGap').value);
-      const input = document.getElementById('textInput').value;
-      const trigger = document.getElementById('trigger').value || '-.-.-.';
-      const warmup = '--';
-      const morse = `${warmup} ${trigger} ${textToMorse(input)}`;
-
-      let samples = [];
-
-      function tone(duration) {
-        const count = Math.floor(SAMPLE_RATE * duration / 1000);
-        for (let i = 0; i < count; i++) {
-          samples.push(Math.sin(2 * Math.PI * 800 * i / SAMPLE_RATE));
-        }
-      }
-
-      function silence(duration) {
-        const count = Math.floor(SAMPLE_RATE * duration / 1000);
-        for (let i = 0; i < count; i++) {
-          samples.push(0);
-        }
-      }
-
-      for (let i = 0; i < morse.length; i++) {
-        const char = morse[i];
-        if (char === '.') {
-          tone(dot);
-          silence(symbolGap);
-        } else if (char === '-') {
-          tone(dash);
-          silence(symbolGap);
-        } else if (char === ' ') {
-          silence(charGap);
-        }
-      }
-
-      const pcm = new Int16Array(samples.length);
-      for (let i = 0; i < samples.length; i++) {
-        pcm[i] = Math.max(-1, Math.min(1, samples[i])) * 32767;
-      }
-
-      const mp3encoder = new lamejs.Mp3Encoder(1, SAMPLE_RATE, 128);
-      const mp3Data = [];
-      const chunkSize = 1152;
-      for (let i = 0; i < pcm.length; i += chunkSize) {
-        const chunk = pcm.subarray(i, i + chunkSize);
-        const mp3buf = mp3encoder.encodeBuffer(chunk);
-        if (mp3buf.length > 0) mp3Data.push(new Uint8Array(mp3buf));
-      }
-      const mp3buf = mp3encoder.flush();
-      if (mp3buf.length > 0) mp3Data.push(new Uint8Array(mp3buf));
-
-      const blob = new Blob(mp3Data, { type: 'audio/mp3' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'morse.mp3';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
     }
 
     window.onload = () => {
