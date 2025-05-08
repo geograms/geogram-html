@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Morse Code Generator</title>
+  <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.0/lame.min.js"></script>
+  <style>
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .control-panel {
+      background-color: #1e1e1e;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      border: 1px solid #444;
+    }
+    .control-group {
+      margin: 15px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    label {
+      display: inline-block;
+      width: 180px;
+      text-align: left;
+    }
+    input {
+      width: 60%;
+      padding: 8px;
+      background-color: #2d2d2d;
+      border: 1px solid #444;
+      border-radius: 4px;
+      color: white;
+    }
+    button {
+      margin-top: 15px;
+      padding: 12px 25px;
+      background-color: #333;
+      border: 1px solid #555;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #444;
+    }
+    #morseOutput {
+      font-family: monospace;
+      letter-spacing: 3px;
+      font-size: 18px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Morse Code Generator</h1>
+
+  <div class="control-panel">
+    <div class="control-group">
+      <label for="trigger">Trigger Sequence:</label>
+      <input type="text" id="trigger" value="-.-.-.">
+    </div>
+
+    <div class="control-group">
+      <label for="textInput">Text to Convert (A-Z, 0-9, punctuation):</label>
+      <input type="text" id="textInput" maxlength="100" pattern="[A-Za-z0-9 .,!?'/()&:;=+\-_$@\"]+">
+    </div>
+
+    <div class="control-group">
+      <label for="dotDuration">Dot Duration (ms):</label>
+      <input type="number" id="dotDuration" value="10">
+    </div>
+
+    <div class="control-group">
+      <label for="dashDuration">Dash Duration (ms):</label>
+      <input type="number" id="dashDuration" value="200">
+    </div>
+
+    <div class="control-group">
+      <label for="symbolGap">Symbol Gap (ms):</label>
+      <input type="number" id="symbolGap" value="130">
+    </div>
+
+    <div class="control-group">
+      <label for="charGap">Char Gap (ms):</label>
+      <input type="number" id="charGap" value="260">
+    </div>
+
+    <div id="morseOutput">Morse: </div>
+
+    <button onclick="sendMorse()" style="background-color: #228822;">Send</button>
+    <button onclick="stopMorse()" style="background-color: #663333;">Stop</button>
+    <button onclick="downloadMP3()" style="background-color: #224466;">Download MP3</button>
+  </div>
+
+  <script>
+    const context = new (window.AudioContext || window.webkitAudioContext)();
+    let oscillators = [];
+    const CUSTOM_SPACE = '--..-';
+    const SAMPLE_RATE = 44100;
+
+    const morseCodeMap = {
+      'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
+      'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
+      'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
+      'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+      'Y': '-.--', 'Z': '--..',
+      '0': '-----', '1': '.----', '2': '..---', '3': '...--',
+      '4': '....-', '5': '.....', '6': '-....', '7': '--...',
+      '8': '---..', '9': '----.',
+      '.': '.-.-.-', ',': '--..--', '?': '..--..', "'": '.----.',
+      '!': '-.-.--', '/': '-..-.', '(': '-.--.', ')': '-.--.-',
+      '&': '.-...', ':': '---...', ';': '-.-.-.', '=': '-...-',
+      '+': '.-.-.', '-': '-....-', '_': '..--.-', '"': '.-..-.',
+      '$': '...-..-', '@': '.--.-.'
+    };
+
+    function textToMorse(text) {
+      return text.toUpperCase().split('').map(char => {
+        if (char === ' ') return CUSTOM_SPACE;
+        return morseCodeMap[char] || '';
+      }).join(' ');
+    }
+
+    function updateMorseOutput() {
+      const input = document.getElementById('textInput').value;
+      const trigger = document.getElementById('trigger').value || '-.-.-.';
+      const morse = textToMorse(input);
+      document.getElementById('morseOutput').textContent = 'Morse: ' + trigger + ' ' + morse;
+    }
+
+    function playTone(duration) {
+      const osc = context.createOscillator();
+      const gain = context.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 800;
+      gain.gain.value = 0.5;
+      osc.connect(gain).connect(context.destination);
+      osc.start();
+      osc.stop(context.currentTime + duration / 1000);
+      oscillators.push(osc);
+    }
+
+    function stopMorse() {
+      oscillators.forEach(osc => osc.stop());
+      oscillators = [];
+    }
+
+    function sendMorse() {
+      stopMorse();
+
+      const input = document.getElementById('textInput').value;
+      const trigger = document.getElementById('trigger').value || '-.-.-.';
+      const dot = parseInt(document.getElementById('dotDuration').value);
+      const dash = parseInt(document.getElementById('dashDuration').value);
+      const symbolGap = parseInt(document.getElementById('symbolGap').value);
+      const charGap = parseInt(document.getElementById('charGap').value);
+
+      const warmup = '--';
+      const morse = `${warmup} ${trigger} ${textToMorse(input)}`;
+      let time = 0;
+
+      for (let i = 0; i < morse.length; i++) {
+        const char = morse[i];
+        if (char === '.') {
+          setTimeout(() => playTone(dot), time);
+          time += dot + symbolGap;
+        } else if (char === '-') {
+          setTimeout(() => playTone(dash), time);
+          time += dash + symbolGap;
+        } else if (char === ' ') {
+          time += charGap;
+        }
+      }
+    }
+
+    function downloadMP3() {
+      const dot = parseInt(document.getElementById('dotDuration').value);
+      const dash = parseInt(document.getElementById('dashDuration').value);
+      const symbolGap = parseInt(document.getElementById('symbolGap').value);
+      const charGap = parseInt(document.getElementById('charGap').value);
+      const input = document.getElementById('textInput').value;
+      const trigger = document.getElementById('trigger').value || '-.-.-.';
+      const warmup = '--';
+      const morse = `${warmup} ${trigger} ${textToMorse(input)}`;
+
+      let samples = [];
+
+      function tone(duration) {
+        const count = Math.floor(SAMPLE_RATE * duration / 1000);
+        for (let i = 0; i < count; i++) {
+          samples.push(Math.sin(2 * Math.PI * 800 * i / SAMPLE_RATE));
+        }
+      }
+
+      function silence(duration) {
+        const count = Math.floor(SAMPLE_RATE * duration / 1000);
+        for (let i = 0; i < count; i++) {
+          samples.push(0);
+        }
+      }
+
+      for (let i = 0; i < morse.length; i++) {
+        const char = morse[i];
+        if (char === '.') {
+          tone(dot);
+          silence(symbolGap);
+        } else if (char === '-') {
+          tone(dash);
+          silence(symbolGap);
+        } else if (char === ' ') {
+          silence(charGap);
+        }
+      }
+
+      const pcm = new Int16Array(samples.length);
+      for (let i = 0; i < samples.length; i++) {
+        pcm[i] = Math.max(-1, Math.min(1, samples[i])) * 32767;
+      }
+
+      const mp3encoder = new lamejs.Mp3Encoder(1, SAMPLE_RATE, 128);
+      const mp3Data = [];
+      const chunkSize = 1152;
+      for (let i = 0; i < pcm.length; i += chunkSize) {
+        const chunk = pcm.subarray(i, i + chunkSize);
+        const mp3buf = mp3encoder.encodeBuffer(chunk);
+        if (mp3buf.length > 0) mp3Data.push(new Uint8Array(mp3buf));
+      }
+      const mp3buf = mp3encoder.flush();
+      if (mp3buf.length > 0) mp3Data.push(new Uint8Array(mp3buf));
+
+      const blob = new Blob(mp3Data, { type: 'audio/mp3' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'morse.mp3';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    window.onload = () => {
+      document.getElementById('textInput').value = 'hello world!';
+      updateMorseOutput();
+    };
+  </script>
+</body>
+</html>
+
