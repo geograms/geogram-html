@@ -123,6 +123,7 @@
   <script>
     const context = new (window.AudioContext || window.webkitAudioContext)();
     let oscillators = [];
+    let timeoutHandles = [];
     const CUSTOM_SPACE = '--..-';
     const SAMPLE_RATE = 44100;
     let progressTimer = null;
@@ -172,6 +173,8 @@
     function stopMorse() {
       oscillators.forEach(osc => osc.stop());
       oscillators = [];
+      timeoutHandles.forEach(id => clearTimeout(id));
+      timeoutHandles = [];
       clearInterval(progressTimer);
       document.getElementById('progressBar').style.display = 'none';
     }
@@ -216,10 +219,10 @@
       for (let i = 0; i < morse.length; i++) {
         const char = morse[i];
         if (char === '.') {
-          setTimeout(() => playTone(dot), time);
+          timeoutHandles.push(setTimeout(() => playTone(dot), time));
           time += dot + symbolGap;
         } else if (char === '-') {
-          setTimeout(() => playTone(dash), time);
+          timeoutHandles.push(setTimeout(() => playTone(dash), time));
           time += dash + symbolGap;
         } else if (char === ' ') {
           time += charGap;
