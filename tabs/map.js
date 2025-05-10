@@ -1,28 +1,51 @@
 // tabs/map.js
 function render() {
-  // Clear existing content and create map-specific structure
+  // Clear existing content and recreate the exact structure from map.html
   document.getElementById('content').innerHTML = `
-    <div id="map-container">
-      <div id="map"></div>
-      <div class="map-toolbar">
-        <button id="measureBtn">Measure Distance</button>
-        <button id="addMarkerBtn">Add Marker</button>
-        <label><input type="checkbox" id="trackToggle"> Track Me</label>
-        <div id="geocoder"></div>
-      </div>
+    <div id="map"></div>
+    <div class="toolbar">
+      <button id="measureBtn">Measure Distance</button>
+      <button id="addMarkerBtn">Add Marker</button>
+      <label><input type="checkbox" id="trackToggle"> Track Me</label>
+      <div id="geocoder" style="flex: 1;"></div>
     </div>
   `;
 
-  // Load Leaflet resources if needed
-  if (!window.L) {
-    loadLeafletResources().then(initializeMap);
-  } else {
-    initializeMap();
-  }
-}
+  // Add critical styles immediately
+  const style = document.createElement('style');
+  style.textContent = `
+    #map {
+      position: absolute;
+      top: 100px; /* header + tabs height */
+      bottom: 100px; /* toolbar + footer height */
+      left: 0;
+      right: 0;
+      z-index: 0;
+    }
+    .toolbar {
+      position: fixed;
+      bottom: 40px; /* footer height */
+      left: 0;
+      right: 0;
+      padding: 10px;
+      background: var(--card);
+      display: flex;
+      gap: 10px;
+      z-index: 1000;
+      border-top: 1px solid var(--border);
+    }
+    .toolbar button {
+      padding: 8px 12px;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: 4px;
+    }
+  `;
+  document.head.appendChild(style);
 
-function loadLeafletResources() {
-  return new Promise((resolve) => {
+  // Load Leaflet only once
+  if (!window.L) {
     const leafletCSS = document.createElement('link');
     leafletCSS.rel = 'stylesheet';
     leafletCSS.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
@@ -38,32 +61,37 @@ function loadLeafletResources() {
     leafletJS.onload = () => {
       const geocoderJS = document.createElement('script');
       geocoderJS.src = 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js';
-      geocoderJS.onload = resolve;
+      geocoderJS.onload = initializeMap;
       document.head.appendChild(geocoderJS);
     };
     document.head.appendChild(leafletJS);
-  });
+  } else {
+    initializeMap();
+  }
 }
 
 function initializeMap() {
-  // Add map-specific styles
-  addMapStyles();
-
-  // Initialize the map
+  // Create map with full size
   const map = L.map('map').setView([0, 0], 2);
+  
+  // Add tile layer
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
-  // Geocoder control
+  // Force proper sizing
+  setTimeout(() => map.invalidateSize(true), 0);
+
+  // Add geocoder
   L.Control.geocoder({ defaultMarkGeocode: false })
     .on('markgeocode', e => {
-      const bbox = e.geocode.bbox;
-      map.fitBounds(bbox);
-      L.marker(e.geocode.center).addTo(map).bindPopup(e.geocode.name).openPopup();
+      map.fitBounds(e.geocode.bbox);
+      L.marker(e.geocode.center).addTo(map)
+        .bindPopup(e.geocode.name)
+        .openPopup();
     }).addTo(map);
 
-  // Restore last view
+  // Restore saved view
   const lastView = localStorage.getItem('mapView');
   if (lastView) {
     try {
@@ -74,15 +102,15 @@ function initializeMap() {
 
   // Save view on move
   map.on('moveend', () => {
-    const c = map.getCenter();
+    const center = map.getCenter();
     localStorage.setItem('mapView', JSON.stringify({
-      lat: c.lat,
-      lng: c.lng,
+      lat: center.lat,
+      lng: center.lng,
       zoom: map.getZoom()
     }));
   });
 
-  // Measurement functionality
+  // Measurement tool
   let measureState = 0;
   let startLatLng = null;
   let measureLine = null;
@@ -109,13 +137,14 @@ function initializeMap() {
     }
   });
 
-  // Marker functionality
+  // Marker tool
   document.getElementById('addMarkerBtn').addEventListener('click', () => {
     const marker = L.marker(map.getCenter(), { draggable: true }).addTo(map);
     marker.bindPopup("Drag me").openPopup();
     marker.on('dragend', () => {
       const pos = marker.getLatLng();
-      marker.setPopupContent(`Lat: ${pos.lat.toFixed(5)}<br>Lng: ${pos.lng.toFixed(5)}`).openPopup();
+      marker.setPopupContent(`Lat: ${pos.lat.toFixed(5)}<br>Lng: ${pos.lng.toFixed(5)}`)
+        .openPopup();
     });
   });
 
@@ -135,7 +164,7 @@ function initializeMap() {
           }
         }, null, { enableHighAccuracy: true });
       } else {
-        alert("Geolocation is not supported by your browser");
+        alert("Geolocation not supported");
         e.target.checked = false;
       }
     } else {
@@ -145,85 +174,4 @@ function initializeMap() {
       trackMarker = null;
     }
   });
-}
-
-function addMapStyles() {
-  if (document.getElementById('map-styles')) return;
-
-  const style = document.createElement('style');
-  style.id = 'map-styles';
-  style.textContent = `
-    #map-container {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      width: 100%;
-      height: calc(100vh - 120px); /* Adjust based on header/footer height */
-    }
-    
-    #map {
-      flex: 1;
-      width: 100%;
-      z-index: 0;
-    }
-    
-    .map-toolbar {
-      padding: 0.8em;
-      background: var(--card);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1em;
-      align-items: center;
-      border-top: 1px solid var(--border);
-    }
-    
-    .map-toolbar button {
-      padding: 0.5em 1em;
-      background-color: var(--accent);
-      color: var(--bg);
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.9em;
-    }
-    
-    .map-toolbar label {
-      display: flex;
-      align-items: center;
-      gap: 0.5em;
-      font-size: 0.9em;
-    }
-    
-    #geocoder {
-      flex: 1;
-      min-width: 200px;
-    }
-    
-    .leaflet-control-geocoder {
-      background: var(--card);
-      border: 1px solid var(--border);
-    }
-    
-    .leaflet-control-geocoder a {
-      background-color: var(--accent);
-    }
-    
-    .leaflet-control-geocoder-form input {
-      background: var(--bg);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-    
-    @media (max-width: 768px) {
-      .map-toolbar {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      
-      #geocoder {
-        min-width: 100%;
-      }
-    }
-  `;
-  document.head.appendChild(style);
 }

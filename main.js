@@ -1,10 +1,10 @@
 // Tab definitions with JS module paths
 const tabs = [
-  { id: "nearby", label: "Nearby", module: "tabs/nearby.js" },
-  { id: "messages", label: "Messages", module: "tabs/messages.js" },
+  { id: "activity", label: "Activity", module: "tabs/activity.js" },
   { id: "map", label: "Map", module: "tabs/map.js" },
   { id: "radio", label: "Radio", module: "tabs/radio.js" },
-  { id: "control", label: "Control", module: "tabs/control.js" },
+  { id: "downloads", label: "Downloads", module: "tabs/downloads.js" },
+  { id: "config", label: "Config", module: "tabs/config.js" },
   { id: "docs", label: "Docs", module: "tabs/docs.js" }
 ];
 
