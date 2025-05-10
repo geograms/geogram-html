@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Map</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, sans-serif;
+    }
+    #map {
+      flex: 1;
+      width: 100%;
+    }
+    .topbar {
+      display: flex;
+      justify-content: flex-end;
+      background: var(--card);
+      padding: 0.5em 1em;
+      flex-wrap: wrap;
+    }
+    .topbar a {
+      color: var(--link);
+      text-decoration: none;
+      font-size: 0.9em;
+      margin-left: 0.5em;
+    }
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5em;
+      background-color: var(--card);
+      padding: 0.6em 0.5em;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab {
+      background: none;
+      border: none;
+      color: var(--link);
+      font-size: 1em;
+      padding: 0.4em 0.8em;
+      cursor: pointer;
+      font-weight: bold;
+      flex: 1 0 auto;
+    }
+    .tab.active {
+      border-bottom: 2px solid var(--accent);
+      color: var(--accent);
+    }
+    .tab:hover {
+      color: var(--accent);
+    }
+    .toolbar {
+      padding: 0.5em 1em;
+      background: var(--card);
+      color: var(--text);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1em;
+      align-items: center;
+      justify-content: center;
+    }
+    footer {
+      font-size: 0.9em;
+      color: var(--link);
+      padding: 1em;
+      background: var(--card);
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+    footer img {
+      height: 24px;
+      filter: brightness(0) saturate(100%) invert(81%) sepia(7%) saturate(734%) hue-rotate(63deg) brightness(93%) contrast(90%);
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <a href="/login">Login</a>&nbsp;|&nbsp;<a href="/register">Register</a>
+  </div>
+
+  <div class="tabs"></div>
+
+  <div id="map"></div>
+
+  <div class="toolbar">
+    <button id="measureBtn">Measure Distance</button>
+    <button id="addMarkerBtn">Add Marker</button>
+    <label><input type="checkbox" id="trackToggle"> Track Me</label>
+    <div id="geocoder" style="flex: 1;"></div>
+  </div>
+
+  <footer id="footer">
+    <img src="logo_small.svg" alt="geogram logo">
+    geogram
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+  <script src="main.js"></script>
+  <script>
+    const map = L.map('map').setView([0, 0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    L.Control.geocoder({ defaultMarkGeocode: false })
+      .on('markgeocode', e => {
+        const bbox = e.geocode.bbox;
+        map.fitBounds(bbox);
+        L.marker(e.geocode.center).addTo(map).bindPopup(e.geocode.name).openPopup();
+      }).addTo(map);
+
+    const lastView = localStorage.getItem('mapView');
+    if (lastView) {
+      try {
+        const { lat, lng, zoom } = JSON.parse(lastView);
+        map.setView([lat, lng], zoom);
+      } catch {}
+    }
+
+    map.on('moveend', () => {
+      const c = map.getCenter();
+      localStorage.setItem('mapView', JSON.stringify({
+        lat: c.lat,
+        lng: c.lng,
+        zoom: map.getZoom()
+      }));
+    });
+
+    let measureState = 0;
+    let startLatLng = null;
+    let measureLine = null;
+
+    document.getElementById('measureBtn').onclick = () => {
+      measureState = 1;
+      alert('Click the first point on the map.');
+    };
+
+    map.on('click', e => {
+      if (measureState === 1) {
+        startLatLng = e.latlng;
+        measureState = 2;
+        alert('Now click the second point.');
+      } else if (measureState === 2) {
+        const distance = startLatLng.distanceTo(e.latlng) / 1000;
+        if (measureLine) map.removeLayer(measureLine);
+        measureLine = L.polyline([startLatLng, e.latlng], { color: 'lime' }).addTo(map);
+        L.popup()
+          .setLatLng(e.latlng)
+          .setContent(`Distance: ${distance.toFixed(2)} km`)
+          .openOn(map);
+        measureState = 0;
+      }
+    });
+
+    document.getElementById('addMarkerBtn').onclick = () => {
+      const marker = L.marker(map.getCenter(), { draggable: true }).addTo(map);
+      marker.bindPopup("Drag me").openPopup();
+      marker.on('dragend', () => {
+        const pos = marker.getLatLng();
+        marker.setPopupContent(`Lat: ${pos.lat.toFixed(5)}<br>Lng: ${pos.lng.toFixed(5)}`).openPopup();
+      });
+    };
+
+    let trackId = null;
+    let trackMarker = null;
+    document.getElementById('trackToggle').onchange = e => {
+      if (e.target.checked) {
+        if (navigator.geolocation) {
+          trackId = navigator.geolocation.watchPosition(pos => {
+            const { latitude, longitude } = pos.coords;
+            if (!trackMarker) {
+              trackMarker = L.marker([latitude, longitude]).addTo(map);
+              map.setView([latitude, longitude], 13);
+            } else {
+              trackMarker.setLatLng([latitude, longitude]);
+            }
+          });
+        }
+      } else {
+        if (trackId) navigator.geolocation.clearWatch(trackId);
+        if (trackMarker) map.removeLayer(trackMarker);
+        trackId = null;
+        trackMarker = null;
+      }
+    };
+  </script>
+</body>
+</html>
+
