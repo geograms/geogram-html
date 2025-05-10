@@ -6,93 +6,17 @@
   <title>geogram</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.8em 1.5em;
-      background: var(--card);
-    }
-    .logo-link {
-      display: flex;
-      align-items: center;
-      gap: 0.8em;
-      text-decoration: none;
-      color: var(--accent);
-      font-weight: bold;
-      font-size: 1.2em;
-    }
-    .logo-link img {
-      height: 32px;
-      filter: brightness(0) saturate(100%) invert(81%) sepia(7%) saturate(734%) hue-rotate(63deg) brightness(93%) contrast(90%);
-    }
-    .tabs-container {
-      display: flex;
-      align-items: center;
-      gap: 1em;
-      position: relative;
-    }
-    .tabs {
-      display: flex;
-      gap: 0.5em;
-    }
-    .tab {
-      border-bottom: none !important; /* Remove underline completely */
-    }
-    .burger-menu {
-      display: none;
-      background: none;
-      border: none;
-      color: var(--accent);
-      font-size: 1.5em;
-      cursor: pointer;
-      padding: 0.5em;
-    }
-    .mobile-tabs {
-      display: none;
-      position: absolute;
-      top: 100%;
-      right: 0;
-      background: var(--card);
-      flex-direction: column;
-      width: 200px;
-      z-index: 1000;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      border-radius: 0 0 4px 4px;
-    }
-    .mobile-tabs.show {
-      display: flex;
-    }
-    .mobile-tabs .tab {
-      padding: 1em;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .mobile-tabs .tab:last-child {
-      border-bottom: none;
-    }
-    @media (max-width: 768px) {
-      .tabs {
-        display: none;
-      }
-      .burger-menu {
-        display: block;
-      }
-    }
-  </style>
 </head>
 <body>
   <canvas id="wave-bg"></canvas>
 
-  <div class="topbar">
-    <a href="#" class="logo-link" id="home-link">
+<div class="header-wrapper">
+  <div class="logo-block">
+    <a href="#" id="home-link">
       <img src="logo_small.svg" alt="geogram logo">
-      <span>geogram</span>
     </a>
-    
+  </div>
+  <div class="topbar">
     <div class="tabs-container">
       <div class="tabs"></div>
       <button class="burger-menu" id="burgerBtn" aria-label="Menu">
@@ -101,76 +25,21 @@
       <div class="mobile-tabs" id="mobileTabs"></div>
     </div>
   </div>
+</div>
+
+
 
   <div id="content" class="main-layout">
     <div class="left-column">
       <h2>Welcome to geogram</h2>
-      <p>This is your dashboard. Use the tabs above to explore features like messages, map, and radio.</p>
+      <p>Use the tabs above to explore features like messages, map, and radio.</p>
     </div>
     <div class="right-column">
-      <p>Sidebar content such as system status, shortcuts, or recent activity can go here.</p>
+      <p>System status, shortcuts will eventually go here.</p>
     </div>
   </div>
 
   <script src="main.js"></script>
-  <script>
-    // Home link functionality
-    document.getElementById('home-link').addEventListener('click', (e) => {
-      e.preventDefault();
-      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-      document.getElementById('content').innerHTML = `
-        <div class="left-column">
-          <h2>Welcome to geogram</h2>
-          <p>This is your dashboard. Use the tabs above to explore features.</p>
-        </div>
-        <div class="right-column">
-          <p>System status and shortcuts appear here.</p>
-        </div>
-      `;
-      document.getElementById('mobileTabs').classList.remove('show');
-    });
-
-    // Burger menu functionality
-    const burgerBtn = document.getElementById('burgerBtn');
-    const mobileTabs = document.getElementById('mobileTabs');
-    
-    burgerBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      mobileTabs.classList.toggle('show');
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener('click', () => {
-      mobileTabs.classList.remove('show');
-    });
-
-    // Prevent menu from closing when clicking inside it
-    mobileTabs.addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
-
-    // Update mobile tabs when tabs are generated
-    function updateMobileTabs() {
-      const tabs = document.querySelectorAll('.tab');
-      const mobileTabs = document.getElementById('mobileTabs');
-      mobileTabs.innerHTML = '';
-      
-      tabs.forEach(tab => {
-        const mobileTab = tab.cloneNode(true);
-        mobileTab.addEventListener('click', () => {
-          tab.click(); // Trigger the original tab's click handler
-          mobileTabs.classList.remove('show');
-        });
-        mobileTabs.appendChild(mobileTab);
-      });
-    }
-
-    // Initialize mobile tabs
-    updateMobileTabs();
-    
-    // Watch for tab changes
-    const observer = new MutationObserver(updateMobileTabs);
-    observer.observe(document.querySelector('.tabs'), { childList: true });
-  </script>
 </body>
 </html>
+

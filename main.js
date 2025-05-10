@@ -8,7 +8,6 @@ const tabs = [
   { id: "docs", label: "Docs", module: "tabs/docs.js" }
 ];
 
-// Generate the tabs
 function generateTabs() {
   const tabContainer = document.querySelector(".tabs");
   tabContainer.innerHTML = tabs.map(tab =>
@@ -16,7 +15,6 @@ function generateTabs() {
   ).join("");
 }
 
-// Load tab module by injecting <script>
 function loadTab(tabId) {
   const tab = tabs.find(t => t.id === tabId);
   if (!tab) return;
@@ -35,9 +33,14 @@ function loadTab(tabId) {
     if (typeof render === "function") render();
   };
   document.body.appendChild(script);
+
+  localStorage.setItem("lastTab", tabId);
 }
 
-// Wave background animation
+// Global wave references
+let wavesTop = [];
+let wavesBottom = [];
+
 function initWaveBackground() {
   const canvas = document.getElementById('wave-bg');
   if (!canvas) return;
@@ -55,12 +58,9 @@ function initWaveBackground() {
       baseAmp: 40 + Math.random() * 30,
       baseSpeed: 0.05 + Math.random() * 0.07,
       freq: 0.001 + Math.random() * 0.0015,
-      offset: Math.random() * 1000,
-      color: "rgba(0,255,0,0.15)"
+      offset: Math.random() * 1000
     }));
   }
-
-  let wavesTop, wavesBottom;
 
   window.addEventListener('resize', () => {
     resize();
@@ -71,6 +71,7 @@ function initWaveBackground() {
   function draw() {
     ctx.fillStyle = "#000";
     ctx.fillRect(0, 0, width, height);
+    const waveColor = getComputedStyle(document.body).getPropertyValue("--wave-color").trim();
     const pulse = Math.sin(t * 0.005) * 0.5 + 1;
     for (const wave of [...wavesTop, ...wavesBottom]) {
       ctx.beginPath();
@@ -80,7 +81,7 @@ function initWaveBackground() {
         const y = wave.centerY + Math.sin((x + wave.offset + t * speed) * wave.freq * 2 * Math.PI) * amp;
         ctx.lineTo(x, y);
       }
-      ctx.strokeStyle = wave.color;
+      ctx.strokeStyle = waveColor;
       ctx.lineWidth = 1;
       ctx.stroke();
     }
@@ -94,7 +95,10 @@ function initWaveBackground() {
   draw();
 }
 
-// Initialize app
+function applyTheme(theme) {
+  document.body.setAttribute("data-theme", theme);
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   generateTabs();
   initWaveBackground();
@@ -106,7 +110,19 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  const initialTab = window.location.hash.slice(1) || "nearby";
+  const logo = document.getElementById("home-link");
+  if (logo) {
+    logo.addEventListener("click", (e) => {
+      e.preventDefault();
+      localStorage.setItem("lastTab", "activity");
+      loadTab("activity");
+    });
+  }
+
+  const savedTab = localStorage.getItem("lastTab");
+  const hashTab = window.location.hash.slice(1);
+  const initialTab = savedTab || hashTab || "activity";
+
   loadTab(initialTab);
 });
 
