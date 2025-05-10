@@ -100,6 +100,12 @@ function applyTheme(theme) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  // ✅ Apply theme before anything renders
+  const storedTheme = localStorage.getItem("theme");
+  if (storedTheme) {
+    document.body.setAttribute("data-theme", storedTheme);
+  }
+
   generateTabs();
   initWaveBackground();
 
