@@ -1,4 +1,3 @@
-// tabs/map.js
 function render() {
   // Clear existing content and recreate the exact structure from map.html
   document.getElementById('content').innerHTML = `
@@ -16,15 +15,15 @@ function render() {
   style.textContent = `
     #map {
       position: absolute;
-      top: 30px; /* header + tabs height */
-      bottom: 90px; /* toolbar + footer height */
+      top: 30px;
+      bottom: 90px;
       left: 0;
       right: 0;
       z-index: 0;
     }
     .toolbar {
       position: fixed;
-      bottom: 40px; /* footer height */
+      bottom: 40px;
       left: 0;
       right: 0;
       padding: 10px;
@@ -41,10 +40,9 @@ function render() {
       border: none;
       border-radius: 4px;
     }
-
     .leaflet-top.leaflet-left {
-     top: 60px; 
-}
+      top: 60px;
+    }
   `;
   document.head.appendChild(style);
 
@@ -60,12 +58,22 @@ function render() {
     geocoderCSS.href = 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css';
     document.head.appendChild(geocoderCSS);
 
+    const clusterCSS = document.createElement('link');
+    clusterCSS.rel = 'stylesheet';
+    clusterCSS.href = 'https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css';
+    document.head.appendChild(clusterCSS);
+
     const leafletJS = document.createElement('script');
     leafletJS.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
     leafletJS.onload = () => {
       const geocoderJS = document.createElement('script');
       geocoderJS.src = 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js';
-      geocoderJS.onload = initializeMap;
+      geocoderJS.onload = () => {
+        const clusterJS = document.createElement('script');
+        clusterJS.src = 'https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js';
+        clusterJS.onload = initializeMap;
+        document.head.appendChild(clusterJS);
+      };
       document.head.appendChild(geocoderJS);
     };
     document.head.appendChild(leafletJS);
@@ -75,18 +83,14 @@ function render() {
 }
 
 function initializeMap() {
-  // Create map with full size
   const map = L.map('map').setView([0, 0], 2);
-  
-  // Add tile layer
+
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
-  // Force proper sizing
   setTimeout(() => map.invalidateSize(true), 0);
 
-  // Add geocoder
   L.Control.geocoder({ defaultMarkGeocode: false })
     .on('markgeocode', e => {
       map.fitBounds(e.geocode.bbox);
@@ -95,7 +99,6 @@ function initializeMap() {
         .openPopup();
     }).addTo(map);
 
-  // Restore saved view
   const lastView = localStorage.getItem('mapView');
   if (lastView) {
     try {
@@ -104,7 +107,6 @@ function initializeMap() {
     } catch {}
   }
 
-  // Save view on move
   map.on('moveend', () => {
     const center = map.getCenter();
     localStorage.setItem('mapView', JSON.stringify({
@@ -114,7 +116,6 @@ function initializeMap() {
     }));
   });
 
-  // Measurement tool
   let measureState = 0;
   let startLatLng = null;
   let measureLine = null;
@@ -141,7 +142,6 @@ function initializeMap() {
     }
   });
 
-  // Marker tool
   document.getElementById('addMarkerBtn').addEventListener('click', () => {
     const marker = L.marker(map.getCenter(), { draggable: true }).addTo(map);
     marker.bindPopup("Drag me").openPopup();
@@ -152,7 +152,6 @@ function initializeMap() {
     });
   });
 
-  // Location tracking
   let trackId = null;
   let trackMarker = null;
   document.getElementById('trackToggle').addEventListener('change', e => {
@@ -179,27 +178,35 @@ function initializeMap() {
     }
   });
 
-  // Lazy-load weather station data
+  // Weather stations with clustering
+  const weatherIcon = L.icon({
+    iconUrl: './lib/weather.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+
+  const clusterGroup = L.markerClusterGroup();
+  map.addLayer(clusterGroup);
+
   const weatherScript = document.createElement('script');
   weatherScript.src = './data/WEATHER_STATION.js';
   weatherScript.onload = () => {
     if (Array.isArray(window.WEATHER_STATIONS)) {
       window.WEATHER_STATIONS.forEach(station => {
         const { lat, lon } = station.coordinates;
-        const marker = L.marker([lat, lon]).addTo(map);
+        const marker = L.marker([lat, lon], { icon: weatherIcon });
         marker.bindPopup(`
           <strong>${station.callsign}</strong><br>
           Temp: ${station.t}°C<br>
           Humidity: ${station.h}%<br>
           Pressure: ${station.p} hPa
         `);
+        clusterGroup.addLayer(marker);
       });
     } else {
       console.error('WEATHER_STATIONS is not an array');
     }
   };
   document.body.appendChild(weatherScript);
-
-
-
 }
