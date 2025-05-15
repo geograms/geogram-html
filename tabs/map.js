@@ -91,6 +91,7 @@ function initializeMap() {
 
   setTimeout(() => map.invalidateSize(true), 0);
 
+  // Geocoder control
   L.Control.geocoder({ defaultMarkGeocode: false })
     .on('markgeocode', e => {
       map.fitBounds(e.geocode.bbox);
@@ -99,14 +100,18 @@ function initializeMap() {
         .openPopup();
     }).addTo(map);
 
+  // Restore last view
   const lastView = localStorage.getItem('mapView');
   if (lastView) {
     try {
       const { lat, lng, zoom } = JSON.parse(lastView);
       map.setView([lat, lng], zoom);
-    } catch {}
+    } catch (e) {
+      console.warn("Failed to parse saved map view", e);
+    }
   }
 
+  // Save view on move
   map.on('moveend', () => {
     const center = map.getCenter();
     localStorage.setItem('mapView', JSON.stringify({
@@ -116,6 +121,7 @@ function initializeMap() {
     }));
   });
 
+  // Measurement tools
   let measureState = 0;
   let startLatLng = null;
   let measureLine = null;
@@ -142,6 +148,7 @@ function initializeMap() {
     }
   });
 
+  // Marker tools
   document.getElementById('addMarkerBtn').addEventListener('click', () => {
     const marker = L.marker(map.getCenter(), { draggable: true }).addTo(map);
     marker.bindPopup("Drag me").openPopup();
@@ -152,6 +159,7 @@ function initializeMap() {
     });
   });
 
+  // Location tracking
   let trackId = null;
   let trackMarker = null;
   document.getElementById('trackToggle').addEventListener('change', e => {
@@ -178,79 +186,255 @@ function initializeMap() {
     }
   });
 
-  // Weather stations with their own clustering
-  const weatherIcon = L.icon({
-    iconUrl: './lib/weather.png',
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -32]
-  });
-
+  // Weather stations cluster
   const weatherClusterGroup = L.markerClusterGroup();
   map.addLayer(weatherClusterGroup);
 
-  const weatherScript = document.createElement('script');
-  weatherScript.src = './data/WEATHER_STATION.js';
-  weatherScript.onload = () => {
-    if (Array.isArray(window.WEATHER_STATIONS)) {
-      window.WEATHER_STATIONS.forEach(station => {
-        const { lat, lon } = station.coordinates;
-        const marker = L.marker([lat, lon], { icon: weatherIcon });
-        marker.bindPopup(`
-          <strong>${station.callsign}</strong><br>
-          Temp: ${station.t}°C<br>
-          Humidity: ${station.h}%<br>
-          Pressure: ${station.p} hPa
-        `);
-        weatherClusterGroup.addLayer(marker);
-      });
-    }
-  };
-  document.body.appendChild(weatherScript);
+  function loadWeatherStations() {
+    const cachedWeather = localStorage.getItem('cachedWeatherStations');
+    const cacheExpiry = localStorage.getItem('weatherCacheExpiry');
+    const now = Date.now();
 
-  // iGates with separate clustering and progressive loading
+    if (cachedWeather && cacheExpiry && now < parseInt(cacheExpiry)) {
+      // Load from cache
+      try {
+        const stations = JSON.parse(cachedWeather);
+        addWeatherStations(stations, true);
+      } catch (e) {
+        console.error("Failed to parse cached weather data", e);
+        loadFreshWeatherStations();
+      }
+    } else {
+      // Load fresh data
+      loadFreshWeatherStations();
+    }
+  }
+
+  function loadFreshWeatherStations() {
+    const weatherScript = document.createElement('script');
+    weatherScript.src = './data/WEATHER_STATION.js';
+    weatherScript.onload = () => {
+      if (Array.isArray(window.WEATHER_STATIONS)) {
+        // Cache for 1 hour
+        localStorage.setItem('cachedWeatherStations', JSON.stringify(window.WEATHER_STATIONS));
+        localStorage.setItem('weatherCacheExpiry', Date.now() + 3600000);
+        addWeatherStations(window.WEATHER_STATIONS, false);
+      }
+    };
+    document.body.appendChild(weatherScript);
+  }
+
+  function addWeatherStations(stations, fromCache) {
+    const weatherIcon = L.icon({
+      iconUrl: './lib/weather.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    });
+
+    if (fromCache) {
+      console.log(`Loaded ${stations.length} weather stations from cache`);
+    }
+
+    stations.forEach(station => {
+      const { lat, lon } = station.coordinates;
+      const marker = L.marker([lat, lon], { icon: weatherIcon });
+      marker.bindPopup(`
+        <strong>${station.callsign}</strong><br>
+        Temp: ${station.t}°C<br>
+        Humidity: ${station.h}%<br>
+        Pressure: ${station.p} hPa
+      `);
+      weatherClusterGroup.addLayer(marker);
+    });
+  }
+
+  // iGates cluster with progressive loading
   const iGateClusterGroup = L.markerClusterGroup();
   map.addLayer(iGateClusterGroup);
 
-  const iGateScript = document.createElement('script');
-  iGateScript.src = './data/IGATE.js';
-  iGateScript.onload = () => {
-    if (!Array.isArray(window.IGATE)) {
-      console.error('IGATE is not an array');
-      return;
+  function loadIGates() {
+    if ('indexedDB' in window) {
+      // Use IndexedDB for large dataset
+      const request = indexedDB.open('APRSCache', 1);
+      
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains('igates')) {
+          db.createObjectStore('igates', { keyPath: 'callsign' });
+        }
+      };
+
+      request.onsuccess = (event) => {
+        const db = event.target.result;
+        checkIGateCache(db);
+      };
+
+      request.onerror = (event) => {
+        console.error("IndexedDB error:", event.target.error);
+        fallbackIGateLoad();
+      };
+    } else {
+      // Fallback to localStorage
+      fallbackIGateLoad();
+    }
+  }
+
+  function checkIGateCache(db) {
+    const transaction = db.transaction('igates', 'readonly');
+    const store = transaction.objectStore('igates');
+    const countRequest = store.count();
+
+    countRequest.onsuccess = () => {
+      if (countRequest.result > 0) {
+        // We have cached data
+        const cacheTime = localStorage.getItem('igateCacheTime');
+        const cacheAge = cacheTime ? Date.now() - parseInt(cacheTime) : Infinity;
+        
+        if (cacheAge < 3600000) { // 1 hour
+          // Load from cache
+          const getAllRequest = store.getAll();
+          getAllRequest.onsuccess = () => {
+            processIGates(getAllRequest.result, true);
+          };
+        } else {
+          // Cache expired, load fresh but show cached data first
+          const getAllRequest = store.getAll();
+          getAllRequest.onsuccess = () => {
+            if (getAllRequest.result.length > 0) {
+              processIGates(getAllRequest.result, true);
+            }
+            loadFreshIGates(db);
+          };
+        }
+      } else {
+        // No cache, load fresh
+        loadFreshIGates(db);
+      }
+    };
+  }
+
+  function loadFreshIGates(db = null) {
+    const iGateScript = document.createElement('script');
+    iGateScript.src = './data/IGATE.js';
+    iGateScript.onload = () => {
+      if (Array.isArray(window.IGATE)) {
+        processIGates(window.IGATE, false);
+        
+        // Cache the data
+        if (db) {
+          cacheIGatesInIndexedDB(db, window.IGATE);
+        } else {
+          cacheIGatesInLocalStorage(window.IGATE);
+        }
+      }
+    };
+    document.body.appendChild(iGateScript);
+  }
+
+  function cacheIGatesInIndexedDB(db, igates) {
+    const transaction = db.transaction('igates', 'readwrite');
+    const store = transaction.objectStore('igates');
+    
+    // Clear old data first
+    const clearRequest = store.clear();
+    
+    clearRequest.onsuccess = () => {
+      // Add in batches to avoid blocking
+      const batchSize = 2000;
+      let i = 0;
+      
+      function addBatch() {
+        const batch = igates.slice(i, i + batchSize);
+        if (batch.length === 0) {
+          localStorage.setItem('igateCacheTime', Date.now());
+          return;
+        }
+        
+        batch.forEach(igate => {
+          store.put(igate);
+        });
+        
+        i += batchSize;
+        setTimeout(addBatch, 0);
+      }
+      
+      addBatch();
+    };
+  }
+
+  function cacheIGatesInLocalStorage(igates) {
+    try {
+      // Try to save a sample to check if we have space
+      const sample = igates.slice(0, 100);
+      localStorage.setItem('igateSampleTest', JSON.stringify(sample));
+      
+      // If successful, save all (or in chunks if needed)
+      localStorage.setItem('cachedIGates', JSON.stringify(igates));
+      localStorage.setItem('igateCacheTime', Date.now());
+    } catch (e) {
+      console.warn("Couldn't cache iGates in localStorage:", e);
+    }
+  }
+
+  function fallbackIGateLoad() {
+    const cachedIGates = localStorage.getItem('cachedIGates');
+    const cacheTime = localStorage.getItem('igateCacheTime');
+    
+    if (cachedIGates && cacheTime && (Date.now() - parseInt(cacheTime) < 3600000)) {
+      try {
+        const igates = JSON.parse(cachedIGates);
+        processIGates(igates, true);
+      } catch (e) {
+        console.error("Failed to parse cached iGates", e);
+        loadFreshIGates();
+      }
+    } else {
+      loadFreshIGates();
+    }
+  }
+
+  function processIGates(igates, fromCache) {
+    if (fromCache) {
+      console.log(`Loaded ${igates.length} iGates from cache`);
+    } else {
+      console.log(`Processing ${igates.length} fresh iGates`);
     }
 
-    // Progress control
-    const progress = L.control({ position: 'bottomleft' });
-    progress.onAdd = function() {
-      this.div = L.DomUtil.create('div', 'progress-control');
-      this.div.innerHTML = `
-        <div style="
-          background: white;
-          padding: 8px;
-          border-radius: 4px;
-          box-shadow: 0 0 10px rgba(0,0,0,0.2);
-          font-size: 14px;
-          max-width: 200px;
-          word-wrap: break-word;
-        ">
-          Loading iGates: <span id="igate-progress">0</span> / ${window.IGATE.length}
-        </div>
-      `;
-      return this.div;
-    };
-    progress.addTo(map);
+    // Progress control for fresh load
+    let progressControl;
+    if (!fromCache) {
+      progressControl = L.control({ position: 'bottomleft' });
+      progressControl.onAdd = function() {
+        this.div = L.DomUtil.create('div', 'progress-control');
+        this.div.innerHTML = `
+          <div style="
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            font-size: 14px;
+          ">
+            Loading iGates: <span id="igate-progress">0</span> / ${igates.length}
+            ${fromCache ? '<br>(cached)' : ''}
+          </div>
+        `;
+        return this.div;
+      };
+      progressControl.addTo(map);
+    }
 
     // Process in batches
     const batchSize = 500;
     let processed = 0;
-    const total = window.IGATE.length;
 
     function processBatch() {
-      const batchEnd = Math.min(processed + batchSize, total);
+      const batchEnd = Math.min(processed + batchSize, igates.length);
       
       for (let i = processed; i < batchEnd; i++) {
-        const igate = window.IGATE[i];
+        const igate = igates[i];
+        if (!igate.coordinates) continue;
+        
         const { lat, lon } = igate.coordinates;
         const marker = L.marker([lat, lon]);
         marker.bindPopup(`
@@ -263,17 +447,21 @@ function initializeMap() {
       }
 
       processed = batchEnd;
-      document.getElementById('igate-progress').textContent = processed;
+      if (!fromCache && document.getElementById('igate-progress')) {
+        document.getElementById('igate-progress').textContent = processed;
+      }
 
-      if (processed < total) {
+      if (processed < igates.length) {
         setTimeout(processBatch, 0);
-      } else {
-        setTimeout(() => map.removeControl(progress), 2000);
+      } else if (!fromCache && progressControl) {
+        setTimeout(() => map.removeControl(progressControl), 2000);
       }
     }
 
-    // Start processing
     processBatch();
-  };
-  document.body.appendChild(iGateScript);
+  }
+
+  // Start loading both datasets
+  loadWeatherStations();
+  loadIGates();
 }

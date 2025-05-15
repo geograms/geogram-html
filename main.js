@@ -45,7 +45,10 @@ function initWaveBackground() {
   const canvas = document.getElementById('wave-bg');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  let width, height, t = 0;
+  let width, height;
+  let lastTime = 0;
+  const targetFPS = 60;
+  const frameInterval = 1000 / targetFPS;
 
   function resize() {
     width = canvas.width = window.innerWidth;
@@ -56,8 +59,10 @@ function initWaveBackground() {
     return Array.from({ length: count }, () => ({
       centerY,
       baseAmp: 40 + Math.random() * 30,
-      baseSpeed: 0.05 + Math.random() * 0.07,
-      freq: 0.001 + Math.random() * 0.0015,
+      // Slower base speed (reduced from 0.05-0.12 to 0.02-0.05)
+      baseSpeed: 0.02 + Math.random() * 0.03,
+      // Lower frequency for smoother waves (reduced from 0.001-0.0025 to 0.0005-0.001)
+      freq: 0.0005 + Math.random() * 0.0005,
       offset: Math.random() * 1000
     }));
   }
@@ -68,31 +73,43 @@ function initWaveBackground() {
     wavesBottom = createWaves(3, (2 * height) / 3);
   });
 
-  function draw() {
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0, 0, width, height);
-    const waveColor = getComputedStyle(document.body).getPropertyValue("--wave-color").trim();
-    const pulse = Math.sin(t * 0.005) * 0.5 + 1;
-    for (const wave of [...wavesTop, ...wavesBottom]) {
-      ctx.beginPath();
-      const amp = wave.baseAmp * pulse;
-      const speed = wave.baseSpeed * pulse;
-      for (let x = 0; x < width; x++) {
-        const y = wave.centerY + Math.sin((x + wave.offset + t * speed) * wave.freq * 2 * Math.PI) * amp;
-        ctx.lineTo(x, y);
+  function draw(timestamp) {
+    // Frame rate control
+    if (!timestamp || !lastTime || timestamp - lastTime > frameInterval) {
+      lastTime = timestamp || performance.now();
+      
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, width, height);
+      
+      const waveColor = getComputedStyle(document.body).getPropertyValue("--wave-color").trim();
+      
+      // Smoother, more subtle pulse effect
+      const pulse = Math.sin(lastTime * 0.001) * 0.2 + 0.8; // Reduced amplitude
+      
+      for (const wave of [...wavesTop, ...wavesBottom]) {
+        ctx.beginPath();
+        const amp = wave.baseAmp * pulse;
+        const speed = wave.baseSpeed;
+        
+        for (let x = 0; x < width; x++) {
+          const y = wave.centerY + 
+            Math.sin((x + wave.offset + lastTime * speed) * wave.freq * 2 * Math.PI) * amp;
+          ctx.lineTo(x, y);
+        }
+        
+        ctx.strokeStyle = waveColor;
+        ctx.lineWidth = 1;
+        ctx.stroke();
       }
-      ctx.strokeStyle = waveColor;
-      ctx.lineWidth = 1;
-      ctx.stroke();
     }
-    t += 1;
+    
     requestAnimationFrame(draw);
   }
 
   resize();
   wavesTop = createWaves(3, window.innerHeight / 3);
   wavesBottom = createWaves(3, (2 * window.innerHeight) / 3);
-  draw();
+  requestAnimationFrame(draw);
 }
 
 function applyTheme(theme) {
