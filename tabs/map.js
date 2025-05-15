@@ -16,8 +16,8 @@ function render() {
   style.textContent = `
     #map {
       position: absolute;
-      top: 100px; /* header + tabs height */
-      bottom: 100px; /* toolbar + footer height */
+      top: 30px; /* header + tabs height */
+      bottom: 90px; /* toolbar + footer height */
       left: 0;
       right: 0;
       z-index: 0;
@@ -41,6 +41,10 @@ function render() {
       border: none;
       border-radius: 4px;
     }
+
+    .leaflet-top.leaflet-left {
+     top: 60px; 
+}
   `;
   document.head.appendChild(style);
 
@@ -174,4 +178,28 @@ function initializeMap() {
       trackMarker = null;
     }
   });
+
+  // Lazy-load weather station data
+  const weatherScript = document.createElement('script');
+  weatherScript.src = './data/WEATHER_STATION.js';
+  weatherScript.onload = () => {
+    if (Array.isArray(window.WEATHER_STATIONS)) {
+      window.WEATHER_STATIONS.forEach(station => {
+        const { lat, lon } = station.coordinates;
+        const marker = L.marker([lat, lon]).addTo(map);
+        marker.bindPopup(`
+          <strong>${station.callsign}</strong><br>
+          Temp: ${station.t}°C<br>
+          Humidity: ${station.h}%<br>
+          Pressure: ${station.p} hPa
+        `);
+      });
+    } else {
+      console.error('WEATHER_STATIONS is not an array');
+    }
+  };
+  document.body.appendChild(weatherScript);
+
+
+
 }
