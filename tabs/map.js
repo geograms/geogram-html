@@ -178,7 +178,7 @@ function initializeMap() {
     }
   });
 
-  // Weather stations with clustering
+  // Weather stations with their own clustering
   const weatherIcon = L.icon({
     iconUrl: './lib/weather.png',
     iconSize: [32, 32],
@@ -186,8 +186,8 @@ function initializeMap() {
     popupAnchor: [0, -32]
   });
 
-  const clusterGroup = L.markerClusterGroup();
-  map.addLayer(clusterGroup);
+  const weatherClusterGroup = L.markerClusterGroup();
+  map.addLayer(weatherClusterGroup);
 
   const weatherScript = document.createElement('script');
   weatherScript.src = './data/WEATHER_STATION.js';
@@ -202,11 +202,78 @@ function initializeMap() {
           Humidity: ${station.h}%<br>
           Pressure: ${station.p} hPa
         `);
-        clusterGroup.addLayer(marker);
+        weatherClusterGroup.addLayer(marker);
       });
-    } else {
-      console.error('WEATHER_STATIONS is not an array');
     }
   };
   document.body.appendChild(weatherScript);
+
+  // iGates with separate clustering and progressive loading
+  const iGateClusterGroup = L.markerClusterGroup();
+  map.addLayer(iGateClusterGroup);
+
+  const iGateScript = document.createElement('script');
+  iGateScript.src = './data/IGATE.js';
+  iGateScript.onload = () => {
+    if (!Array.isArray(window.IGATE)) {
+      console.error('IGATE is not an array');
+      return;
+    }
+
+    // Progress control
+    const progress = L.control({ position: 'bottomleft' });
+    progress.onAdd = function() {
+      this.div = L.DomUtil.create('div', 'progress-control');
+      this.div.innerHTML = `
+        <div style="
+          background: white;
+          padding: 8px;
+          border-radius: 4px;
+          box-shadow: 0 0 10px rgba(0,0,0,0.2);
+          font-size: 14px;
+          max-width: 200px;
+          word-wrap: break-word;
+        ">
+          Loading iGates: <span id="igate-progress">0</span> / ${window.IGATE.length}
+        </div>
+      `;
+      return this.div;
+    };
+    progress.addTo(map);
+
+    // Process in batches
+    const batchSize = 500;
+    let processed = 0;
+    const total = window.IGATE.length;
+
+    function processBatch() {
+      const batchEnd = Math.min(processed + batchSize, total);
+      
+      for (let i = processed; i < batchEnd; i++) {
+        const igate = window.IGATE[i];
+        const { lat, lon } = igate.coordinates;
+        const marker = L.marker([lat, lon]);
+        marker.bindPopup(`
+          <div style="max-width: 300px; word-wrap: break-word;">
+            <strong>${igate.callsign}</strong><br>
+            ${igate.message || 'No additional info'}
+          </div>
+        `);
+        iGateClusterGroup.addLayer(marker);
+      }
+
+      processed = batchEnd;
+      document.getElementById('igate-progress').textContent = processed;
+
+      if (processed < total) {
+        setTimeout(processBatch, 0);
+      } else {
+        setTimeout(() => map.removeControl(progress), 2000);
+      }
+    }
+
+    // Start processing
+    processBatch();
+  };
+  document.body.appendChild(iGateScript);
 }

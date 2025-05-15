@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>APRS-IS WebSocket Client</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: monospace;
+      padding: 1rem;
+    }
+    h1 {
+      color: #90caf9;
+    }
+    pre {
+      background-color: #1e1e1e;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow: auto;
+      max-height: 80vh;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>APRS-IS WebSocket Test</h1>
+  <pre id="output">Connecting...</pre>
+
+  <script>
+    const output = document.getElementById('output');
+    const socket = new WebSocket('ws://srvr.aprs-is.net:8080');
+
+    socket.binaryType = "blob";
+
+    socket.onopen = () => {
+      output.textContent += "\nWebSocket connected.";
+      // Send login line immediately with minimal filter
+      const login = "user N0CALL pass -1 vers JSClient 1.0 filter m/10\r\n";
+      socket.send(login);
+    };
+
+    socket.onmessage = (event) => {
+      if (typeof event.data === "string") {
+        output.textContent += `\n${event.data}`;
+      } else if (event.data instanceof Blob) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          output.textContent += `\n${reader.result}`;
+        };
+        reader.readAsText(event.data);
+      }
+    };
+
+    socket.onerror = (error) => {
+      output.textContent += `\nWebSocket error: ${error.message || error}`;
+    };
+
+    socket.onclose = () => {
+      output.textContent += `\nWebSocket connection closed`;
+    };
+  </script>
+</body>
+</html>
+

@@ -6,7 +6,7 @@ function render() {
         <h2>Sections</h2>
         <ul class="nav-links" style="list-style: none; padding-left: 0;">
           <li><a href="#user" class="nav-link">User</a></li>
-          <li><a href="#location" class="nav-link">Location</a></li>
+          <li><a href="#locations" class="nav-link">Locations</a></li>
           <li><a href="#customization" class="nav-link">Customization</a></li>
         </ul>
         <button id="reset-settings" class="reset-button">Reset to Default</button>
@@ -18,37 +18,38 @@ function render() {
         <h2>User</h2>
         <div class="card">
           <div style="display: flex; flex-direction: column; gap: 1em;">
-            <div>
-              <label for="privkey">NOSTR Private Key</label>
-              <input type="password" id="privkey" class="styled-select" maxlength="64" style="width: 100%;" />
-              <small>Used to sign messages — keep this private.</small>
-            </div>
-            <div>
-              <label for="pubkey">NOSTR Public Key</label>
-              <input type="text" id="pubkey" class="styled-select" maxlength="64" style="width: 100%;" />
-              <small>Visible identifier for your profile.</small>
-            </div>
-            <div>
-              <label for="username">User Name</label>
-              <input type="text" id="username" class="styled-select" maxlength="30" style="width: 100%;" />
-              <small>Name shown to others in chats.</small>
-            </div>
+          
+          
+<div>
+  <label for="username" style="display: block; margin-bottom: 0.25em;">User Name or Call Sign</label>
+  <input type="text" id="username" class="styled-select" maxlength="30" style="width: 100%;" />
+  <small>Name shown to others in chats.</small>
+</div>
 
-            <div>
-              <label>Call Signs</label>
-              <small>Add operator identifiers from radio licensing platforms.</small>
-              <table class="styled-table" style="margin-top: 0.5em; width: 100%;">
-                <thead><tr><th>Type</th><th>ID</th></tr></thead>
-                <tbody id="callsign-table"></tbody>
-              </table>
-              <button id="add-callsign" class="reset-button" style="margin-top: 0.5em">Add Call Sign</button>
-            </div>
+<div>
+  <label for="privkey" style="display: block; margin-bottom: 0.25em;">NOSTR Private Key</label>
+  <div style="display: flex; gap: 0.5em;">
+    <input type="text" id="privkey" class="styled-select" maxlength="64" style="flex: 1;" />
+    <button id="generate-key" class="reset-button" style="margin-top: 0">Generate Key</button>
+  </div>
+  <small>Used to sign messages, you can either use yours or generate a new one — keep this private.</small>
+</div>
+
+<div style="margin-bottom: 2em;">
+  <label for="pubkey" style="display: block; margin-bottom: 0.25em;">NOSTR Public Key (read-only)</label>
+  <input type="text" id="pubkey" class="styled-select" maxlength="64" style="width: 100%;" readonly />
+  <small>Pubic identifier of your profile on NOSTR — can be shared.</small>
+</div>
+
+   
+   
+   
           </div>
         </div>
       </div>
 
 
-      <div id="location" style="margin-bottom: 4em;">
+      <div id="locations" style="margin-bottom: 4em;">
         <h2>Locations of interest</h2>
         <div class="card">
           <div style="display: flex; flex-direction: column; gap: 1em;">
@@ -169,66 +170,25 @@ function render() {
       localStorage.setItem(id, el.value);
     });
   });
+  
 
-  // Callsigns functionality (unchanged)
-  function saveCallsigns() {
-    const rows = Array.from(document.querySelectorAll('#callsign-table tr'));
-    const data = rows.map(row => ({
-      type: row.querySelector('select').value,
-      id: row.querySelector('input').value
-    }));
-    localStorage.setItem("callsigns", JSON.stringify(data));
+document.getElementById('generate-key').addEventListener('click', () => {
+  if (!window.NostrTools) {
+    alert("Nostr library not loaded.");
+    return;
   }
 
-  document.getElementById('add-callsign').addEventListener('click', () => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>
-        <select class="styled-select">
-          <option>Amateur</option>
-          <option>GMRS</option>
-          <option>Commercial</option>
-          <option>Marine</option>
-          <option>Aviation</option>
-          <option>Military Tactical</option>
-          <option>Police</option>
-          <option>Fire</option>
-          <option>Custom</option>
-        </select>
-      </td>
-      <td><input type="text" class="styled-select" maxlength="20" style="width: 100%;" /></td>
-    `;
-    row.querySelector('select').addEventListener('change', saveCallsigns);
-    row.querySelector('input').addEventListener('input', saveCallsigns);
-    document.getElementById('callsign-table').appendChild(row);
-    saveCallsigns();
-  });
+  const privateKey = window.NostrTools.generatePrivateKey();
+  const publicKey = window.NostrTools.getPublicKey(privateKey);
 
-  const savedCallsigns = localStorage.getItem("callsigns");
-  if (savedCallsigns) {
-    JSON.parse(savedCallsigns).forEach(item => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>
-          <select class="styled-select">
-            <option${item.type === "Amateur" ? " selected" : ""}>Amateur</option>
-            <option${item.type === "GMRS" ? " selected" : ""}>GMRS</option>
-            <option${item.type === "Commercial" ? " selected" : ""}>Commercial</option>
-            <option${item.type === "Marine" ? " selected" : ""}>Marine</option>
-            <option${item.type === "Aviation" ? " selected" : ""}>Aviation</option>
-            <option${item.type === "Military Tactical" ? " selected" : ""}>Military Tactical</option>
-            <option${item.type === "Police" ? " selected" : ""}>Police</option>
-            <option${item.type === "Fire" ? " selected" : ""}>Fire</option>
-            <option${item.type === "Custom" ? " selected" : ""}>Custom</option>
-          </select>
-        </td>
-        <td><input type="text" class="styled-select" maxlength="20" style="width: 100%;" value="${item.id}" /></td>
-      `;
-      row.querySelector('select').addEventListener('change', saveCallsigns);
-      row.querySelector('input').addEventListener('input', saveCallsigns);
-      document.getElementById('callsign-table').appendChild(row);
-    });
-  }
+  document.getElementById('privkey').value = privateKey;
+  document.getElementById('pubkey').value = publicKey;
+
+  localStorage.setItem('privkey', privateKey);
+  localStorage.setItem('pubkey', publicKey);
+});
+
+ 
 
   // Countries functionality
 const countries = [
