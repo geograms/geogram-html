@@ -26,6 +26,18 @@ function render() {
     <div class="right-column">
       <button id="toggle-listening" class="card">🎧 Start Listening</button>
 
+      <h2>Channel</h2>
+      <select id="channel-selector" class="card">
+        <option value="446.00625">446.00625 MHz (PMR channel 1)</option>
+        <option value="446.01875">446.01875 MHz (PMR channel 2)</option>
+        <option value="446.03125">446.03125 MHz (PMR channel 3)</option>
+        <option value="446.04375">446.04375 MHz (PMR channel 4)</option>
+        <option value="446.05625">446.05625 MHz (PMR channel 5)</option>
+        <option value="446.06875">446.06875 MHz (PMR channel 6)</option>
+        <option value="446.08125">446.08125 MHz (PMR channel 7)</option>
+        <option value="446.09375">446.09375 MHz (PMR channel 8)</option>
+      </select>
+
       <h2>Nearby</h2>
       <div id="nearby-stations" class="card"></div>
       <h2>Groups</h2>
