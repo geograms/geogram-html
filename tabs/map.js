@@ -50,27 +50,33 @@ function render() {
   if (!window.L) {
     const leafletCSS = document.createElement('link');
     leafletCSS.rel = 'stylesheet';
-    leafletCSS.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    // https://unpkg.com/leaflet@1.9.4/dist/leaflet.css
+    leafletCSS.href = 'lib/map/leaflet.css';
     document.head.appendChild(leafletCSS);
 
     const geocoderCSS = document.createElement('link');
     geocoderCSS.rel = 'stylesheet';
-    geocoderCSS.href = 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css';
+    // https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css
+    geocoderCSS.href = 'lib/map/Control.Geocoder.css';
     document.head.appendChild(geocoderCSS);
 
     const clusterCSS = document.createElement('link');
     clusterCSS.rel = 'stylesheet';
-    clusterCSS.href = 'https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css';
+    // https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css
+    clusterCSS.href = 'lib/map/MarkerCluster.Default.css';
     document.head.appendChild(clusterCSS);
 
     const leafletJS = document.createElement('script');
-    leafletJS.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    // https://unpkg.com/leaflet@1.9.4/dist/leaflet.js
+    leafletJS.src = 'lib/map/leaflet.js';
     leafletJS.onload = () => {
       const geocoderJS = document.createElement('script');
-      geocoderJS.src = 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js';
+      // https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js
+      geocoderJS.src = 'lib/map/Control.Geocoder.js';
       geocoderJS.onload = () => {
         const clusterJS = document.createElement('script');
-        clusterJS.src = 'https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js';
+        // https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js
+        clusterJS.src = 'lib/map/leaflet.markercluster.js';
         clusterJS.onload = initializeMap;
         document.head.appendChild(clusterJS);
       };
@@ -226,7 +232,7 @@ function initializeMap() {
 
   function addWeatherStations(stations, fromCache) {
     const weatherIcon = L.icon({
-      iconUrl: './lib/weather.png',
+      iconUrl: './lib/map/images/weather.png',
       iconSize: [32, 32],
       iconAnchor: [16, 32],
       popupAnchor: [0, -32]
@@ -257,7 +263,7 @@ function initializeMap() {
     if ('indexedDB' in window) {
       // Use IndexedDB for large dataset
       const request = indexedDB.open('APRSCache', 1);
-      
+
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
         if (!db.objectStoreNames.contains('igates')) {
@@ -290,7 +296,7 @@ function initializeMap() {
         // We have cached data
         const cacheTime = localStorage.getItem('igateCacheTime');
         const cacheAge = cacheTime ? Date.now() - parseInt(cacheTime) : Infinity;
-        
+
         if (cacheAge < 3600000) { // 1 hour
           // Load from cache
           const getAllRequest = store.getAll();
@@ -320,7 +326,7 @@ function initializeMap() {
     iGateScript.onload = () => {
       if (Array.isArray(window.IGATE)) {
         processIGates(window.IGATE, false);
-        
+
         // Cache the data
         if (db) {
           cacheIGatesInIndexedDB(db, window.IGATE);
@@ -335,30 +341,30 @@ function initializeMap() {
   function cacheIGatesInIndexedDB(db, igates) {
     const transaction = db.transaction('igates', 'readwrite');
     const store = transaction.objectStore('igates');
-    
+
     // Clear old data first
     const clearRequest = store.clear();
-    
+
     clearRequest.onsuccess = () => {
       // Add in batches to avoid blocking
       const batchSize = 2000;
       let i = 0;
-      
+
       function addBatch() {
         const batch = igates.slice(i, i + batchSize);
         if (batch.length === 0) {
           localStorage.setItem('igateCacheTime', Date.now());
           return;
         }
-        
+
         batch.forEach(igate => {
           store.put(igate);
         });
-        
+
         i += batchSize;
         setTimeout(addBatch, 0);
       }
-      
+
       addBatch();
     };
   }
@@ -368,7 +374,7 @@ function initializeMap() {
       // Try to save a sample to check if we have space
       const sample = igates.slice(0, 100);
       localStorage.setItem('igateSampleTest', JSON.stringify(sample));
-      
+
       // If successful, save all (or in chunks if needed)
       localStorage.setItem('cachedIGates', JSON.stringify(igates));
       localStorage.setItem('igateCacheTime', Date.now());
@@ -380,7 +386,7 @@ function initializeMap() {
   function fallbackIGateLoad() {
     const cachedIGates = localStorage.getItem('cachedIGates');
     const cacheTime = localStorage.getItem('igateCacheTime');
-    
+
     if (cachedIGates && cacheTime && (Date.now() - parseInt(cacheTime) < 3600000)) {
       try {
         const igates = JSON.parse(cachedIGates);
@@ -405,7 +411,7 @@ function initializeMap() {
     let progressControl;
     if (!fromCache) {
       progressControl = L.control({ position: 'bottomleft' });
-      progressControl.onAdd = function() {
+      progressControl.onAdd = function () {
         this.div = L.DomUtil.create('div', 'progress-control');
         this.div.innerHTML = `
           <div style="
@@ -430,13 +436,23 @@ function initializeMap() {
 
     function processBatch() {
       const batchEnd = Math.min(processed + batchSize, igates.length);
-      
+
+      const iGateIcon = L.icon({
+        iconUrl: 'lib/map/images/antenna.png',  // Path to antenna icon
+        iconSize: [25, 25],              // Size of the icon in pixels [width, height]
+        iconAnchor: [12, 25],            // Point of the icon that will correspond to marker's location
+        popupAnchor: [0, -25]            // Point from which the popup should open relative to the iconAnchor
+      });
+
       for (let i = processed; i < batchEnd; i++) {
         const igate = igates[i];
         if (!igate.coordinates) continue;
-        
+
         const { lat, lon } = igate.coordinates;
-        const marker = L.marker([lat, lon]);
+        //const marker = L.marker([lat, lon]);
+        const marker = L.marker([lat, lon], {
+          icon: iGateIcon  // Add this option to use the custom icon
+        });
         marker.bindPopup(`
           <div style="max-width: 300px; word-wrap: break-word;">
             <strong>${igate.callsign}</strong><br>

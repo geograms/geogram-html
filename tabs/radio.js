@@ -3,7 +3,7 @@ function render() {
   // Load LameJS library dynamically
   if (!window.Lame) {
     const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/lamejs@1.2.0/lame.min.js';
+    script.src = 'lib/lame.min.js';
     script.onload = initializeControlPanel;
     document.head.appendChild(script);
   } else {
