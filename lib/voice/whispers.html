@@ -25,7 +25,7 @@
     let whisperInstance = null;
 
     async function loadModel() {
-      const res = await fetch("https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-medium.en-q5_0.bin?download=true");
+      const res = await fetch("https://geogram.info/lib/voice/ggml-small-q5_1.bin");
       const buf = await res.arrayBuffer();
       Module.FS_createDataFile("/", "whisper.bin", new Uint8Array(buf), true, true);
       whisperInstance = Module.init("whisper.bin");
