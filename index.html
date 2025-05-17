@@ -5,39 +5,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>geogram</title>
   <link rel="stylesheet" href="lib/style.css">
-  <link rel="stylesheet" href="lib/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Loading indicator */
+    #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
+  <!-- Loading screen -->
+  <div id="loading">
+    <div class="spinner"></div>
+  </div>
 
-  
   <canvas id="wave-bg"></canvas>
 
-<div class="header-wrapper">
-  <div class="logo-block">
-    <a href="#" id="home-link">
-      <img src="lib/logo_small.svg" alt="geogram logo">
-    </a>
-  </div>
-  <div class="topbar">
-    <div class="tabs-container">
-      <div class="tabs"></div>
-      <button class="burger-menu" id="burgerBtn" aria-label="Menu">
-        <i class="fas fa-bars"></i>
-      </button>
-      <div class="mobile-tabs" id="mobileTabs"></div>
+  <div class="header-wrapper">
+    <div class="logo-block">
+      <a href="#" id="home-link">
+        <img src="lib/logo_small.svg" alt="geogram logo">
+      </a>
+    </div>
+    <div class="topbar">
+      <div class="tabs-container">
+        <div class="tabs" id="desktopTabs"></div>
+        <button class="burger-menu" id="burgerBtn" aria-label="Menu">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="mobile-tabs" id="mobileTabs"></div>
+      </div>
     </div>
   </div>
-</div>
-
-
 
   <div id="content" class="main-layout">
     <div class="left-column">
       <h2>Welcome to geogram</h2>
-      <p>Use the tabs above to explore features like messages, map, and radio.</p>
+      <p>Use the menu button to explore features like messages, map, and radio.</p>
     </div>
     <div class="right-column">
-      <p>System status, shortcuts will eventually go here.</p>
+      <p>System status and shortcuts will appear here.</p>
     </div>
   </div>
 
@@ -45,6 +72,17 @@
   <script src="lib/recordings.js"></script>
   <script src="lib/morsecode.js"></script>
   <script src="lib/main.js"></script>
+  
+  <script>
+    // Hide loading screen when everything is loaded
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.getElementById('loading').style.opacity = '0';
+        setTimeout(function() {
+          document.getElementById('loading').style.display = 'none';
+        }, 300);
+      }, 500);
+    });
+  </script>
 </body>
 </html>
-
