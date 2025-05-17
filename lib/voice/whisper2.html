@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<!-- saved from url=(0030)https://whisper.ggerganov.com/ -->
+<html lang="en-us" data-darkreader-mode="dynamic" data-darkreader-scheme="dark" data-darkreader-proxy-injected="true"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><style class="darkreader darkreader--fallback" media="screen"></style><style class="darkreader darkreader--user-agent" media="screen">@layer {
+html {
+    background-color: var(--darkreader-background-ffffff, #1c1e1f) !important;
+}
+html {
+    color-scheme: dark !important;
+}
+iframe {
+    color-scheme: dark !important;
+}
+html, body {
+    background-color: var(--darkreader-background-ffffff, #1c1e1f);
+}
+html, body {
+    border-color: var(--darkreader-border-4c4c4c, #847b6c);
+    color: var(--darkreader-text-000000, #ffffff);
+}
+a {
+    color: var(--darkreader-text-0040ff, #3ba7ff);
+}
+table {
+    border-color: var(--darkreader-border-808080, #61696c);
+}
+mark {
+    color: var(--darkreader-text-000000, #ffffff);
+}
+::placeholder {
+    color: var(--darkreader-text-a9a9a9, #cdc5b9);
+}
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+    background-color: var(--darkreader-background-faffbd, #4a4e00) !important;
+    color: var(--darkreader-text-000000, #ffffff) !important;
+}
+* {
+    scrollbar-color: var(--darkreader-background-b0b0b0, #4f5559) var(--darkreader-background-f1f1f1, #252829);
+}
+::selection {
+    background-color: var(--darkreader-background-0060d4, #0059c3) !important;
+    color: var(--darkreader-text-ffffff, #ffffff) !important;
+}
+::-moz-selection {
+    background-color: var(--darkreader-background-0060d4, #0059c3) !important;
+    color: var(--darkreader-text-ffffff, #ffffff) !important;
+}
+}</style><style class="darkreader darkreader--text" media="screen"></style><style class="darkreader darkreader--invert" media="screen">.jfk-bubble.gtx-bubble, .captcheck_answer_label > input + img, span#closed_text > img[src^="https://www.gstatic.com/images/branding/googlelogo"], span[data-href^="https://www.hcaptcha.com/"] > #icon, img.Wirisformula, a[data-testid="headerMediumLogo"]>svg, .d2l-navigation-link-image-container, .d2l-iframe-loading-container {
+    filter: invert(100%) hue-rotate(180deg) brightness(115%) contrast(90%) !important;
+}</style><style class="darkreader darkreader--inline" media="screen">[data-darkreader-inline-bgcolor] {
+  background-color: var(--darkreader-inline-bgcolor) !important;
+}
+[data-darkreader-inline-bgimage] {
+  background-image: var(--darkreader-inline-bgimage) !important;
+}
+[data-darkreader-inline-border] {
+  border-color: var(--darkreader-inline-border) !important;
+}
+[data-darkreader-inline-border-bottom] {
+  border-bottom-color: var(--darkreader-inline-border-bottom) !important;
+}
+[data-darkreader-inline-border-left] {
+  border-left-color: var(--darkreader-inline-border-left) !important;
+}
+[data-darkreader-inline-border-right] {
+  border-right-color: var(--darkreader-inline-border-right) !important;
+}
+[data-darkreader-inline-border-top] {
+  border-top-color: var(--darkreader-inline-border-top) !important;
+}
+[data-darkreader-inline-boxshadow] {
+  box-shadow: var(--darkreader-inline-boxshadow) !important;
+}
+[data-darkreader-inline-color] {
+  color: var(--darkreader-inline-color) !important;
+}
+[data-darkreader-inline-fill] {
+  fill: var(--darkreader-inline-fill) !important;
+}
+[data-darkreader-inline-stroke] {
+  stroke: var(--darkreader-inline-stroke) !important;
+}
+[data-darkreader-inline-outline] {
+  outline-color: var(--darkreader-inline-outline) !important;
+}
+[data-darkreader-inline-stopcolor] {
+  stop-color: var(--darkreader-inline-stopcolor) !important;
+}
+[data-darkreader-inline-bg] {
+  background: var(--darkreader-inline-bg) !important;
+}
+[data-darkreader-inline-border-short] {
+  border: var(--darkreader-inline-border-short) !important;
+}
+[data-darkreader-inline-border-bottom-short] {
+  border-bottom: var(--darkreader-inline-border-bottom-short) !important;
+}
+[data-darkreader-inline-border-left-short] {
+  border-left: var(--darkreader-inline-border-left-short) !important;
+}
+[data-darkreader-inline-border-right-short] {
+  border-right: var(--darkreader-inline-border-right-short) !important;
+}
+[data-darkreader-inline-border-top-short] {
+  border-top: var(--darkreader-inline-border-top-short) !important;
+}
+[data-darkreader-inline-invert] {
+    filter: invert(100%) hue-rotate(180deg);
+}</style><style class="darkreader darkreader--variables" media="screen">:root {
+   --darkreader-neutral-background: var(--darkreader-background-ffffff, #1c1e1f);
+   --darkreader-neutral-text: var(--darkreader-text-000000, #ffffff);
+   --darkreader-selection-background: var(--darkreader-background-0060d4, #0059c3);
+   --darkreader-selection-text: var(--darkreader-text-ffffff, #ffffff);
+}</style><style class="darkreader darkreader--root-vars" media="screen"></style>
+        <title>whisper.cpp : WASM example</title>
+
+        <style>
+            #output {
+                width: 100%;
+                height: 100%;
+                margin: 0 auto;
+                margin-top: 10px;
+                border-left: 0px;
+                border-right: 0px;
+                padding-left: 0px;
+                padding-right: 0px;
+                display: block;
+                background-color: black;
+                color: white;
+                font-size: 10px;
+                font-family: 'Lucida Console', Monaco, monospace;
+                outline: none;
+                white-space: pre;
+                overflow-wrap: normal;
+                overflow-x: scroll;
+            }
+        </style><style class="darkreader darkreader--sync" media="screen"></style>
+    <meta name="darkreader" content="6d4bc5946bb749f8a54f9dd11a2f357b"><style class="darkreader darkreader--override" media="screen">.vimvixen-hint {
+    background-color: var(--darkreader-background-ffd76e, #785600) !important;
+    border-color: var(--darkreader-background-c59d00, #b69100) !important;
+    color: var(--darkreader-text-302505, #f7f4ee) !important;
+}
+#vimvixen-console-frame {
+    color-scheme: light !important;
+}
+::placeholder {
+    opacity: 0.5 !important;
+}
+#edge-translate-panel-body,
+.MuiTypography-body1,
+.nfe-quote-text {
+    color: var(--darkreader-neutral-text) !important;
+}
+gr-main-header {
+    background-color: var(--darkreader-background-add8e6, #1f5465) !important;
+}
+.tou-z65h9k,
+.tou-mignzq,
+.tou-1b6i2ox,
+.tou-lnqlqk {
+    background-color: var(--darkreader-neutral-background) !important;
+}
+.tou-75mvi {
+    background-color: var(--darkreader-background-cfecf5, #114352) !important;
+}
+.tou-ta9e87,
+.tou-1w3fhi0,
+.tou-1b8t2us,
+.tou-py7lfi,
+.tou-1lpmd9d,
+.tou-1frrtv8,
+.tou-17ezmgn {
+    background-color: var(--darkreader-background-f5f5f5, #232526) !important;
+}
+.tou-uknfeu {
+    background-color: var(--darkreader-background-faedda, #4d330a) !important;
+}
+.tou-6i3zyv {
+    background-color: var(--darkreader-background-85c3d8, #296b81) !important;
+}
+div.mermaid-viewer-control-panel .btn {
+    background-color: var(--darkreader-neutral-background);
+    fill: var(--darkreader-neutral-text);
+}
+svg g rect.er {
+    fill: var(--darkreader-neutral-background) !important;
+}
+svg g rect.er.entityBox {
+    fill: var(--darkreader-neutral-background) !important;
+}
+svg g rect.er.attributeBoxOdd {
+    fill: var(--darkreader-neutral-background) !important;
+}
+svg g rect.er.attributeBoxEven {
+    fill: var(--darkreader-selection-background);
+    fill-opacity: 0.8 !important;
+}
+svg rect.er.relationshipLabelBox {
+    fill: var(--darkreader-neutral-background) !important;
+}
+svg g g.nodes rect,
+svg g g.nodes polygon {
+    fill: var(--darkreader-neutral-background) !important;
+}
+svg g rect.task {
+    fill: var(--darkreader-selection-background) !important;
+}
+svg line.messageLine0,
+svg line.messageLine1 {
+    stroke: var(--darkreader-neutral-text) !important;
+}
+div.mermaid .actor {
+    fill: var(--darkreader-neutral-background) !important;
+}
+mitid-authenticators-code-app > .code-app-container {
+    background-color: white !important;
+    padding-top: 1rem;
+}
+iframe#unpaywall[src$="unpaywall.html"] {
+    color-scheme: light !important;
+}
+select option {
+    background-color: var(--darkreader-neutral-background) !important;
+}
+body#tumblr {
+    --darkreader-bg--secondary-accent: 31, 32, 34 !important;
+    --darkreader-bg--white: 23, 23, 23 !important;
+    --darkreader-text--black: 228, 224, 218 !important;
+}
+:host {
+    --d2l-border-color: var(--darkreader-bg--d2l-color-gypsum) !important;
+    --d2l-button-icon-background-color-hover: var(--darkreader-bg--d2l-color-gypsum) !important;
+    --d2l-color-ferrite: var(--darkreader-neutral-text) !important;
+    --d2l-color-sylvite: var(--darkreader-bg--d2l-color-sylvite) !important;
+    --d2l-dropdown-background-color: var(--darkreader-neutral-background) !important;
+    --d2l-dropdown-border-color: var(--darkreader-border--d2l-color-mica) !important;
+    --d2l-input-backgroud-color: var(--darkreader-neutral-background) !important;
+    --d2l-menu-border-color: var(--darkreader-bg--d2l-color-gypsum) !important;
+    --d2l-tooltip-background-color: var(--darkreader-neutral-background) !important;
+    --d2l-tooltip-border-color: var(--darkreader-bg--d2l-color-gypsum) !important;
+}
+:host([_floating]) .d2l-floating-buttons-container {
+    background-color: var(--darkreader-neutral-background) !important;
+    border-top-color: var(--darkreader-border--d2l-color-mica) !important;
+    opacity: 0.88 !important;
+}
+d2l-card {
+    background: var(--darkreader-neutral-background) !important;
+    border-color: var(--darkreader-border--d2l-color-gypsum) !important;
+}
+d2l-dropdown-content > div,
+d2l-menu-item {
+    background-color: var(--darkreader-neutral-background) !important;
+    border-radius: 10px !important;
+}
+d2l-empty-state-simple {
+    border-color: var(--darkreader-bg--d2l-color-gypsum) !important;
+}
+.d2l-button-filter > ul > li > a.vui-button {
+    border-color: var(--darkreader-border--d2l-color-mica) !important;
+}
+.d2l-label-text:has(.d2l-button-subtle-content):hover,
+.d2l-label-text:has(.d2l-button-subtle-content):focus,
+.d2l-label-text:has(.d2l-button-subtle-content):active {
+    background-color: var(--darkreader-bg--d2l-color-gypsum) !important;
+}
+.d2l-navigation-centerer {
+    color: inherit !important;
+}
+.d2l-tabs-layout {
+    border-color: var(--darkreader-border--d2l-color-gypsum) !important;
+}
+.d2l-input,
+.d2l-calendar-date,
+.d2l-htmleditor-container {
+    background-color: var(--darkreader-neutral-background) !important;
+}
+.d2l-collapsible-panel {
+    border: 1px solid var(--darkreader-border--d2l-color-mica) !important;
+    border-radius: 0.4rem !important;
+}
+.d2l-collapsible-panel-divider {
+    border-bottom: 1px solid var(--darkreader-border--d2l-color-mica) !important;
+}
+.d2l-w2d-flex {
+    border-bottom: 2px solid var(--darkreader-border--d2l-color-mica) !important;
+}
+.d2l-collapsible-panel scrolled,
+.d2l-collapsible-panel-header,
+.d2l-w2d-collection-fixed {
+    background-color: var(--darkreader-neutral-background) !important;
+}
+.d2l-loading-spinner-bg {
+    fill: var(--darkreader-bg--d2l-color-gypsum) !important;
+}
+.d2l-loading-spinner-bg-stroke {
+    stroke: var(--darkreader-border--d2l-color-mica) !important;
+}
+.d2l-loading-spinner-wrapper svg path,
+.d2l-loading-spinner-wrapper svg circle {
+    fill: var(--darkreader-neutral-background) !important;
+}
+embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast(90%); }</style><script async="false" type="text/javascript" src="chrome-extension://kpgefcfmnafjgpblomihpgmejjdanjjp/nostr-provider.js"></script></head>
+    <body>
+        <div id="main-container">
+            <b>Minimal <a href="https://github.com/ggerganov/whisper.cpp">whisper.cpp</a> example running fully in the browser</b>
+
+            <br><br>
+
+            Usage instructions:<br>
+            <ul>
+                <li>Load a ggml model file (you can obtain one from <a href="https://ggml.ggerganov.com/">here</a>, recommended: <b>tiny</b> or <b>base</b>)</li>
+                <li>Select audio file to transcribe or record audio from the microphone (sample: <a href="https://whisper.ggerganov.com/jfk.wav">jfk.wav</a>)</li>
+                <li>Click on the "Transcribe" button to start the transcription</li>
+            </ul>
+
+            Note that the computation is quite heavy and may take a few seconds to complete.<br>
+            The transcription results will be displayed in the text area below.<br><br>
+            <b>Important:</b>
+                <ul>
+                    <li>your browser must support WASM SIMD instructions for this to work</li>
+                    <li>Firefox cannot load files larger than 256 MB - use Chrome instead</li>
+                </ul>
+
+            <b>More examples:</b>
+                <a href="https://whisper.ggerganov.com/">main</a> |
+                <a href="https://whisper.ggerganov.com/bench">bench</a> |
+                <a href="https://whisper.ggerganov.com/stream">stream</a> |
+                <a href="https://whisper.ggerganov.com/command">command</a> |
+                <a href="https://whisper.ggerganov.com/talk">talk</a> |
+
+            <hr>
+
+            <div id="model">
+                Whisper models: <span id="model-whisper-status"></span><br><br>
+                <button id="fetch-whisper-tiny-en" onclick="loadWhisper(&#39;tiny.en&#39;)">tiny.en (75 MB)</button>
+                <button id="fetch-whisper-tiny" onclick="loadWhisper(&#39;tiny&#39;)">tiny (75 MB)</button>
+                <button id="fetch-whisper-base-en" onclick="loadWhisper(&#39;base.en&#39;)">base.en (142 MB)</button>
+                <button id="fetch-whisper-base" onclick="loadWhisper(&#39;base&#39;)">base (142 MB)</button>
+                <button id="fetch-whisper-small-en" onclick="loadWhisper(&#39;small.en&#39;)">small.en (466 MB)</button>
+                <button id="fetch-whisper-small" onclick="loadWhisper(&#39;small&#39;)">small (466 MB)</button>
+                <input type="file" id="whisper-file" name="file" onchange="loadFile(event, &#39;whisper.bin&#39;)">
+                <br><br>
+                Quantized models:<br><br>
+                <button id="fetch-whisper-tiny-en-q5_1" onclick="loadWhisper(&#39;tiny-en-q5_1&#39;)">tiny.en (Q5_1, 31 MB)</button>
+                <button id="fetch-whisper-tiny-q5_1" onclick="loadWhisper(&#39;tiny-q5_1&#39;)">tiny (Q5_1, 31 MB)</button>
+                <button id="fetch-whisper-base-en-q5_1" onclick="loadWhisper(&#39;base-en-q5_1&#39;)">base.en (Q5_1, 57 MB)</button>
+                <button id="fetch-whisper-base-q5_1" onclick="loadWhisper(&#39;base-q5_1&#39;)">base (Q5_1, 57 MB)</button>
+                <button id="fetch-whisper-small-en-q5_1" onclick="loadWhisper(&#39;small-en-q5_1&#39;)">small.en (Q5_1, 182 MB)</button>
+                <button id="fetch-whisper-small-q5_1" onclick="loadWhisper(&#39;small-q5_1&#39;)">small (Q5_1, 182 MB)</button><br>
+                <button id="fetch-whisper-medium-en-q5_0" onclick="loadWhisper(&#39;medium-en-q5_0&#39;)">medium.en (Q5_0, 515 MB)</button>
+                <button id="fetch-whisper-medium-q5_0" onclick="loadWhisper(&#39;medium-q5_0&#39;)">medium (Q5_0, 515 MB)</button>
+                <button id="fetch-whisper-large-q5_0" onclick="loadWhisper(&#39;large-q5_0&#39;)">large (Q5_0, 1030 MB)</button>
+                <span id="fetch-whisper-progress"></span>
+            </div>
+
+            <br>
+
+            <!-- radio button to select between file upload or microphone -->
+            <div id="input">
+                Input:
+                <input type="radio" id="file" name="input" value="file" checked="checked" onchange="changeInput(&#39;file&#39;)"> <label for="file">File</label>
+                <input type="radio" id="mic" name="input" value="mic" onchange="changeInput(&#39;mic&#39;)"> <label for="mic">Microphone</label>
+            </div>
+
+            <br>
+
+            <div id="input_file">
+                Audio file:
+                <input type="file" id="file" name="file" onchange="loadAudio(event)">
+            </div>
+
+            <div id="input_mic" style="display: none;">
+                Microphone:
+                <button id="start" onclick="startRecording()">Start</button>
+                <button id="stop" onclick="stopRecording()" disabled="">Stop</button>
+
+                <!-- progress bar to show recording progress -->
+                <br><br>
+                <div id="progress" style="display: none;">
+                    <div id="progress-bar" style="width: 0%; height: 10px; background-color: rgb(76, 175, 80); --darkreader-inline-bgcolor: var(--darkreader-background-4caf50, #46a14a);" data-darkreader-inline-bgcolor=""></div>
+                    <div id="progress-text">0%</div>
+                </div>
+            </div>
+
+            <audio controls="controls" id="audio" loop="" hidden="">
+                Your browser does not support the &lt;audio&gt; tag.
+                <source id="source" src="" type="audio/wav">
+            </audio>
+
+            <hr><br>
+
+            <table>
+                <tbody><tr>
+                    <td>
+                        Language:
+                        <select id="language" name="language">
+                            <option value="en">English</option>
+                            <option value="ar">Arabic</option>
+                            <option value="hy">Armenian</option>
+                            <option value="az">Azerbaijani</option>
+                            <option value="eu">Basque</option>
+                            <option value="be">Belarusian</option>
+                            <option value="bn">Bengali</option>
+                            <option value="bg">Bulgarian</option>
+                            <option value="ca">Catalan</option>
+                            <option value="zh">Chinese</option>
+                            <option value="hr">Croatian</option>
+                            <option value="cs">Czech</option>
+                            <option value="da">Danish</option>
+                            <option value="nl">Dutch</option>
+                            <option value="en">English</option>
+                            <option value="et">Estonian</option>
+                            <option value="tl">Filipino</option>
+                            <option value="fi">Finnish</option>
+                            <option value="fr">French</option>
+                            <option value="gl">Galician</option>
+                            <option value="ka">Georgian</option>
+                            <option value="de">German</option>
+                            <option value="el">Greek</option>
+                            <option value="gu">Gujarati</option>
+                            <option value="iw">Hebrew</option>
+                            <option value="hi">Hindi</option>
+                            <option value="hu">Hungarian</option>
+                            <option value="is">Icelandic</option>
+                            <option value="id">Indonesian</option>
+                            <option value="ga">Irish</option>
+                            <option value="it">Italian</option>
+                            <option value="ja">Japanese</option>
+                            <option value="kn">Kannada</option>
+                            <option value="ko">Korean</option>
+                            <option value="la">Latin</option>
+                            <option value="lv">Latvian</option>
+                            <option value="lt">Lithuanian</option>
+                            <option value="mk">Macedonian</option>
+                            <option value="ms">Malay</option>
+                            <option value="mt">Maltese</option>
+                            <option value="no">Norwegian</option>
+                            <option value="fa">Persian</option>
+                            <option value="pl">Polish</option>
+                            <option value="pt">Portuguese</option>
+                            <option value="ro">Romanian</option>
+                            <option value="ru">Russian</option>
+                            <option value="sr">Serbian</option>
+                            <option value="sk">Slovak</option>
+                            <option value="sl">Slovenian</option>
+                            <option value="es">Spanish</option>
+                            <option value="sw">Swahili</option>
+                            <option value="sv">Swedish</option>
+                            <option value="ta">Tamil</option>
+                            <option value="te">Telugu</option>
+                            <option value="th">Thai</option>
+                            <option value="tr">Turkish</option>
+                            <option value="uk">Ukrainian</option>
+                            <option value="ur">Urdu</option>
+                            <option value="vi">Vietnamese</option>
+                            <option value="cy">Welsh</option>
+                            <option value="yi">Yiddish</option>
+                        </select>
+                    </td>
+                    <!-- Slider to select number of threads between 1 and 16 -->
+                    <td>
+                        Threads:
+                        <input type="range" id="threads" name="threads" min="1" max="16" value="8" onchange="changeThreads(this.value)">
+                        <span id="threads-value">8</span>
+                    </td>
+                    <td>
+                        <button onclick="onProcess(false);">Transcribe</button>
+                    </td>
+                    <td>
+                        <button onclick="onProcess(true);">Translate</button>
+                    </td>
+                </tr>
+            </tbody></table>
+
+            <br>
+
+            <!-- textarea with height filling the rest of the page -->
+            <textarea id="output" rows="20"></textarea>
+
+            <br><br>
+
+            <div class="cell-version">
+                <span>
+                    |
+                    Build time: <span class="nav-link">Sat May 20 20:00:06 2023</span> |
+                    Commit hash: <a class="nav-link" href="https://github.com/ggerganov/whisper.cpp/commit/429b9785">429b9785</a> |
+                    Commit subject: <span class="nav-link">ggml : update WASM SIMD</span> |
+                    <a class="nav-link" href="https://github.com/ggerganov/whisper.cpp/tree/master/examples/whisper.wasm">Source Code</a> |
+                </span>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="./helpers.js"></script>
+        <script type="text/javascript">
+            // TODO: convert audio buffer to WAV
+            function setAudio(audio) {
+                //if (audio) {
+                //    // convert to 16-bit PCM
+                //    var blob = new Blob([audio], { type: 'audio/wav' });
+                //    var url = URL.createObjectURL(blob);
+                //    document.getElementById('source').src = url;
+                //    document.getElementById('audio').hidden = false;
+                //    document.getElementById('audio').loop = false;
+                //    document.getElementById('audio').load();
+                //} else {
+                //    document.getElementById('audio').hidden = true;
+                //}
+            }
+
+            function changeInput(input) {
+                if (input == 'file') {
+                    document.getElementById('input_file').style.display = 'block';
+                    document.getElementById('input_mic' ).style.display = 'none';
+                    document.getElementById('progress'  ).style.display = 'none';
+                } else {
+                    document.getElementById('input_file').style.display = 'none';
+                    document.getElementById('input_mic' ).style.display = 'block';
+                    document.getElementById('progress'  ).style.display = 'block';
+                }
+            }
+
+            var Module = {
+                print: printTextarea,
+                printErr: printTextarea,
+                setStatus: function(text) {
+                    printTextarea('js: ' + text);
+                },
+                monitorRunDependencies: function(left) {
+                }
+            };
+
+            // web audio context
+            var context = null;
+
+            // audio data
+            var audio = null;
+
+            // the whisper instance
+            var instance = null;
+            var model_whisper = '';
+
+            // helper function
+            function convertTypedArray(src, type) {
+                var buffer = new ArrayBuffer(src.byteLength);
+                var baseView = new src.constructor(buffer).set(src);
+                return new type(buffer);
+            }
+
+            //
+            // load model
+            //
+
+            let dbVersion = 1
+            let dbName    = 'whisper.ggerganov.com';
+            let indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB
+
+            function storeFS(fname, buf) {
+                // write to WASM file using FS_createDataFile
+                // if the file exists, delete it
+                try {
+                    Module.FS_unlink(fname);
+                } catch (e) {
+                    // ignore
+                }
+
+                Module.FS_createDataFile("/", fname, buf, true, true);
+
+                //model_whisper = fname;
+
+                document.getElementById('model-whisper-status').innerHTML = 'loaded "' + model_whisper + '"!';
+
+                printTextarea('storeFS: stored model: ' + fname + ' size: ' + buf.length);
+
+                document.getElementById('model').innerHTML = 'Model fetched: ' + model_whisper;
+            }
+
+            function loadFile(event, fname) {
+                var file = event.target.files[0] || null;
+                if (file == null) {
+                    return;
+                }
+
+                printTextarea("loadFile: loading model: " + file.name + ", size: " + file.size + " bytes");
+                printTextarea('loadFile: please wait ...');
+
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    var buf = new Uint8Array(reader.result);
+                    storeFS(fname, buf);
+                }
+                reader.readAsArrayBuffer(file);
+
+                document.getElementById('fetch-whisper-tiny-en' ).style.display = 'none';
+                document.getElementById('fetch-whisper-base-en' ).style.display = 'none';
+                document.getElementById('fetch-whisper-small-en').style.display = 'none';
+                document.getElementById('fetch-whisper-tiny'    ).style.display = 'none';
+                document.getElementById('fetch-whisper-base'    ).style.display = 'none';
+                document.getElementById('fetch-whisper-small'   ).style.display = 'none';
+
+                document.getElementById('fetch-whisper-tiny-en-q5_1'  ).style.display = 'none';
+                document.getElementById('fetch-whisper-tiny-q5_1'     ).style.display = 'none';
+                document.getElementById('fetch-whisper-base-en-q5_1'  ).style.display = 'none';
+                document.getElementById('fetch-whisper-base-q5_1'     ).style.display = 'none';
+                document.getElementById('fetch-whisper-small-en-q5_1' ).style.display = 'none';
+                document.getElementById('fetch-whisper-small-q5_1'    ).style.display = 'none';
+                document.getElementById('fetch-whisper-medium-en-q5_0').style.display = 'none';
+                document.getElementById('fetch-whisper-medium-q5_0'   ).style.display = 'none';
+                document.getElementById('fetch-whisper-large-q5_0'    ).style.display = 'none';
+
+                document.getElementById('whisper-file'          ).style.display = 'none';
+                document.getElementById('model-whisper-status'  ).innerHTML = 'loaded model: ' + file.name;
+            }
+
+            function loadWhisper(model) {
+                let urls = {
+                    'tiny.en':  'https://whisper.ggerganov.com/ggml-model-whisper-tiny.en.bin',
+                    'tiny':     'https://whisper.ggerganov.com/ggml-model-whisper-tiny.bin',
+                    'base.en':  'https://whisper.ggerganov.com/ggml-model-whisper-base.en.bin',
+                    'base':     'https://whisper.ggerganov.com/ggml-model-whisper-base.bin',
+                    'small.en': 'https://whisper.ggerganov.com/ggml-model-whisper-small.en.bin',
+                    'small':    'https://whisper.ggerganov.com/ggml-model-whisper-small.bin',
+
+                    'tiny-en-q5_1':  'https://whisper.ggerganov.com/ggml-model-whisper-tiny.en-q5_1.bin',
+                    'tiny-q5_1':     'https://whisper.ggerganov.com/ggml-model-whisper-tiny-q5_1.bin',
+                    'base-en-q5_1':  'https://whisper.ggerganov.com/ggml-model-whisper-base.en-q5_1.bin',
+                    'base-q5_1':     'https://whisper.ggerganov.com/ggml-model-whisper-base-q5_1.bin',
+                    'small-en-q5_1': 'https://whisper.ggerganov.com/ggml-model-whisper-small.en-q5_1.bin',
+                    'small-q5_1':    'https://whisper.ggerganov.com/ggml-model-whisper-small-q5_1.bin',
+                    'medium-en-q5_0':'https://whisper.ggerganov.com/ggml-model-whisper-medium.en-q5_0.bin',
+                    'medium-q5_0':   'https://whisper.ggerganov.com/ggml-model-whisper-medium-q5_0.bin',
+                    'large-q5_0':    'https://whisper.ggerganov.com/ggml-model-whisper-large-q5_0.bin',
+                };
+
+                let sizes = {
+                    'tiny.en':  75,
+                    'tiny':     75,
+                    'base.en':  142,
+                    'base':     142,
+                    'small.en': 466,
+                    'small':    466,
+
+                    'tiny-en-q5_1':   31,
+                    'tiny-q5_1':      31,
+                    'base-en-q5_1':   57,
+                    'base-q5_1':      57,
+                    'small-en-q5_1':  182,
+                    'small-q5_1':     182,
+                    'medium-en-q5_0': 515,
+                    'medium-q5_0':    515,
+                    'large-q5_0':     1030,
+                };
+
+                let url     = urls[model];
+                let dst     = 'whisper.bin';
+                let size_mb = sizes[model];
+
+                model_whisper = model;
+
+                document.getElementById('fetch-whisper-tiny-en' ).style.display = 'none';
+                document.getElementById('fetch-whisper-base-en' ).style.display = 'none';
+                document.getElementById('fetch-whisper-small-en').style.display = 'none';
+                document.getElementById('fetch-whisper-tiny'    ).style.display = 'none';
+                document.getElementById('fetch-whisper-base'    ).style.display = 'none';
+                document.getElementById('fetch-whisper-small'   ).style.display = 'none';
+
+                document.getElementById('fetch-whisper-tiny-en-q5_1'  ).style.display = 'none';
+                document.getElementById('fetch-whisper-tiny-q5_1'     ).style.display = 'none';
+                document.getElementById('fetch-whisper-base-en-q5_1'  ).style.display = 'none';
+                document.getElementById('fetch-whisper-base-q5_1'     ).style.display = 'none';
+                document.getElementById('fetch-whisper-small-en-q5_1' ).style.display = 'none';
+                document.getElementById('fetch-whisper-small-q5_1'    ).style.display = 'none';
+                document.getElementById('fetch-whisper-medium-en-q5_0').style.display = 'none';
+                document.getElementById('fetch-whisper-medium-q5_0'   ).style.display = 'none';
+                document.getElementById('fetch-whisper-large-q5_0'    ).style.display = 'none';
+
+                document.getElementById('whisper-file'        ).style.display = 'none';
+                document.getElementById('model-whisper-status').innerHTML = 'loading model: ' + model;
+
+                cbProgress = function(p) {
+                    let el = document.getElementById('fetch-whisper-progress');
+                    el.innerHTML = Math.round(100*p) + '%';
+                };
+
+                cbCancel = function() {
+                    var el;
+
+                    el = document.getElementById('fetch-whisper-tiny-en' ); if (el) el.style.display = 'inline-block';
+                    el = document.getElementById('fetch-whisper-base-en' ); if (el) el.style.display = 'inline-block';
+                    el = document.getElementById('fetch-whisper-small-en'); if (el) el.style.display = 'inline-block';
+                    el = document.getElementById('fetch-whisper-tiny'    ); if (el) el.style.display = 'inline-block';
+                    el = document.getElementById('fetch-whisper-base'    ); if (el) el.style.display = 'inline-block';
+                    el = document.getElementById('fetch-whisper-small'   ); if (el) el.style.display = 'inline-block';
+
+                    el = document.getElementById('fetch-whisper-tiny-en-q5_1'  ); if (el) el.style.display = 'inline-block';
+                    el = document.getElementById('fetch-whisper-tiny-q5_1'     ); if (el) el.style.display = 'inline-block';
+                    el = document.getElementById('fetch-whisper-base-en-q5_1'  ); if (el) el.style.display = 'inline-block';
+                    el = document.getElementById('fetch-whisper-base-q5_1'     ); if (el) el.style.display = 'inline-block';
+                    el = document.getElementById('fetch-whisper-small-en-q5_1' ); if (el) el.style.display = 'inline-block';
+                    el = document.getElementById('fetch-whisper-small-q5_1'    ); if (el) el.style.display = 'inline-block';
+                    el = document.getElementById('fetch-whisper-medium-en-q5_0'); if (el) el.style.display = 'inline-block';
+                    el = document.getElementById('fetch-whisper-medium-q5_0'   ); if (el) el.style.display = 'inline-block';
+                    el = document.getElementById('fetch-whisper-large-q5_0'    ); if (el) el.style.display = 'inline-block';
+
+                    el = document.getElementById('whisper-file'        ); if (el) el.style.display = 'inline-block';
+                    el = document.getElementById('model-whisper-status'); if (el) el.innerHTML = '';
+                };
+
+                loadRemote(url, dst, size_mb, cbProgress, storeFS, cbCancel, printTextarea);
+            }
+
+            //
+            // audio file
+            //
+
+            const kMaxAudio_s = 30*60;
+            const kMaxRecording_s = 2*60;
+            const kSampleRate = 16000;
+
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            window.OfflineAudioContext = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+
+            function loadAudio(event) {
+                if (!context) {
+                    context = new AudioContext({
+                        sampleRate: kSampleRate,
+                        channelCount: 1,
+                        echoCancellation: false,
+                        autoGainControl:  true,
+                        noiseSuppression: true,
+                    });
+                }
+
+                var file = event.target.files[0] || null;
+                if (file == null) {
+                    return;
+                }
+
+                printTextarea('js: loading audio: ' + file.name + ', size: ' + file.size + ' bytes');
+                printTextarea('js: please wait ...');
+
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    var buf = new Uint8Array(reader.result);
+
+                    context.decodeAudioData(buf.buffer, function(audioBuffer) {
+                        var offlineContext = new OfflineAudioContext(audioBuffer.numberOfChannels, audioBuffer.length, audioBuffer.sampleRate);
+                        var source = offlineContext.createBufferSource();
+                        source.buffer = audioBuffer;
+                        source.connect(offlineContext.destination);
+                        source.start(0);
+
+                        offlineContext.startRendering().then(function(renderedBuffer) {
+                            audio = renderedBuffer.getChannelData(0);
+                            printTextarea('js: audio loaded, size: ' + audio.length);
+
+                            // truncate to first 30 seconds
+                            if (audio.length > kMaxAudio_s*kSampleRate) {
+                                audio = audio.slice(0, kMaxAudio_s*kSampleRate);
+                                printTextarea('js: truncated audio to first ' + kMaxAudio_s + ' seconds');
+                            }
+
+                            setAudio(audio);
+                        });
+                    }, function(e) {
+                        printTextarea('js: error decoding audio: ' + e);
+                        audio = null;
+                        setAudio(audio);
+                    });
+                }
+                reader.readAsArrayBuffer(file);
+            }
+
+            //
+            // microphone
+            //
+
+            var mediaRecorder = null;
+            var doRecording = false;
+            var startTime = 0;
+
+            function stopRecording() {
+                doRecording = false;
+            }
+
+            // record up to kMaxRecording_s seconds of audio from the microphone
+            // check if doRecording is false every 1000 ms and stop recording if so
+            // update progress information
+            function startRecording() {
+                if (!context) {
+                    context = new AudioContext({
+                        sampleRate: kSampleRate,
+                        channelCount: 1,
+                        echoCancellation: false,
+                        autoGainControl:  true,
+                        noiseSuppression: true,
+                    });
+                }
+
+                document.getElementById('start').disabled = true;
+                document.getElementById('stop').disabled = false;
+
+                document.getElementById('progress-bar').style.width = '0%';
+                document.getElementById('progress-text').innerHTML = '0%';
+
+                doRecording = true;
+                startTime = Date.now();
+
+                var chunks = [];
+                var stream = null;
+
+                navigator.mediaDevices.getUserMedia({audio: true, video: false})
+                    .then(function(s) {
+                        stream = s;
+                        mediaRecorder = new MediaRecorder(stream);
+                        mediaRecorder.ondataavailable = function(e) {
+                            chunks.push(e.data);
+                        };
+                        mediaRecorder.onstop = function(e) {
+                            var blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
+                            chunks = [];
+
+                            document.getElementById('start').disabled = false;
+                            document.getElementById('stop').disabled = true;
+
+                            var reader = new FileReader();
+                            reader.onload = function(event) {
+                                var buf = new Uint8Array(reader.result);
+
+                                context.decodeAudioData(buf.buffer, function(audioBuffer) {
+                                    var offlineContext = new OfflineAudioContext(audioBuffer.numberOfChannels, audioBuffer.length, audioBuffer.sampleRate);
+                                    var source = offlineContext.createBufferSource();
+                                    source.buffer = audioBuffer;
+                                    source.connect(offlineContext.destination);
+                                    source.start(0);
+
+                                    offlineContext.startRendering().then(function(renderedBuffer) {
+                                        audio = renderedBuffer.getChannelData(0);
+                                        printTextarea('js: audio recorded, size: ' + audio.length);
+
+                                        // truncate to first 30 seconds
+                                        if (audio.length > kMaxRecording_s*kSampleRate) {
+                                            audio = audio.slice(0, kMaxRecording_s*kSampleRate);
+                                            printTextarea('js: truncated audio to first ' + kMaxRecording_s + ' seconds');
+                                        }
+                                        setAudio(audio);
+                                    });
+                                }, function(e) {
+                                    printTextarea('js: error decoding audio: ' + e);
+                                    audio = null;
+                                    setAudio(audio);
+                                });
+                            }
+
+                            reader.readAsArrayBuffer(blob);
+                        };
+                        mediaRecorder.start();
+                    })
+                    .catch(function(err) {
+                        printTextarea('js: error getting audio stream: ' + err);
+                    });
+
+                var interval = setInterval(function() {
+                    if (!doRecording) {
+                        clearInterval(interval);
+                        mediaRecorder.stop();
+                        stream.getTracks().forEach(function(track) {
+                            track.stop();
+                        });
+                    }
+
+                    document.getElementById('progress-bar').style.width = (100*(Date.now() - startTime)/1000/kMaxRecording_s) + '%';
+                    document.getElementById('progress-text').innerHTML = (100*(Date.now() - startTime)/1000/kMaxRecording_s).toFixed(0) + '%';
+                }, 1000);
+
+                printTextarea('js: recording ...');
+
+                setTimeout(function() {
+                    if (doRecording) {
+                        printTextarea('js: recording stopped after ' + kMaxRecording_s + ' seconds');
+                        stopRecording();
+                    }
+                }, kMaxRecording_s*1000);
+            }
+
+            //
+            // transcribe
+            //
+
+            var nthreads = 8;
+
+            function changeThreads(value) {
+                nthreads = value;
+                document.getElementById('threads-value').innerHTML = nthreads;
+            }
+
+            function onProcess(translate) {
+                if (!instance) {
+                    instance = Module.init('whisper.bin');
+
+                    if (instance) {
+                        printTextarea("js: whisper initialized, instance: " + instance);
+                        document.getElementById('model').innerHTML = 'Model loaded: ' + model_whisper;
+                    }
+                }
+
+                if (!instance) {
+                    printTextarea("js: failed to initialize whisper");
+                    return;
+                }
+
+                if (!audio) {
+                    printTextarea("js: no audio data");
+                    return;
+                }
+
+                if (instance) {
+                    printTextarea('');
+                    printTextarea('js: processing - this might take a while ...');
+                    printTextarea('');
+
+                    setTimeout(function() {
+                        var ret = Module.full_default(instance, audio, document.getElementById('language').value, nthreads, translate);
+                        console.log('js: full_default returned: ' + ret);
+                        if (ret) {
+                            printTextarea("js: whisper returned: " + ret);
+                        }
+                    }, 100);
+                }
+            }
+        </script>
+        <script type="text/javascript" src="./whisperlib.js"></script>
+    
+
+
+<script type="text/javascript">
+    window.addEventListener("DOMContentLoaded", () => {
+        fetch("ggml-model-whisper-small.bin")
+            .then(response => response.arrayBuffer())
+            .then(buffer => {
+                storeFS("whisper.bin", new Uint8Array(buffer));
+                model_whisper = "ggml-model-whisper-small.bin";
+                printTextarea("Auto-loaded model: " + model_whisper);
+                document.getElementById("model").innerHTML = 'Model auto-loaded: ' + model_whisper;
+            })
+            .catch(err => {
+                printTextarea("Failed to auto-load model: " + err);
+            });
+    });
+</script>
+
+</body></html>
