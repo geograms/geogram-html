@@ -104,13 +104,12 @@ function render() {
           <label for="theme-select">Color Theme</label>
           <div class="custom-select-wrapper">
             <select id="theme-select" class="styled-select">
-              <option value="green">Green</option>
-              <option value="day">Day</option>
-              <option value="night">Night</option>
-              <option value="brown">Brown</option>
-              <option value="grey">Grey</option>
-              <option value="red">Red</option>
-              <option value="lightblue">Light Blue</option>
+              <option value="green">Eco-Green</option>
+              <option value="monster">Monster Energy</option>
+              <option value="red">Red Alert</option>
+              <option value="yellow">Bruce Lee</option>
+              <option value="blue">Low-light Blue</option>
+              <option value="evangelion">Evangelion</option>
             </select>
           </div>
         </div>

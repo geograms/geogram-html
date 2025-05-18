@@ -6,6 +6,16 @@
        url('fonts/Inter-Regular.ttf') format('truetype');
 }
 
+
+.right-column .nav-links {
+  list-style: none;
+  padding-left: 0;
+}
+
+.right-column .nav-links li {
+  margin-bottom: 0.5em; /* optional: adds some spacing between items */
+}
+
 :root {
   --bg: #0e1b0e;
   --text: #cfeac8;
@@ -17,79 +27,60 @@
   --wave-color: rgba(0, 255, 0, 0.15);
 }
 
-body[data-theme="day"] {
-  --bg: #ffffff;
-  --text: #e0e0e0;
-  --accent: #1a73e8;
-  --link: #1a73e8;
-  --card: #e9f1fb;
-  --border: #ccc;
-  --logo-filter: brightness(0) saturate(100%) invert(34%) sepia(84%) saturate(684%) hue-rotate(178deg) brightness(89%) contrast(90%);
-  --wave-color: rgba(26, 115, 232, 0.15);
-}
-
-body[data-theme="night"] {
-  --bg: #121212;
-  --text: #e0e0e0;
-  --accent: #90caf9;
-  --link: #90caf9;
-  --card: #1e1e1e;
-  --border: #444;
-  --logo-filter: brightness(0.5) saturate(0%);
-  --wave-color: rgba(144, 202, 249, 0.15);
-}
-
-.right-column .nav-links {
-  list-style: none;
-  padding-left: 0;
-}
-
-.right-column .nav-links li {
-  margin-bottom: 0.5em; /* optional: adds some spacing between items */
-}
-
-body[data-theme="brown"] {
-  --bg: #f4ede3;
-  --text: #4e3b2b;
-  --accent: #a1866f;
-  --link: #967b5d;
-  --card: #e0d2c1;
-  --border: #bda58b;
-  --logo-filter: brightness(0) saturate(100%) invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0.4) contrast(100%);
-  --wave-color: rgba(161, 134, 111, 0.15);
-}
-
-body[data-theme="grey"] {
-  --bg: #e0e0e0;
-  --text: #222;
-  --accent: #666;
-  --link: #444;
-  --card: #f8f8f8;
-  --border: #aaa;
-  --logo-filter: brightness(0) saturate(100%) invert(13%) sepia(0%) saturate(400%) hue-rotate(190deg) brightness(90%) contrast(90%);
-  --wave-color: rgba(100, 100, 100, 0.15);
-}
 
 body[data-theme="red"] {
   --bg: #2b0e0e;
-  --text: #ffe5e5;
-  --accent: #ff5c5c;
-  --link: #ff9999;
-  --card: #4d1f1f;
+  --text: #ffffff;
+  --accent: #ffffff;
+  --link: #ffffff;
+  --card: #c93838;
   --border: #aa4444;
-  --logo-filter: brightness(0) saturate(100%) invert(75%) sepia(15%) saturate(450%) hue-rotate(330deg) brightness(95%) contrast(85%);
-  --wave-color: rgba(255, 92, 92, 0.15);
+  --logo-filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+  --wave-color: rgba(245, 243, 243, 0.5);
 }
 
-body[data-theme="lightblue"] {
-  --bg: #e7f6fd;
-  --text: #0d3c61;
+body[data-theme="blue"] {
+  --bg: #41b4e9;
+  --text: #ffffff;
   --accent: #2d9cdb;
   --link: #2d9cdb;
-  --card: #d0ecfa;
+  --card: #0b1318;
   --border: #8ecae6;
-  --logo-filter: brightness(0) saturate(100%) invert(16%) sepia(41%) saturate(2391%) hue-rotate(179deg) brightness(92%) contrast(89%);
-  --wave-color: rgba(45, 156, 219, 0.15);
+  --logo-filter: brightness(0) saturate(100%) invert(48%) sepia(85%) saturate(748%) hue-rotate(162deg) brightness(89%) contrast(87%);
+  --wave-color: rgba(155, 218, 255, 0.2);
+}
+
+body[data-theme="yellow"] {
+  --bg: #000000;             /* Pure black background */
+  --text: #f8f8f8;           /* Off-white text */
+  --accent: #FFCC00;         /* Bruce Lee's iconic yellow */
+  --link: #FFD700;           /* Slightly brighter yellow for links */
+  --card: #1a1a1a;           /* Dark gray cards */
+  --border: #333333;         /* Medium gray borders */
+  --logo-filter: brightness(0) saturate(100%) invert(84%) sepia(98%) saturate(1000%) hue-rotate(360deg) brightness(105%) contrast(105%);
+  --wave-color: rgba(255, 204, 0, 0.30); /* Yellow wave effect */
+}
+
+body[data-theme="evangelion"] {
+  --bg: #0a0a2a;             /* Deep navy blue background */
+  --text: #e0e0ff;           /* Light lavender text */
+  --accent: #ff00ff;         /* Neon magenta (Eva-01 purple) */
+  --link: #00ffff;           /* Cyan highlights (NERV green/cyan) */
+  --card: #1a1a3a;           /* Dark purple cards */
+  --border: #4d4dff;         /* Electric blue borders */
+  --logo-filter: brightness(0) saturate(100%) invert(28%) sepia(98%) saturate(2475%) hue-rotate(292deg) brightness(104%) contrast(147%);
+  --wave-color: rgba(255, 0, 255, 0.15); /* Pulsing magenta waves */
+}
+
+body[data-theme="monster"] {
+  --bg: #000000;             /* Pure black background */
+  --text: #ffffff;           /* Bright white text */
+  --accent: #94ff00;         /* Toxic neon green (Monster's signature color) */
+  --link: #00ffaa;           /* Electric teal for links */
+  --card: #121212;           /* Slightly lighter black cards */
+  --border: #94ff00;         /* Glowing green borders */
+  --logo-filter: brightness(0) saturate(100%) invert(84%) sepia(99%) saturate(465%) hue-rotate(17deg) brightness(105%) contrast(101%);
+  --wave-color: rgba(148, 255, 0, 0.50); /* Pulsing neon green energy waves */
 }
 
 html, body {
