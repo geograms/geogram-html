@@ -105,11 +105,10 @@ function render() {
           <label for="theme-select">Color Theme</label>
           <div class="custom-select-wrapper">
             <select id="theme-select" class="styled-select">
-              <option value="green">Eco-Green</option>
+              <option value="blue">Low-light Blue</option>
               <option value="monster">Monster Energy</option>
               <option value="red">Red Alert</option>
               <option value="yellow">Bruce Lee</option>
-              <option value="blue">Low-light Blue</option>
               <option value="evangelion">Evangelion</option>
             </select>
           </div>
@@ -170,7 +169,7 @@ function render() {
   }
   
   brandTextInput.addEventListener('input', (e) => {
-    const text = e.target.value.trim().toUpperCase();
+    const text = e.target.value.trim();//.toUpperCase();
     localStorage.setItem('brandText', text);
     updateBrandText(text);
   });
@@ -178,7 +177,7 @@ function render() {
   function updateBrandText(text) {
     const brandElement = document.querySelector('.radio-brand');
     if (brandElement) {
-      brandElement.textContent = text || 'GEONET';
+      brandElement.textContent = text || 'GEOGRAM';
     }
   }
 

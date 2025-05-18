@@ -85,8 +85,7 @@ body[data-theme="yellow"] {
   --link: #FFD700;           /* Slightly brighter yellow for links */
   --card: #1a1a1a;           /* Dark gray cards */
   --border: #333333;         /* Medium gray borders */
-  --logo-filter: brightness(0) saturate(100%) invert(84%) sepia(98%) saturate(1000%) hue-rotate(360deg) brightness(105%) contrast(105%);
-  --wave-color: rgba(255, 204, 0, 0.30); /* Yellow wave effect */
+  --logo-filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
 }
 
 body[data-theme="evangelion"] {
@@ -161,6 +160,13 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 1001;
 }
 
+
+.logo-block img {
+  width: 40px;
+  height: 40px;
+  filter: var(--logo-filter);
+}
+
 #home-link {
   display: flex;
   align-items: center;
@@ -172,18 +178,11 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Audiowide', 'Orbitron', 'Arial Narrow', sans-serif;
   font-weight: 900;
   font-size: 1.5rem;
-  text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--accent);
   white-space: nowrap;
-  text-shadow: 0 0 5px var(--wave-color);
+  /*text-shadow: 0 0 5px var(--wave-color);*/
   font-style: italic;
-}
-
-.logo-block img {
-  width: 40px;
-  height: 40px;
-  filter: var(--logo-filter);
 }
 
 .topbar {
