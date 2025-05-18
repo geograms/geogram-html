@@ -1,9 +1,37 @@
 @font-face {
   font-family: 'Inter';
   font-style: normal;
-  font-weight: 500;
-  src: local('Inter Regular'),
+  font-weight: 400; /* Regular weight is typically 400 */
+  src: local('Inter'), 
+       local('Inter-Regular'),
        url('fonts/Inter-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500; /* Medium weight */
+  src: local('Inter Medium'), 
+       local('Inter-Medium'),
+       url('fonts/Inter-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'FasterOne';
+  font-style: normal;
+  font-weight: 400; /* Regular weight is typically 400 */
+  src: local('FasterOne'), 
+       local('FasterOne-Regular'),
+       url('fonts/FasterOne-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Audiowide';
+  font-style: normal;
+  font-weight: 400; /* Regular weight is typically 400 */
+  src: local('Audiowide'), 
+       local('Audiowide-Regular'),
+       url('fonts/Audiowide-Regular.ttf') format('truetype');
 }
 
 
@@ -100,6 +128,11 @@ body {
   z-index: 0;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Audiowide', sans-serif;
+  font-weight: 500;
+}
+
 #wave-bg {
   position: fixed;
   top: 0;
@@ -136,7 +169,7 @@ body {
 }
 
 .radio-brand {
-  font-family: 'Orbitron', 'Arial Black', sans-serif;
+  font-family: 'Audiowide', 'Orbitron', 'Arial Narrow', sans-serif;
   font-weight: 900;
   font-size: 1.5rem;
   text-transform: uppercase;
@@ -144,6 +177,7 @@ body {
   color: var(--accent);
   white-space: nowrap;
   text-shadow: 0 0 5px var(--wave-color);
+  font-style: italic;
 }
 
 .logo-block img {
@@ -182,7 +216,7 @@ body {
   border: none;
   color: var(--link);
   font-size: 0.95em;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Audiowide', sans-serif;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -512,4 +546,9 @@ a:hover {
     height: auto;
     padding: 0.5em;
   }
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
