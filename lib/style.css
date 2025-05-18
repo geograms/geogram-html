@@ -137,7 +137,6 @@ body {
   cursor: pointer;
   z-index: 1001;
   position: relative;
-
 }
 
 .logo-block img {
@@ -220,12 +219,19 @@ body {
 }
 
 @media (max-width: 768px) {
+
+  .logo-block {
+    padding: 0; /* Remove padding on mobile */
+    border-radius: 0; /* Remove border-radius on mobile */
+  }
+
   .burger-menu {
     display: flex;
   }
 
   .header-wrapper {
     flex-direction: column;
+    height: 50px;
   }
 
   .topbar {

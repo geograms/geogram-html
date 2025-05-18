@@ -16,7 +16,7 @@ function render() {
   style.textContent = `
     #map-container {
       position: fixed;
-      top: 60px; /* Header height */
+      top: 30px; /* Header height */
       left: 0;
       right: 0;
       bottom: 0;
