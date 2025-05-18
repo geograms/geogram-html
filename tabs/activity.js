@@ -42,6 +42,7 @@ function render() {
 
       <h2>Channel</h2>
       <select id="channel-selector" class="styled-select">
+        <option value="">Not Defined</option>
         <option value="446.00625">446.00625 MHz (PMR channel 1)</option>
         <option value="446.01875">446.01875 MHz (PMR channel 2)</option>
         <option value="446.03125">446.03125 MHz (PMR channel 3)</option>
