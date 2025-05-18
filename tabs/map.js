@@ -1,47 +1,68 @@
 function render() {
-  // Clear existing content and recreate the exact structure from map.html
+  // Create the map with devices around the world (it is does not work as offline yet)
   document.getElementById('content').innerHTML = `
-    <div id="map"></div>
-    <div class="toolbar">
-      <button id="measureBtn">Measure Distance</button>
-      <button id="addMarkerBtn">Add Marker</button>
-      <label><input type="checkbox" id="trackToggle"> Track Me</label>
-      <div id="geocoder" style="flex: 1;"></div>
+    <div id="map-container">
+      <div id="map"></div>
+      <div class="map-toolbar">
+        <button id="measureBtn">Measure</button>
+        <button id="addMarkerBtn">Marker</button>
+        <label><input type="checkbox" id="trackToggle"> Track</label>
+        <div id="geocoder" style="flex: 1;"></div>
+      </div>
     </div>
   `;
 
-  // Add critical styles immediately
   const style = document.createElement('style');
   style.textContent = `
+    #map-container {
+      position: fixed;
+      top: 60px; /* Header height */
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+    
     #map {
       position: absolute;
-      top: 30px;
-      bottom: 90px;
+      top: 0;
+      bottom: 60px; /* Toolbar height */
       left: 0;
       right: 0;
-      z-index: 0;
     }
-    .toolbar {
-      position: fixed;
-      bottom: 40px;
+    
+    .map-toolbar {
+      position: absolute;
+      bottom: 0;
       left: 0;
       right: 0;
+      height: 60px;
       padding: 10px;
       background: var(--card);
       display: flex;
-      gap: 10px;
+      gap: 8px;
+      align-items: center;
       z-index: 1000;
       border-top: 1px solid var(--border);
+      overflow-x: auto;
     }
-    .toolbar button {
-      padding: 8px 12px;
-      background: var(--accent);
-      color: var(--bg);
-      border: none;
-      border-radius: 4px;
-    }
+    
     .leaflet-top.leaflet-left {
-      top: 60px;
+      top: 70px !important;
+    }
+    
+    @media (max-width: 768px) {
+      #map-container {
+        top: 50px; /* Smaller header on mobile */
+      }
+      
+      .map-toolbar {
+        height: 50px;
+        padding: 8px;
+      }
+      
+      .leaflet-top.leaflet-left {
+        top: 60px !important;
+      }
     }
   `;
   document.head.appendChild(style);
