@@ -565,3 +565,14 @@ a:hover {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+#recording-list button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+#recording-list button:not(:disabled):hover {
+  background-color: #666;
+  color: white;
+  cursor: pointer;
+}
