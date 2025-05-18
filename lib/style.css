@@ -17,14 +17,14 @@
 }
 
 :root {
-  --bg: #0e1b0e;
-  --text: #cfeac8;
-  --accent: #a9dc9c;
-  --link: #b1e4b3;
-  --card: #1b2e1b;
-  --border: #406343;
-  --logo-filter: brightness(0) saturate(100%) invert(81%) sepia(7%) saturate(734%) hue-rotate(63deg) brightness(93%) contrast(90%);
-  --wave-color: rgba(0, 255, 0, 0.15);
+  --bg: #41b4e9;
+  --text: #ffffff;
+  --accent: #2d9cdb;
+  --link: #2d9cdb;
+  --card: #0b1318;
+  --border: #8ecae6;
+  --logo-filter: brightness(0) saturate(100%) invert(48%) sepia(85%) saturate(748%) hue-rotate(162deg) brightness(89%) contrast(87%);
+  --wave-color: rgba(155, 218, 255, 0.2);
 }
 
 
@@ -118,16 +118,32 @@ body {
 }
 
 .logo-block {
-  width: 60px;
-  background-color: var(--card);
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0.5em;
+  min-width: 180px;
   border-radius: 0 0 0.5em 0;
+  padding: 0.5em 1em; /* Adjusted padding */
+  background-color: var(--card);
   cursor: pointer;
   z-index: 1001;
-  position: relative;
+}
+
+#home-link {
+  display: flex;
+  align-items: center;
+  gap: 5x;
+  text-decoration: none;
+}
+
+.radio-brand {
+  font-family: 'Orbitron', 'Arial Black', sans-serif;
+  font-weight: 900;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  white-space: nowrap;
+  text-shadow: 0 0 5px var(--wave-color);
 }
 
 .logo-block img {
