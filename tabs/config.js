@@ -101,6 +101,7 @@ function render() {
           <div id="customization">
         <h2>Customization</h2>
         <div class="card">
+        <div style="display: flex; flex-direction: column; gap: 1em; margin-bottom: 2em">
           <label for="theme-select">Color Theme</label>
           <div class="custom-select-wrapper">
             <select id="theme-select" class="styled-select">
@@ -113,6 +114,13 @@ function render() {
             </select>
           </div>
         </div>
+      </div>
+
+      <div>
+        <label for="brand-text">Header Text</label>
+        <input type="text" id="brand-text" class="styled-select" maxlength="20" 
+               value="GEOGRAM" style="width: 100%;">
+        <small style="display: block; margin-top: 0.5em;">Custom text to display next to logo</small>
       </div>
           
         </div>
@@ -152,6 +160,27 @@ function render() {
     localStorage.setItem('theme', selectedTheme);
     applyTheme(selectedTheme);
   });
+
+
+  const brandTextInput = document.getElementById('brand-text');
+  const savedBrandText = localStorage.getItem('brandText');
+  if (savedBrandText) {
+    brandTextInput.value = savedBrandText;
+    updateBrandText(savedBrandText);
+  }
+  
+  brandTextInput.addEventListener('input', (e) => {
+    const text = e.target.value.trim().toUpperCase();
+    localStorage.setItem('brandText', text);
+    updateBrandText(text);
+  });
+  
+  function updateBrandText(text) {
+    const brandElement = document.querySelector('.radio-brand');
+    if (brandElement) {
+      brandElement.textContent = text || 'GEONET';
+    }
+  }
 
   // Reset button
   document.getElementById('reset-settings').addEventListener('click', () => {
