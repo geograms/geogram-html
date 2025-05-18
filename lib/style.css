@@ -418,6 +418,19 @@ a:hover {
   max-width: 300px;
 }
 
+.favorite-item {
+  padding: 6px;
+  border-bottom: 1px solid #333;
+  color: var(--fg);
+}
+
+#activity-feed,
+#recording-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 .content-column {
   flex: 4;
   min-width: 0; /* Allows content to shrink below min-content size */

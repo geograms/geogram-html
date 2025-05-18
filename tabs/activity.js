@@ -2,9 +2,6 @@ function render() {
   document.getElementById('content').innerHTML = `
     <div class="left-column">
       <h2>Recent</h2>
-      <div id="activity-feed" class="card"></div>
-
-      <h2>Voice Notes</h2>
       <div class="card" id="voice-notes">
         <div id="recording-indicator" style="display: none; margin: 10px 0;">
           <div class="pulse-circle"></div>
@@ -21,6 +18,10 @@ function render() {
         </div>
         <ul id="recording-list" class="card" style="margin-top: 10px;"></ul>
       </div>
+
+      <h2>Favorites</h2>
+      <div id="activity-feed" class="card"></div>
+
     </div>
 
     <div class="right-column">
