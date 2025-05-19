@@ -38,8 +38,8 @@ function initializeControlPanel() {
 
 <div id="programming" class="card" style="margin-bottom: 2em; padding: 1em;">
   <h2>Channel programming</h2>
-  Program the walkie talkie channel frequencies  <button style="margin-left: 1em;" id="sendToRadioBtn" class="action-button">Send to radio</button>
-  <br><br>Edit the values below with the frequencies you want to use. Attention: this tool only works for walkie talkies with the geogram firmware installed.
+  Program the walkie talkie channel frequencies:  <button style="margin-left: 1em;" id="sendToRadioBtn" class="action-button">Send to radio</button>
+  <br><br>Edit the values below with the frequencies you want to use. <br>Attention: this tool only works for walkie talkies with the geogram firmware installed.
   <br>
 
   <div style="margin-bottom: 1em;">
@@ -205,19 +205,23 @@ function initializeControlPanel() {
         <td><input type="text" class="channel-input" value="" /></td>
         <td><input type="text" class="channel-input" value="" /></td>
       </tr>
-      <tr>loadChannelsFromDB();
+      <tr>
         <td class="channel"; style="text-align: center;">30</td>
         <td><input type="text" class="channel-input" value="" /></td>
         <td><input type="text" class="channel-input" value="" /></td>
       </tr>
     </tbody>
   </table>
+
+  <button id="resetChannelsBtn" class="action-button" style="margin-left: 1em;margin-top: 1em;">Reset to default channel values</button>
+
+
 </div>
 
 
     <div id="morsecode">
       <h2>Morse Code Generator</h2>
-      Use this tool for direct communication with Walkie Talkies.
+      Use this tool for direct communication with walkie talkies.
       </br></br>
       <div class="control-panel">
         <div class="control-group">
@@ -266,6 +270,20 @@ function initializeControlPanel() {
   setupMorseCodeFunctionality();
   loadChannelsFromDB();
   attachChannelInputListeners();
+
+  document.getElementById('resetChannelsBtn').addEventListener('click', async () => {
+    const confirmed = confirm("Are you sure you want to reset all channels to default?");
+    if (!confirmed) return;
+  
+    const db = await openDB();
+    const tx = db.transaction('channelData', 'readwrite');
+    tx.objectStore('channelData').clear();
+  
+    tx.oncomplete = () => {
+      restoreDefaultChannels();
+      saveChannelsToDB();
+    };
+  });
 
 
 
