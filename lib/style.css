@@ -44,6 +44,20 @@
   margin-bottom: 0.5em; /* optional: adds some spacing between items */
 }
 
+.nav-links li {
+  margin-bottom: 1.0em;
+  position: relative;
+  padding-left: 1.2em;
+}
+
+.nav-links li::before {
+  content: ">";
+  position: absolute;
+  left: 0;
+  color: var(--accent); /* optional for visual emphasis */
+}
+
+
 :root {
   --bg: #41b4e9;
   --text: #ffffff;
