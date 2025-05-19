@@ -392,6 +392,25 @@ a:hover {
   font-family: inherit;
 }
 
+.action-button {
+  background-color: var(--card);
+  color: var(--accent);
+  border: none;
+  padding: 0.6em 1.2em;
+  border-radius: 6px;
+  font-size: 1.0em;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: inline-block;
+  height: 2.6em;
+  line-height: 1.4em;
+}
+
+.action-button:hover {
+  background-color: var(--accent);
+  color: var(--card);
+}
+
 .reset-button {
   background-color: transparent;
   color: var(--accent);
@@ -405,6 +424,27 @@ a:hover {
 .reset-button:hover {
   background-color: var(--accent);
   color: var(--bg);
+}
+
+.channel-input {
+  width: 100%;
+  padding: 0.4em;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.9em;
+  background-color: #000000;
+  color: var(--text);
+}
+
+.channel {
+  background-color: #000000;
+  color: var(--text);
+  text-align: center;
+}
+
+
+.channel-center {
+  text-align: center;
 }
 
 .custom-select-wrapper {
