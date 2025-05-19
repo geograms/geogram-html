@@ -271,6 +271,7 @@ function initializeControlPanel() {
   loadChannelsFromDB();
   attachChannelInputListeners();
 
+  // attach an action to the reset button
   document.getElementById('resetChannelsBtn').addEventListener('click', async () => {
     const confirmed = confirm("Are you sure you want to reset all channels to default?");
     if (!confirmed) return;
@@ -285,6 +286,10 @@ function initializeControlPanel() {
     };
   });
 
+  // attach an action to the send button
+  document.getElementById('sendToRadioBtn').addEventListener('click', () => {
+    sendToRadio();
+  });
 
 
 }
