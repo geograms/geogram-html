@@ -34,7 +34,7 @@ function initializeControlPanel() {
 
 
 
-     <div class="left-column main-column">
+     <div class="right-column content-column">
 
 <div id="programming" class="card" style="margin-bottom: 2em; padding: 1em;">
   <h2>Channel programming</h2>
@@ -48,9 +48,9 @@ function initializeControlPanel() {
 
   <table id="channelTable" class="styled-table" style="margin-top: 1em; width: 100%;">
     <colgroup>
-      <col style="width: 5; style="text-align: center;">   <!-- Channel -->
-      <col style="width: 10%;">   <!-- Frequency -->
-      <col style="width: 85%;">   <!-- Description -->
+      <col style="width: 05%;">  <!-- Channel -->
+      <col style="width: 10%;">  <!-- Frequency -->
+      <col style="width: 85%;">  <!-- Description -->
     </colgroup>
     <thead>
       <tr>
