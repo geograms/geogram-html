@@ -225,7 +225,7 @@ function initializeControlPanel() {
     </tbody>
   </table>
 
-  <button id="resetChannelsBtn" class="action-button" style="margin-left: 1em;margin-top: 1em;">Reset to default channel values</button>
+  <button id="resetChannelsBtn" class="action-button" style="margin-left: 1em;margin-top: 1em;">Reset to default values</button>
 
 
 </div>
