@@ -38,8 +38,20 @@ function initializeControlPanel() {
 
 <div id="programming" class="card" style="margin-bottom: 2em; padding: 1em;">
   <h2>Channel programming</h2>
-  Program the walkie talkie channel frequencies:  <button style="margin-left: 1em;" id="sendToRadioBtn" class="action-button">Send to radio</button>
-  <br><br>Edit the values below with the frequencies you want to use. <br>Attention: this tool only works for walkie talkies with the geogram firmware installed.
+  
+
+  Edit the values below with the frequencies you want to use. When you are ready, send the values to the radio. 
+
+  <div style="display: flex; align-items: center; gap: 1em; margin-top: 2em;">
+    <button style="margin-left: 1em;" id="sendToRadioBtn" class="action-button">Send to radio</button>
+    <div id="radioProgressWrap" style="display: none; align-items: center; gap: 0.5em; margin-left: 1em;">
+      <div id="progressContainer" style="width: 120px; height: 8px; background: #444; border-radius: 4px; overflow: hidden;">
+        <div id="progressBar" style="height: 100%; width: 0%; background-color: var(--accent); transition: width 0.2s;"></div>
+    </div>
+  <span id="progressPercent" style="font-size: 0.9em; color: var(--text);">0%</span>
+</div>
+</div>
+
   <br>
 
   <div style="margin-bottom: 1em;">
