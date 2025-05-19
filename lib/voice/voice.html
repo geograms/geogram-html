@@ -31,13 +31,6 @@
 
             <br><br>
 
-            Usage instructions:<br>
-            <ul>
-                <li>Load a ggml model file (you can obtain one from <a href="https://ggml.ggerganov.com/">here</a>, recommended: <b>tiny</b> or <b>base</b>)</li>
-                <li>Select audio file to transcribe or record audio from the microphone (sample: <a href="https://whisper.ggerganov.com/jfk.wav">jfk.wav</a>)</li>
-                <li>Click on the "Transcribe" button to start the transcription</li>
-            </ul>
-
             Note that the computation is quite heavy and may take a few seconds to complete.<br>
             The transcription results will be displayed in the text area below.<br><br>
             <b>Important:</b>
@@ -120,6 +113,7 @@
                     <td>
                         Language:
                         <select id="language" name="language">
+                            <option value="pt">Portuguese</option>
                             <option value="en">English</option>
                             <option value="ar">Arabic</option>
                             <option value="hy">Armenian</option>
@@ -163,7 +157,6 @@
                             <option value="no">Norwegian</option>
                             <option value="fa">Persian</option>
                             <option value="pl">Polish</option>
-                            <option value="pt">Portuguese</option>
                             <option value="ro">Romanian</option>
                             <option value="ru">Russian</option>
                             <option value="sr">Serbian</option>
@@ -216,7 +209,7 @@
             </div>
         </div>
 
-        <script type="text/javascript" src="./whisper.cpp _ WASM example_files/helpers.js"></script>
+        <script type="text/javascript" src="./helpers.js"></script>
         <script type="text/javascript">
             // TODO: convert audio buffer to WAV
             function setAudio(audio) {
@@ -340,11 +333,11 @@
             function loadWhisper(model) {
                 let urls = {
                     'tiny.en':  'https://whisper.ggerganov.com/ggml-model-whisper-tiny.en.bin',
-                    'tiny':     'https://whisper.ggerganov.com/ggml-model-whisper-tiny.bin',
+                    'tiny':     'https://geogram.info/lib/voice/ggml-model-whisper-tiny.bin',
                     'base.en':  'https://whisper.ggerganov.com/ggml-model-whisper-base.en.bin',
                     'base':     'https://whisper.ggerganov.com/ggml-model-whisper-base.bin',
                     'small.en': 'https://whisper.ggerganov.com/ggml-model-whisper-small.en.bin',
-                    'small':    'https://whisper.ggerganov.com/ggml-model-whisper-small.bin',
+                    'small':    'hhttps://geogram.info/lib/voice/ggml-model-whisper-small.bin',
 
                     'tiny-en-q5_1':  'https://whisper.ggerganov.com/ggml-model-whisper-tiny.en-q5_1.bin',
                     'tiny-q5_1':     'https://whisper.ggerganov.com/ggml-model-whisper-tiny-q5_1.bin',
@@ -654,7 +647,7 @@
                 }
             }
         </script>
-        <script type="text/javascript" src="./whisper.cpp _ WASM example_files/main.js"></script>
+        <script type="text/javascript" src="./main.js"></script>
     
 
 </body></html>
