@@ -205,7 +205,7 @@ function initializeControlPanel() {
         <td><input type="text" class="channel-input" value="" /></td>
         <td><input type="text" class="channel-input" value="" /></td>
       </tr>
-      <tr>
+      <tr>loadChannelsFromDB();
         <td class="channel"; style="text-align: center;">30</td>
         <td><input type="text" class="channel-input" value="" /></td>
         <td><input type="text" class="channel-input" value="" /></td>
@@ -264,6 +264,8 @@ function initializeControlPanel() {
 
   addControlPanelStyles();
   setupMorseCodeFunctionality();
+  loadChannelsFromDB();
+  attachChannelInputListeners();
 
 
 
