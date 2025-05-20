@@ -359,8 +359,8 @@ h1, h2, h3, h4, h5, h6 {
 .main-layout {
   display: flex;
   flex-direction: row;
-  gap: 2em;
-  padding: 2em;
+  gap: 1em;
+  padding: 1em;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
@@ -384,7 +384,7 @@ h2 {
   color: var(--accent);
   border-bottom: 1px solid var(--border);
   padding-bottom: 0.3em;
-  margin-top: 2em;
+  /*margin-top: 2em;*/
 }
 
 a {
@@ -460,7 +460,6 @@ a:hover {
   margin-top: 0.5em;
 }
 
-/* Add these at the end of your style.css file */
 .nav-column {
   flex: 1;
   min-width: 250px;

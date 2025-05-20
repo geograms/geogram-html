@@ -26,11 +26,12 @@ function initializeControlPanel() {
       <div class="card">
         <h2>Radio</h2>
         <ul class="nav-links" style="list-style: none; padding-left: 0;">
+          <li><a href="#remotecontrol" class="nav-link">Remote Control</a></li>
           <li><a href="#programming" class="nav-link">Channel programming</a></li>
           <li><a href="#morsecode" class="nav-link">Morse Code Tunning</a></li>
         </ul>
       </div>
-    </div>
+  </div>
 
 
 
@@ -41,7 +42,18 @@ function initializeControlPanel() {
 
 <div id="remotecontrol" class="card" style="margin-bottom: 2em; padding: 1em;">
   <h2>Remote Control</h2>
-  <p>Send commands to the walkie talkie remotely via digital interface.</p>
+  <p>Send commands to the walkie talkie remotely via morse code.</p>
+
+  <!-- Ping -->
+  <div class="remote-control-group">
+    <label style="grid-column: 1;">Ping</label>
+    <div style="display: flex; gap: 0.5em; grid-column: 2;">
+      <button class="action-button">Send</button>
+    </div>
+    <div style="grid-column: 2;">
+      <small>Discover which compatible devices are nearby</small>
+    </div>
+  </div>
 
   <!-- Memorize Channel -->
   <div class="remote-control-group">
@@ -84,11 +96,11 @@ function initializeControlPanel() {
   <div class="remote-control-group">
     <label style="grid-column: 1;">Broadcast Message</label>
     <div style="display: flex; gap: 0.5em; grid-column: 2;">
-      <input type="text" placeholder="Message text" class="channel-input" style="flex: 1;" />
+      <input type="text" maxlength="30" placeholder="Message text" class="channel-input" style="flex: 1;" />
       <button class="action-button">Send</button>
     </div>
     <div style="grid-column: 2;">
-      <small>Sends a digital message to everyone</small>
+      <small>Sends a digital message to everyone in reach</small>
     </div>
   </div>
 
@@ -100,7 +112,7 @@ function initializeControlPanel() {
       <button class="action-button">Send</button>
     </div>
     <div style="grid-column: 2;">
-      <small>Listen for voice on the mentioned channels (e.g.: 01, 05, 07)</small>
+      <small>Listen for voice or data on the mentioned channels (e.g.: 01, 05, 07)</small>
     </div>
   </div>
 </div>
