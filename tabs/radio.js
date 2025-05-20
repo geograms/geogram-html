@@ -36,6 +36,91 @@ function initializeControlPanel() {
 
      <div class="right-column content-column">
 
+
+
+
+<div id="remotecontrol" class="card" style="margin-bottom: 2em; padding: 1em;">
+  <h2>Remote Control</h2>
+  <p>Send commands to the walkie talkie remotely via digital interface.</p>
+
+  <!-- Memorize Channel -->
+  <div class="remote-control-group">
+    <label style="grid-column: 1;">Memorize Channel</label>
+    <div style="display: flex; gap: 0.5em; grid-column: 2;">
+      <input type="number" min="1" max="30" placeholder="Channel (01–30)" class="channel-input" />
+      <input type="text" placeholder="Frequency (MHz)" class="channel-input" />
+      <button class="action-button">Send</button>
+    </div>
+    <div style="grid-column: 2;">
+      <small>Defines a channel with a specific frequency, such as 415.12345</small>
+    </div>
+  </div>
+
+  <!-- Change Channel -->
+  <div class="remote-control-group">
+    <label style="grid-column: 1;">Change Channel</label>
+    <div style="display: flex; gap: 0.5em; grid-column: 2;">
+      <input type="number" min="1" max="30" placeholder="Channel (01–30)" class="channel-input" />
+      <button class="action-button">Send</button>
+    </div>
+    <div style="grid-column: 2;">
+      <small>Changes to a channel saved in memory</small>
+    </div>
+  </div>
+
+  <!-- Select Channel -->
+  <div class="remote-control-group">
+    <label style="grid-column: 1;">Select Channel</label>
+    <div style="display: flex; gap: 0.5em; grid-column: 2;">
+      <input type="number" min="1" max="30" placeholder="Channel (01–30)" class="channel-input" />
+      <button class="action-button">Send</button>
+    </div>
+    <div style="grid-column: 2;">
+      <small>Selects channel to be used</small>
+    </div>
+  </div>
+
+  <!-- Broadcast Message -->
+  <div class="remote-control-group">
+    <label style="grid-column: 1;">Broadcast Message</label>
+    <div style="display: flex; gap: 0.5em; grid-column: 2;">
+      <input type="text" placeholder="Message text" class="channel-input" style="flex: 1;" />
+      <button class="action-button">Send</button>
+    </div>
+    <div style="grid-column: 2;">
+      <small>Sends a digital message to everyone</small>
+    </div>
+  </div>
+
+  <!-- Monitor Channels -->
+  <div class="remote-control-group">
+    <label style="grid-column: 1;">Monitor Channels</label>
+    <div style="display: flex; gap: 0.5em; grid-column: 2;">
+      <input type="text" placeholder="Comma-separated (e.g., 01,05,07)" class="channel-input" style="flex: 1;" />
+      <button class="action-button">Send</button>
+    </div>
+    <div style="grid-column: 2;">
+      <small>Listen for voice on the mentioned channels (e.g.: 01, 05, 07)</small>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
+
 <div id="programming" class="card" style="margin-bottom: 2em; padding: 1em;">
   <h2>Channel programming</h2>
   

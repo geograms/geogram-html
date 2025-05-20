@@ -625,3 +625,11 @@ a:hover {
   color: white;
   cursor: pointer;
 }
+
+.remote-control-group {
+  margin-top: 1.5em;
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  align-items: center;
+  gap: 0.5em 1em;
+}
