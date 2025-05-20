@@ -9,17 +9,15 @@ function render() {
           <li><a href="#uvk5-firmware" class="nav-link">Quansheng UV-K5 Firmware</a></li>
           <li><a href="#esp32-tdongle" class="nav-link">ESP32 T-Dongle</a></li>
         </ul>
+        On this page you find links to geogram in different devices.
+        </br></br>
+        These are just meant as preview and to permit following the development and volunteer.
+        </br></br>
+        Please be pacient as we only aim for full release by 17th of July 2025.
       </div>
     </div>
 
     <div class="right-column content-column">
-        
-        On this page you find links to the Geograms apps running in different devices.
-        These are just meant as preview and to permit following the development and volunteer.
-        </br></br>
-        Please be pacient as we only aim for full interoperability/release on the 17th of July 2025.
-
-       
       <div id="android-app">
         <h2>Android App</h2>
         <div class="card">
@@ -44,7 +42,14 @@ function render() {
          class="action-button" download>
         ⬇ Download Firmware
       </a>
+
+      <a href="https://egzumer.github.io/uvtools/?firmwareURL=https://github.com/geograms/geogram-k5/raw/refs/heads/main/compiled-firmware/firmware.packed.bin"
+         class="action-button" download>
+        ⚡ Flash Firmware
+      </a>
+
     </div>
+
 
     <p style="margin-top: 1em;">
       View the source or contribute on GitHub: 
