@@ -29,14 +29,30 @@ function render() {
         </div>
       </div>
 
-      <div id="uvk5-firmware">
-        <h2>Quansheng UV-K5 Firmware</h2>
-        <div class="card">
-          <p>Custom firmware for the UV-K5 and UV-K5(8) walkie-talkies, enabling digital data relay, APRS compatibility, and voice monitoring enhancements tailored for Geogram integration.</p>
-          <p><strong>Status:</strong> Only communicating with Web app</p>
-          <p><a href="https://github.com/geograms/geogram-k5" target="_blank">https://github.com/geograms/geogram-k5</a></p>
-        </div>
-      </div>
+  <div id="uvk5-firmware">
+  <h2>Quansheng UV-K5 Firmware</h2>
+  <div class="card" style="padding: 0em;">
+    <p>
+      Custom firmware for the UV-K5 and UV-K5(8) walkie-talkies enabling digital data relay, APRS compatibility, and enhanced voice monitoring features tailored for Geogram integration.
+    </p>
+    <p><strong>Updated:</strong> 2025-05-20</p>
+
+    <div style="margin: 0em 0;">
+      <a href="https://github.com/geograms/geogram-k5/raw/refs/heads/main/compiled-firmware/firmware.packed.bin"
+         class="action-button" download>
+        ⬇ Download Latest Firmware
+      </a>
+    </div>
+
+    <p style="margin-top: 1em;">
+      View source or contribute on GitHub:<br>
+      <a href="https://github.com/geograms/geogram-k5" target="_blank">
+        github.com/geograms/geogram-k5
+      </a>
+    </p>
+  </div>
+</div>
+
 
       <div id="esp32-tdongle">
         <h2>ESP32 T-Dongle</h2>

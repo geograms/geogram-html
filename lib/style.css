@@ -410,15 +410,22 @@ a:hover {
   background-color: var(--card);
   color: var(--accent);
   border: none;
-  padding: 0.6em 1.2em;
+  padding: 0.4em 0.8em;
   border-radius: 6px;
-  font-size: 1.0em;
+  font-size: 1em;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  display: inline-block;
-  height: 2.6em;
-  line-height: 1.4em;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
 }
+
+
 
 .action-button:hover {
   background-color: var(--accent);
