@@ -194,35 +194,5 @@ limitations under the License.
     </div>
   `;
 
-  // Navigation link functionality (same as config.js)
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const targetId = link.getAttribute('href').substring(1);
-      const targetElement = document.getElementById(targetId);
-      if (targetElement) {
-        targetElement.scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'start'
-        });
-        
-        // Add temporary highlight
-        targetElement.style.transition = 'background-color 0.5s ease';
-        targetElement.style.backgroundColor = 'var(--wave-color)';
-        setTimeout(() => {
-          targetElement.style.backgroundColor = '';
-        }, 1000);
-      }
-    });
-  });
-
-  // Set initial scroll position if hash exists
-  if (window.location.hash) {
-    const targetElement = document.getElementById(window.location.hash.substring(1));
-    if (targetElement) {
-      setTimeout(() => {
-        targetElement.scrollIntoView();
-      }, 100);
-    }
-  }
+    setupAnchorNavigation("docs");
 }

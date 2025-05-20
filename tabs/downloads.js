@@ -74,20 +74,5 @@ function render() {
     </div>
   `;
 
-  // Navigation smooth scroll and highlight
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const targetId = link.getAttribute('href').substring(1);
-      const targetElement = document.getElementById(targetId);
-      if (targetElement) {
-        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        targetElement.style.transition = 'background-color 0.5s ease';
-        targetElement.style.backgroundColor = 'var(--wave-color)';
-        setTimeout(() => {
-          targetElement.style.backgroundColor = '';
-        }, 1000);
-      }
-    });
-  });
+  setupAnchorNavigation("downloads");
 }

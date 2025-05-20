@@ -395,6 +395,7 @@ function initializeControlPanel() {
   setupMorseCodeFunctionality();
   loadChannelsFromDB();
   attachChannelInputListeners();
+  setupAnchorNavigation("radio");
 
   // attach an action to the reset button
   document.getElementById('resetChannelsBtn').addEventListener('click', async () => {

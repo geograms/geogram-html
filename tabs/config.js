@@ -127,27 +127,8 @@ function render() {
     </div>
   `;
 
-  // Navigation link functionality
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const targetId = link.getAttribute('href').substring(1);
-      const targetElement = document.getElementById(targetId);
-      if (targetElement) {
-        targetElement.scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'start'
-        });
-        
-        // Add temporary highlight
-        targetElement.style.transition = 'background-color 0.5s ease';
-        targetElement.style.backgroundColor = 'var(--wave-color)';
-        setTimeout(() => {
-          targetElement.style.backgroundColor = '';
-        }, 1000);
-      }
-    });
-  });
+ 
+  setupAnchorNavigation("config");
 
   // Theme selection
   const currentTheme = localStorage.getItem('theme') || 'green';
