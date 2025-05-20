@@ -59,7 +59,12 @@ function initializeControlPanel() {
   <div class="remote-control-group">
     <label style="grid-column: 1;">Memorize Channel</label>
     <div style="display: flex; gap: 0.5em; grid-column: 2;">
-      <input type="number" min="1" max="30" placeholder="Channel (01–30)" class="channel-input" />
+      <select class="channel-input">
+        ${Array.from({ length: 30 }, (_, i) => {
+    const ch = (i + 1).toString().padStart(2, '0');
+    return `<option value="${ch}">${ch}</option>`;
+  }).join('')}
+    </select>
       <input type="text" placeholder="Frequency (MHz)" class="channel-input" />
       <button class="action-button">Send</button>
     </div>
@@ -72,8 +77,12 @@ function initializeControlPanel() {
   <div class="remote-control-group">
     <label style="grid-column: 1;">Change Channel</label>
     <div style="display: flex; gap: 0.5em; grid-column: 2;">
-      <input type="number" min="1" max="30" placeholder="Channel (01–30)" class="channel-input" />
-      <button class="action-button">Send</button>
+      <select class="channel-input">
+        ${Array.from({ length: 30 }, (_, i) => {
+    const ch = (i + 1).toString().padStart(2, '0');
+    return `<option value="${ch}">${ch}</option>`;
+  }).join('')}
+    </select>      <button class="action-button">Send</button>
     </div>
     <div style="grid-column: 2;">
       <small>Changes to a channel saved in memory</small>
@@ -84,8 +93,12 @@ function initializeControlPanel() {
   <div class="remote-control-group">
     <label style="grid-column: 1;">Select Channel</label>
     <div style="display: flex; gap: 0.5em; grid-column: 2;">
-      <input type="number" min="1" max="30" placeholder="Channel (01–30)" class="channel-input" />
-      <button class="action-button">Send</button>
+      <select class="channel-input">
+        ${Array.from({ length: 30 }, (_, i) => {
+    const ch = (i + 1).toString().padStart(2, '0');
+    return `<option value="${ch}">${ch}</option>`;
+  }).join('')}
+    </select>      <button class="action-button">Send</button>
     </div>
     <div style="grid-column: 2;">
       <small>Selects channel to be used</small>
@@ -104,22 +117,24 @@ function initializeControlPanel() {
     </div>
   </div>
 
-  <!-- Monitor Channels -->
-  <div class="remote-control-group">
-    <label style="grid-column: 1;">Monitor Channels</label>
-    <div style="display: flex; gap: 0.5em; grid-column: 2;">
-      <input type="text" placeholder="Comma-separated (e.g., 01,05,07)" class="channel-input" style="flex: 1;" />
-      <button class="action-button">Send</button>
+<!-- Monitor Channels -->
+<div class="remote-control-group">
+  <label style="grid-column: 1;">Monitor Channels</label>
+  <div style="grid-column: 2;">
+    <div style="display: flex; align-items: flex-start; gap: 1em; flex-wrap: wrap;">
+      <div id="monitor-channel-checkboxes" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 0.5em; flex: 1;">
+        ${Array.from({ length: 30 }, (_, i) => {
+          const ch = (i + 1).toString().padStart(2, '0');
+          return `<label><input type="checkbox" value="${ch}" /> ${ch}</label>`;
+        }).join('')}
+      </div>
+      <div>
+        <button class="action-button">Send</button>
+      </div>
     </div>
-    <div style="grid-column: 2;">
-      <small>Listen for voice or data on the mentioned channels (e.g.: 01, 05, 07)</small>
-    </div>
+    <small>Listen for voice or data on the selected channels (e.g.: 01, 05, 07)</small>
   </div>
 </div>
-
-
-
-
 
 
 
@@ -405,12 +420,12 @@ function initializeControlPanel() {
   const charGap = () => parseInt(document.getElementById('charGap').value || '200');
 
   // Helper to send command as Morse
-async function transmitCommand(code) {
-  stopMorse(); // Stop previous before triggering
-  //const full = `${trigger()} ${code}`;
-  const full = `${code}`;
-  await sendMorseFromText(full);
-}
+  async function transmitCommand(code) {
+    stopMorse(); // Stop previous before triggering
+    //const full = `${trigger()} ${code}`;
+    const full = `${code}`;
+    await sendMorseFromText(full);
+  }
 
 
   // Attach handlers to Remote Control buttons
@@ -454,8 +469,9 @@ async function transmitCommand(code) {
       }
 
       else if (label.includes('monitor')) {
-        const val = group.querySelector('input[type="text"]').value.trim();
-        if (!val.match(/^(\d{2})(,\d{2})*$/)) return alert('Use format: 01,05,07');
+        const checkboxes = group.querySelectorAll('input[type="checkbox"]:checked');
+        const val = Array.from(checkboxes).map(cb => cb.value).join(',');
+        if (!val) return alert('Select at least one channel');
         cmd = `O:${val}`;
       }
 
