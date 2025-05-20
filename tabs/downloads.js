@@ -25,7 +25,9 @@ function render() {
         <div class="card">
           <p>The official Geogram Android app allows you to connect your radio hardware, receive APRS data, record transmissions, and sync with your browser instance (when online).</p>
           <p><strong>Status:</strong> Only communicating with ESP32 T-Dongle</p>
-          <p><a href="https://github.com/geograms/geogram-android" target="_blank">https://github.com/geograms/geogram-android</a></p>
+          <p> View the source or contribute on GitHub: 
+          <a href="https://github.com/geograms/geogram-android" target="_blank">https://github.com/geograms/geogram-android</a>
+          </p>
         </div>
       </div>
 
@@ -40,12 +42,12 @@ function render() {
     <div style="margin: 0em 0;">
       <a href="https://github.com/geograms/geogram-k5/raw/refs/heads/main/compiled-firmware/firmware.packed.bin"
          class="action-button" download>
-        ⬇ Download Latest Firmware
+        ⬇ Download Firmware
       </a>
     </div>
 
     <p style="margin-top: 1em;">
-      View source or contribute on GitHub:<br>
+      View the source or contribute on GitHub: 
       <a href="https://github.com/geograms/geogram-k5" target="_blank">
         github.com/geograms/geogram-k5
       </a>

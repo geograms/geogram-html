@@ -57,6 +57,9 @@
   color: var(--accent); /* optional for visual emphasis */
 }
 
+.card {
+  margin-bottom: 4em;
+}
 
 :root {
   --bg: #41b4e9;
