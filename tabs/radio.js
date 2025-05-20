@@ -385,11 +385,11 @@ function initializeControlPanel() {
   document.getElementById('resetChannelsBtn').addEventListener('click', async () => {
     const confirmed = confirm("Are you sure you want to reset all channels to default?");
     if (!confirmed) return;
-  
+
     const db = await openDB();
     const tx = db.transaction('channelData', 'readwrite');
     tx.objectStore('channelData').clear();
-  
+
     tx.oncomplete = () => {
       restoreDefaultChannels();
       saveChannelsToDB();
@@ -399,6 +399,68 @@ function initializeControlPanel() {
   // attach an action to the send button
   document.getElementById('sendToRadioBtn').addEventListener('click', () => {
     sendToRadio();
+  });
+
+  const trigger = () => document.getElementById('trigger').value;
+  const charGap = () => parseInt(document.getElementById('charGap').value || '200');
+
+  // Helper to send command as Morse
+async function transmitCommand(code) {
+  stopMorse(); // Stop previous before triggering
+  //const full = `${trigger()} ${code}`;
+  const full = `${code}`;
+  await sendMorseFromText(full);
+}
+
+
+  // Attach handlers to Remote Control buttons
+
+  const remoteGroups = document.querySelectorAll('#remotecontrol .remote-control-group');
+
+  remoteGroups.forEach(group => {
+    const label = group.querySelector('label')?.textContent?.toLowerCase() || '';
+    const btn = group.querySelector('button');
+
+    btn.addEventListener('click', async () => {
+      let cmd = '';
+
+      if (label.includes('ping')) {
+        cmd = 'P:';
+      }
+
+      else if (label.includes('memorize')) {
+        const ch = group.querySelector('input[type="number"]').value.padStart(2, '0');
+        const freq = group.querySelector('input[type="text"]').value.trim();
+        if (!ch || !freq) return alert('Invalid input.');
+        cmd = `M:${ch}:${freq}`;
+      }
+
+      else if (label.includes('change')) {
+        const ch = group.querySelector('input[type="number"]').value.padStart(2, '0');
+        if (!ch) return alert('Invalid input.');
+        cmd = `C:${ch}`;
+      }
+
+      else if (label.includes('select')) {
+        const ch = group.querySelector('input[type="number"]').value.padStart(2, '0');
+        if (!ch) return alert('Invalid input.');
+        cmd = `S:${ch}`;
+      }
+
+      else if (label.includes('broadcast')) {
+        const msg = group.querySelector('input[type="text"]').value.trim();
+        if (!msg) return alert('Message empty.');
+        cmd = `B:${msg}`;
+      }
+
+      else if (label.includes('monitor')) {
+        const val = group.querySelector('input[type="text"]').value.trim();
+        if (!val.match(/^(\d{2})(,\d{2})*$/)) return alert('Use format: 01,05,07');
+        cmd = `O:${val}`;
+      }
+
+      if (cmd) await transmitCommand(cmd);
+    });
   });
 
 
