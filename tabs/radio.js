@@ -27,7 +27,7 @@ function initializeControlPanel() {
         <h2>Radio</h2>
         <ul class="nav-links" style="list-style: none; padding-left: 0;">
           <li><a href="#programming" class="nav-link">Channel programming</a></li>
-          <li><a href="#morsecode" class="nav-link">Morse Code Generator</a></li>
+          <li><a href="#morsecode" class="nav-link">Morse Code Tunning</a></li>
         </ul>
       </div>
     </div>
@@ -232,10 +232,10 @@ function initializeControlPanel() {
 
 
     <div id="morsecode">
-      <h2>Morse Code Generator</h2>
-      Use this tool for direct communication with walkie talkies.
+      <h2>Morse Code Tuning</h2>
+      Use this tool for communication tuning with walkie talkies.
       </br></br>
-      <div class="control-panel">
+      <div>
         <div class="control-group">
           <label for="trigger">Trigger Sequence:</label>
           <input type="text" id="trigger" value="-.-.-.">
@@ -271,8 +271,9 @@ function initializeControlPanel() {
           <button class="btn-stop" id="stopMorseBtn">Stop</button>
           <button class="btn-download" id="downloadMp3Btn">Download MP3</button>
         </div>
-      </div>
+        </div>
     </div>
+    <button id="resetMorseBtn" class="action-button" style="margin-top: 1em;">Reset to default values</button>
   </div>  
 
   </div>
