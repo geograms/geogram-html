@@ -337,8 +337,14 @@ function initializeControlPanel() {
     </tbody>
   </table>
 
-  <button id="resetChannelsBtn" class="action-button" style="margin-left: 1em;margin-top: 1em;">Reset to default values</button>
+  <div style="margin-left: 1em; margin-top: 1em; display: flex; gap: 1em;">
+    <button id="resetChannelsBtn" class="action-button">Reset to default values</button>
+    <button id="exportChannelsBtn" class="action-button">Export</button>
+    <button id="importChannelsBtn" class="action-button">Import</button>
+    <input type="file" id="importFileInput" accept=".json" style="display: none;" />
+  </div>
 
+  
 
 </div>
 
@@ -479,6 +485,50 @@ function initializeControlPanel() {
       if (cmd) await transmitCommand(cmd);
     });
   });
+
+
+
+  document.getElementById('exportChannelsBtn').addEventListener('click', () => {
+    const rows = document.querySelectorAll('#channelTable tbody tr');
+    const data = Array.from(rows).map(row => ({
+      channel: row.cells[0].textContent.trim(),
+      freq: row.cells[1].querySelector('input').value.trim(),
+      desc: row.cells[2].querySelector('input').value.trim(),
+    }));
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'channels.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+  
+  document.getElementById('importChannelsBtn').addEventListener('click', () => {
+    document.getElementById('importFileInput').click();
+  });
+  
+  document.getElementById('importFileInput').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const text = await file.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      return alert("Invalid JSON");
+    }
+  
+    const rows = document.querySelectorAll('#channelTable tbody tr');
+    data.forEach((item, i) => {
+      if (!rows[i]) return;
+      rows[i].cells[1].querySelector('input').value = item.freq || '';
+      rows[i].cells[2].querySelector('input').value = item.desc || '';
+    });
+  
+    saveChannelsToDB();
+  });
+  
 
 
 }
