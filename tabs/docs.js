@@ -8,6 +8,7 @@ function render() {
           <li><a href="#introduction" class="nav-link">Introduction</a></li>
           <li><a href="#features" class="nav-link">Features</a></li>
           <li><a href="#getting-started" class="nav-link">Getting Started</a></li>
+          <li><a href="#upload-firmware" class="nav-link">Upload firmware to Walkie Talkie</a></li>
           <li><a href="#configuration" class="nav-link">Configuration</a></li>
           <li><a href="#privacy" class="nav-link">Privacy & Security</a></li>
           <li><a href="#troubleshooting" class="nav-link">Troubleshooting</a></li>
@@ -73,6 +74,40 @@ function render() {
             <li>LocalStorage API</li>
             <li>Geolocation API (for location features)</li>
             <li>WebSocket connections</li>
+          </ul>
+        </div>
+      </div>
+
+      
+      <div id="upload-firmware">
+        <h2>Flashing the Quansheng UV-K5 Walkie Talkie</h2>
+        <div class="card">
+          <h3>Instructions</h3>
+          <ol>
+            <li>Connect a USB-to-Serial cable (Baofeng/Kenwood 2-pin compatible) to your PC and the radio.</li>
+            <li>Ensure the radio is powered on and set to the correct COM mode (usually visible on the screen as "PC").</li>
+            <li>Use a modern browser like Chrome or Edge. Firefox is not supported.</li>
+            <li>Open this web app and go to the programming or flashing section.</li>
+            <li>When prompted, select the correct serial port (you should see "USB-SERIAL CH340" or similar).</li>
+            <li>Click the button to start the flashing process. Watch the progress bar to follow the upload.</li>
+            <li>After the process completes, the radio will reboot with the new firmware.</li>
+          </ol>
+
+          <h3>Browser Requirements</h3>
+          <ul>
+            <li>Use Chromium-based browsers (Chrome, Edge, Brave, etc.)</li>
+            <li>When it works, you will be prompted to choose a serial device.</li>
+            <li>If nothing appears, verify your USB cable and drivers (CH340 or CP2102).</li>
+          </ul>
+
+          <h3>Video Tutorial</h3>
+          <iframe width="100%" height="315" src="https://www.youtube.com/embed/-m2_gXkR5VE" title="Flashing UV-K5 Walkie Talkie" frameborder="0" allowfullscreen></iframe>
+          <p><a href="https://www.youtube.com/watch?v=-m2_gXkR5VE" target="_blank">Watch on YouTube</a></p>
+
+          <h3>Buy the Tools</h3>
+          <ul>
+            <li><a href="https://www.aliexpress.com/wholesale?SearchText=quansheng+uv-k5" target="_blank">Buy Quansheng UV-K5 on AliExpress</a></li>
+            <li><a href="https://www.aliexpress.com/wholesale?SearchText=usb+serial+programming+cable+baofeng" target="_blank">Buy USB Serial Programming Cable on AliExpress</a></li>
           </ul>
         </div>
       </div>

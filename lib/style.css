@@ -642,3 +642,8 @@ a:hover {
   align-items: center;
   gap: 0.5em 1em;
 }
+
+.leaflet-marker-icon {
+  filter: none !important;
+  -webkit-filter: none !important;
+}
