@@ -85,8 +85,9 @@ function render() {
           <h3>Instructions</h3>
           <ol>
             <li>Connect a USB-to-Serial cable (Baofeng/Kenwood 2-pin compatible) to your PC and the radio.</li>
-            <li>Ensure the radio is powered on and set to the correct COM mode (usually visible on the screen as "PC").</li>
-            <li>Use a modern browser like Chrome or Edge. Firefox is not supported.</li>
+            <li>Press the PTT button and turn ON the power. The flashlight Led must turn ON</li>
+            <li>Use a browser like Chrome or Edge. Firefox is not supported.</li>
+            <li>If Chrome doesn't work, check the admin rights (in Ubuntu, you need to install Chrome from the source)</li>
             <li>Open this web app and go to the programming or flashing section.</li>
             <li>When prompted, select the correct serial port (you should see "USB-SERIAL CH340" or similar).</li>
             <li>Click the button to start the flashing process. Watch the progress bar to follow the upload.</li>
