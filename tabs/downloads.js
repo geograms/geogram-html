@@ -8,6 +8,7 @@ function render() {
           <li><a href="#android-app" class="nav-link">Android App</a></li>
           <li><a href="#uvk5-firmware" class="nav-link">Quansheng UV-K5 Firmware</a></li>
           <li><a href="#esp32-tdongle" class="nav-link">ESP32 T-Dongle</a></li>
+          <li><a href="#html" class="nav-link">HTML app</a></li>
         </ul>
         On this page you find links to geogram in different devices.
         </br></br>
@@ -70,6 +71,18 @@ function render() {
         </div>
       </div>
 
+
+      <div id="html">
+        <h2>HTML app</h2>
+        <div class="card">
+          <p>Run this web page directly from your computer or phone without need for an internet connection</p>
+          <div style="margin: 0em 0;">
+            <a href="./tools/geogram-html.zip" class="action-button" download> ⬇ Download HTML app</a>
+          </div>
+        </div>
+      </div>
+
+  
 
     </div>
   `;
