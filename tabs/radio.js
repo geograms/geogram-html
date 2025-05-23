@@ -503,9 +503,11 @@ function initializeControlPanel() {
     if (cmd) {
       sending = true;
       btn.textContent = 'Stop'; // Change button text to "Stop"
+      btn.classList.add('running'); // Add the "running" class
       await transmitCommand(cmd);
       sending = false;
       btn.textContent = 'Send'; // Reset button text to "Send" after completion
+      btn.classList.remove('running'); // Remove the "running" class
     }
 
     });
