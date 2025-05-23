@@ -443,7 +443,17 @@ function initializeControlPanel() {
     const label = group.querySelector('label')?.textContent?.toLowerCase() || '';
     const btn = group.querySelector('button');
 
+    let sending = false; // Track sending state for each button
+
     btn.addEventListener('click', async () => {
+      if (sending) {
+        // Stop sending
+        sending = false;
+        btn.textContent = 'Send';
+        stopMorse(); // Stop the Morse code transmission
+        return;
+      }
+
       let cmd = '';
 
       if (label.includes('ping')) {
@@ -451,13 +461,21 @@ function initializeControlPanel() {
       }
 
       else if (label.includes('memorize')) {
-        const ch = group.querySelector('input[type="number"]').value.padStart(2, '0');
-        const freq = group.querySelector('input[type="text"]').value.trim();
-        if (!ch || !freq) return alert('Invalid input.');
-        cmd = `M:${ch}:${freq}`;
+      const inputs = group.querySelectorAll('.channel-input');
+      const ch = inputs[0].value.padStart(2, '0');
+      let freq = inputs[1].value.trim();
+
+      // Validate and format frequency
+      const freqRegex = /^\d{3}\.\d{4}$/;
+      if (!freqRegex.test(freq)) {
+        return alert('Invalid frequency format. Please use the format NNN.nnnnn (e.g., 446.0062).');
       }
 
-      else if (label.includes('change')) {
+      if (!ch || !freq) return alert('Invalid input.');
+      cmd = `M${ch}:${freq}`;
+
+
+      }else if (label.includes('change')) {
         const ch = group.querySelector('input[type="number"]').value.padStart(2, '0');
         if (!ch) return alert('Invalid input.');
         cmd = `C:${ch}`;
@@ -482,7 +500,14 @@ function initializeControlPanel() {
         cmd = `O:${val}`;
       }
 
-      if (cmd) await transmitCommand(cmd);
+    if (cmd) {
+      sending = true;
+      btn.textContent = 'Stop'; // Change button text to "Stop"
+      await transmitCommand(cmd);
+      sending = false;
+      btn.textContent = 'Send'; // Reset button text to "Send" after completion
+    }
+
     });
   });
 
