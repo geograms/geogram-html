@@ -474,7 +474,7 @@ function initializeControlPanel() {
 
       else if (label.includes('monitor')) {
         const checkboxes = group.querySelectorAll('input[type="checkbox"]:checked');
-        const val = Array.from(checkboxes).map(cb => cb.value).join(',');
+        const val = Array.from(checkboxes).map(cb => cb.value).join(' ');
         if (!val) return alert('Select at least one channel');
         cmd = `O:${val}`;
       }
