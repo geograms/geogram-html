@@ -85,25 +85,10 @@ function initializeControlPanel() {
     </select>      <button class="action-button">Send</button>
     </div>
     <div style="grid-column: 2;">
-      <small>Changes to a channel saved in memory</small>
+      <small>Selects a channel saved in the radio memory</small>
     </div>
   </div>
 
-  <!-- Select Channel -->
-  <div class="remote-control-group">
-    <label style="grid-column: 1;">Select Channel</label>
-    <div style="display: flex; gap: 0.5em; grid-column: 2;">
-      <select class="channel-input">
-        ${Array.from({ length: 30 }, (_, i) => {
-    const ch = (i + 1).toString().padStart(2, '0');
-    return `<option value="${ch}">${ch}</option>`;
-  }).join('')}
-    </select>      <button class="action-button">Send</button>
-    </div>
-    <div style="grid-column: 2;">
-      <small>Selects channel to be used</small>
-    </div>
-  </div>
 
   <!-- Broadcast Message -->
   <div class="remote-control-group">
@@ -475,17 +460,11 @@ function initializeControlPanel() {
       cmd = `M${ch}:${freq}`;
 
 
-      }else if (label.includes('change')) {
-        const ch = group.querySelector('input[type="number"]').value.padStart(2, '0');
-        if (!ch) return alert('Invalid input.');
-        cmd = `C:${ch}`;
-      }
-
-      else if (label.includes('select')) {
-        const ch = group.querySelector('input[type="number"]').value.padStart(2, '0');
-        if (!ch) return alert('Invalid input.');
-        cmd = `S:${ch}`;
-      }
+    }else if (label.includes('change')) {
+      const ch = group.querySelector('select.channel-input').value.padStart(2, '0'); // Select the value from the dropdown
+      if (!ch) return alert('Invalid input. Please select a channel.');
+      cmd = `C:${ch}`; // Format the command as "C:XX"
+    }
 
       else if (label.includes('broadcast')) {
         const msg = group.querySelector('input[type="text"]').value.trim();
@@ -504,6 +483,7 @@ function initializeControlPanel() {
       sending = true;
       btn.textContent = 'Stop'; // Change button text to "Stop"
       btn.classList.add('running'); // Add the "running" class
+      console.log(`Sending command: ${cmd}`);
       await transmitCommand(cmd);
       sending = false;
       btn.textContent = 'Send'; // Reset button text to "Send" after completion
