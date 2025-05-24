@@ -80,6 +80,27 @@
   <script src="lib/main.js"></script>
   
   <script>
+
+    // Set and apply the default theme for new visitors
+    (function initializeTheme() {
+      const defaultTheme = 'red'; // Default theme: Red Alert
+      const savedTheme = localStorage.getItem('theme') || defaultTheme;
+    
+      // Apply the theme
+      applyTheme(savedTheme);
+    
+      // Save the default theme if it's a new visitor
+      if (!localStorage.getItem('theme')) {
+        localStorage.setItem('theme', defaultTheme);
+      }
+    })();
+    
+    // Function to apply the theme
+    function applyTheme(theme) {
+      document.body.setAttribute('data-theme', theme);
+    }
+
+
     // Hide loading screen when everything is loaded
     window.addEventListener('load', function() {
       setTimeout(function() {
