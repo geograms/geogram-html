@@ -44,6 +44,21 @@ function initializeControlPanel() {
   <h2>Remote Control</h2>
   <p>Send commands to the walkie talkie remotely via morse code.</p>
 
+
+
+  <!-- Broadcast Message -->
+  <div class="remote-control-group">
+    <label style="grid-column: 1;">Broadcast Message</label>
+    <div style="display: flex; gap: 0.5em; grid-column: 2;">
+      <input type="text" maxlength="30" placeholder="Message text" class="channel-input" style="flex: 1;" />
+      <button class="action-button">Send</button>
+    </div>
+    <div style="grid-column: 2;">
+      <small>Sends a digital message to everyone in reach</small>
+    </div>
+  </div>
+
+
   <!-- Ping -->
   <div class="remote-control-group">
     <label style="grid-column: 1;">Ping</label>
@@ -90,19 +105,9 @@ function initializeControlPanel() {
   </div>
 
 
-  <!-- Broadcast Message -->
-  <div class="remote-control-group">
-    <label style="grid-column: 1;">Broadcast Message</label>
-    <div style="display: flex; gap: 0.5em; grid-column: 2;">
-      <input type="text" maxlength="30" placeholder="Message text" class="channel-input" style="flex: 1;" />
-      <button class="action-button">Send</button>
-    </div>
-    <div style="grid-column: 2;">
-      <small>Sends a digital message to everyone in reach</small>
-    </div>
-  </div>
+  
 
-<!-- Monitor Channels -->
+<!-- Monitor Channels 
 <div class="remote-control-group">
   <label style="grid-column: 1;">Monitor Channels</label>
   <div style="grid-column: 2;">
@@ -157,9 +162,9 @@ function initializeControlPanel() {
 
   <table id="channelTable" class="styled-table" style="margin-top: 1em; width: 100%;">
     <colgroup>
-      <col style="width: 05%;">  <!-- Channel -->
-      <col style="width: 10%;">  <!-- Frequency -->
-      <col style="width: 85%;">  <!-- Description -->
+      <col style="width: 05%;"> 
+      <col style="width: 10%;">
+      <col style="width: 85%;">
     </colgroup>
     <thead>
       <tr>
@@ -330,6 +335,8 @@ function initializeControlPanel() {
   </div>
 
   
+-->
+
 
 </div>
 
@@ -457,7 +464,7 @@ function initializeControlPanel() {
       }
 
       if (!ch || !freq) return alert('Invalid input.');
-      cmd = `M${ch}:${freq}`;
+      cmd = `M${ch}${freq}`;
 
 
     }else if (label.includes('change')) {

@@ -8,7 +8,7 @@ function render() {
           <li><a href="#introduction" class="nav-link">Introduction</a></li>
           <li><a href="#features" class="nav-link">Features</a></li>
           <li><a href="#getting-started" class="nav-link">Getting Started</a></li>
-          <li><a href="#Hardware" class="nav-link">Hardware</a></li>
+          <li><a href="#hardware" class="nav-link">Hardware</a></li>
           <li><a href="#upload-firmware" class="nav-link">Upload firmware to Walkie Talkie</a></li>
           <li><a href="#configuration" class="nav-link">Configuration</a></li>
           <li><a href="#privacy" class="nav-link">Privacy & Security</a></li>
