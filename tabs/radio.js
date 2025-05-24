@@ -466,9 +466,9 @@ function initializeControlPanel() {
       let freq = inputs[1].value.trim();
 
       // Validate and format frequency
-      const freqRegex = /^\d{3}\.\d{4}$/;
+      const freqRegex = /^\d{3}\.\d{5}$/;
       if (!freqRegex.test(freq)) {
-        return alert('Invalid frequency format. Please use the format NNN.nnnnn (e.g., 446.0062).');
+        return alert('Invalid frequency format. Please use the format NNN.nnnnn (e.g., 446.00625).');
       }
 
       if (!ch || !freq) return alert('Invalid input.');
