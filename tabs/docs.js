@@ -8,6 +8,7 @@ function render() {
           <li><a href="#introduction" class="nav-link">Introduction</a></li>
           <li><a href="#features" class="nav-link">Features</a></li>
           <li><a href="#getting-started" class="nav-link">Getting Started</a></li>
+          <li><a href="#Hardware" class="nav-link">Hardware</a></li>
           <li><a href="#upload-firmware" class="nav-link">Upload firmware to Walkie Talkie</a></li>
           <li><a href="#configuration" class="nav-link">Configuration</a></li>
           <li><a href="#privacy" class="nav-link">Privacy & Security</a></li>
@@ -79,6 +80,21 @@ function render() {
       </div>
 
       
+      <div id="hardware">
+        <h2>Hardware</h2>
+        <div class="card">
+        This is a list of material you need for using this web application.
+          <ul>
+            <li><a href="https://www.aliexpress.com/wholesale?SearchText=quansheng+uv-k5" target="_blank">Walkie-Talkie -> Buy Quansheng UV-K5 on AliExpress</a></li>
+            <li><a href="https://www.aliexpress.com/wholesale?SearchText=usb+serial+programming+cable+baofeng" target="_blank">USB serial cable (for flashing) -> on AliExpress</a></li>
+            <li><a href="https://www.aliexpress.com/wholesale?SearchText=quangsheng-kenwood male connector" target="_blank">Buy the audio cable on AliExpress</a></li>
+          </ul>
+        </div>
+      </div>
+
+
+
+
       <div id="upload-firmware">
         <h2>Flashing the Quansheng UV-K5 Walkie Talkie</h2>
         <div class="card">
@@ -104,14 +120,9 @@ function render() {
           <h3>Video Tutorial</h3>
           <iframe width="100%" height="315" src="https://www.youtube.com/embed/-m2_gXkR5VE" title="Flashing UV-K5 Walkie Talkie" frameborder="0" allowfullscreen></iframe>
           <p><a href="https://www.youtube.com/watch?v=-m2_gXkR5VE" target="_blank">Watch on YouTube</a></p>
-
-          <h3>Buy the Tools</h3>
-          <ul>
-            <li><a href="https://www.aliexpress.com/wholesale?SearchText=quansheng+uv-k5" target="_blank">Buy Quansheng UV-K5 on AliExpress</a></li>
-            <li><a href="https://www.aliexpress.com/wholesale?SearchText=usb+serial+programming+cable+baofeng" target="_blank">Buy USB Serial Programming Cable on AliExpress</a></li>
-          </ul>
         </div>
       </div>
+
 
       <div id="configuration">
         <h2>Configuration</h2>
