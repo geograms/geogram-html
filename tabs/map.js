@@ -67,46 +67,51 @@ function render() {
   `;
   document.head.appendChild(style);
 
-  // Load Leaflet only once
-  if (!window.L) {
-    const leafletCSS = document.createElement('link');
-    leafletCSS.rel = 'stylesheet';
-    // https://unpkg.com/leaflet@1.9.4/dist/leaflet.css
-    leafletCSS.href = 'lib/map/leaflet.css';
-    document.head.appendChild(leafletCSS);
+ // Load Leaflet only once
+if (!window.L) {
+  const leafletCSS = document.createElement('link');
+  leafletCSS.rel = 'stylesheet';
+  // https://unpkg.com/leaflet@1.9.4/dist/leaflet.css
+  leafletCSS.href = 'lib/map/leaflet.css';
+  document.head.appendChild(leafletCSS);
 
-    const geocoderCSS = document.createElement('link');
-    geocoderCSS.rel = 'stylesheet';
-    // https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css
-    geocoderCSS.href = 'lib/map/Control.Geocoder.css';
-    document.head.appendChild(geocoderCSS);
+  const geocoderCSS = document.createElement('link');
+  geocoderCSS.rel = 'stylesheet';
+  // https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css
+  geocoderCSS.href = 'lib/map/Control.Geocoder.css';
+  document.head.appendChild(geocoderCSS);
 
-    const clusterCSS = document.createElement('link');
-    clusterCSS.rel = 'stylesheet';
-    // https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css
-    clusterCSS.href = 'lib/map/MarkerCluster.Default.css';
-    document.head.appendChild(clusterCSS);
+  const clusterCSS = document.createElement('link');
+  clusterCSS.rel = 'stylesheet';
+  // https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css
+  clusterCSS.href = 'lib/map/MarkerCluster.Default.css';
+  document.head.appendChild(clusterCSS);
 
-    const leafletJS = document.createElement('script');
-    // https://unpkg.com/leaflet@1.9.4/dist/leaflet.js
-    leafletJS.src = 'lib/map/leaflet.js';
-    leafletJS.onload = () => {
-      const geocoderJS = document.createElement('script');
-      // https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js
-      geocoderJS.src = 'lib/map/Control.Geocoder.js';
-      geocoderJS.onload = () => {
-        const clusterJS = document.createElement('script');
-        // https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js
-        clusterJS.src = 'lib/map/leaflet.markercluster.js';
-        clusterJS.onload = initializeMap;
-        document.head.appendChild(clusterJS);
-      };
-      document.head.appendChild(geocoderJS);
-    };
-    document.head.appendChild(leafletJS);
-  } else {
-    initializeMap();
-  }
+  // Promise-based script loading
+  loadScript('lib/map/leaflet.js') // https://unpkg.com/leaflet@1.9.4/dist/leaflet.js
+    .then(() => loadScript('lib/map/Control.Geocoder.js')) // https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js
+    .then(() => loadScript('lib/map/leaflet.markercluster.js')) // https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js
+    .then(() => {
+      initializeMap();
+    })
+    .catch(err => {
+      console.error("Map dependency loading failed:", err);
+    });
+} else {
+  initializeMap();
+}
+
+// Helper: Promise-based script loader
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
 }
 
 function initializeMap() {
@@ -331,7 +336,7 @@ function initializeMap() {
             if (getAllRequest.result.length > 0) {
               processIGates(getAllRequest.result, true);
             }
-            loadFreshIGates(db);
+            loadFreshIGates(db); // Load fresh data after showing cached data
           };
         }
       } else {
@@ -339,25 +344,43 @@ function initializeMap() {
         loadFreshIGates(db);
       }
     };
+
+    countRequest.onerror = () => {
+      console.error("Failed to count iGates in IndexedDB");
+      loadFreshIGates(db); // Fallback to fresh load
+    };
   }
 
   function loadFreshIGates(db = null) {
-    const iGateScript = document.createElement('script');
-    iGateScript.src = './data/IGATE.js';
-    iGateScript.onload = () => {
-      if (Array.isArray(window.IGATE)) {
+    loadScript('./data/IGATE.js')
+      .then(() => {
+        if (!Array.isArray(window.IGATE)) {
+          throw new Error("IGATE data not available after script load.");
+        }
+  
         processIGates(window.IGATE, false);
-
-        // Cache the data
+  
         if (db) {
           cacheIGatesInIndexedDB(db, window.IGATE);
         } else {
           cacheIGatesInLocalStorage(window.IGATE);
         }
-      }
-    };
-    document.body.appendChild(iGateScript);
+      })
+      .catch(err => {
+        console.error("Failed to load IGATE.js:", err);
+      });
   }
+  
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = () => resolve();
+      s.onerror = err => reject(err);
+      document.body.appendChild(s);
+    });
+  }
+  
 
   function cacheIGatesInIndexedDB(db, igates) {
     const transaction = db.transaction('igates', 'readwrite');
