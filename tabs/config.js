@@ -21,8 +21,11 @@ function render() {
           
           
 <div>
-  <label for="username" style="display: block; margin-bottom: 0.25em;">User Name or Call Sign</label>
-  <input type="text" id="username" class="styled-select" maxlength="30" style="width: 100%;" />
+  <label for="username" style="display: block; margin-bottom: 0.25em;">Geogram Id / Call Sign</label>
+  <div style="display: flex; gap: 0.5em;">
+    <input type="text" id="username" class="styled-select" maxlength="30" style="flex: 1;" />
+    <button id="generate-callsign" class="reset-button" style="margin-top: 0">Generate Id</button>
+  </div>
   <small>Name shown to others in chats.</small>
 </div>
 
@@ -75,7 +78,7 @@ function render() {
   <label>Coordinates</label>
   <div style="display: flex; gap: 0.5em; margin-top: 0.5em;">
     <input type="text" id="location-coords" class="styled-select" placeholder="Latitude, Longitude" style="flex: 2;" />
-    <input type="number" id="location-radius" class="styled-select" placeholder="Radius (km)" min="1" style="flex: 1;" />
+    <input type="number" id="location-radius" value="50" class="styled-select" placeholder="Radius (km)" min="1" style="flex: 1;" />
     <button id="get-coords" class="reset-button" style="margin-top: 0">Use My Current Location</button>
     <button id="add-location" class="reset-button" style="margin-top: 0">Add Location</button>
     </div>
@@ -127,7 +130,7 @@ function render() {
     </div>
   `;
 
- 
+
   setupAnchorNavigation("config");
 
   // Theme selection
@@ -142,19 +145,20 @@ function render() {
   });
 
 
+  // Brand text input
   const brandTextInput = document.getElementById('brand-text');
   const savedBrandText = localStorage.getItem('brandText');
   if (savedBrandText) {
     brandTextInput.value = savedBrandText;
     updateBrandText(savedBrandText);
   }
-  
+
   brandTextInput.addEventListener('input', (e) => {
     const text = e.target.value.trim();//.toUpperCase();
     localStorage.setItem('brandText', text);
     updateBrandText(text);
   });
-  
+
   function updateBrandText(text) {
     const brandElement = document.querySelector('.radio-brand');
     if (brandElement) {
@@ -178,52 +182,101 @@ function render() {
       localStorage.setItem(id, el.value);
     });
   });
-  
 
-document.getElementById('generate-key').addEventListener('click', () => {
-  if (!window.NostrTools) {
-    alert("Nostr library not loaded.");
-    return;
+
+
+
+  // generate callsign
+  function generateCallsign() {
+    // Generate a 6-character string
+    // remove confusing characters like '0', 'O', 'I', 'l'
+    const chars = 'ACDEFHJKLMNPQRSTUVWXYZ234579';
+    //const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '';
+    for (let i = 0; i < 5; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    const callsign = `GEO-${code}`;
+
+    // Display in an input or element with id 'callsign'
+    const callsignInput = document.getElementById('username');
+    if (callsignInput) {
+      callsignInput.value = callsign;
+      localStorage.setItem('username', callsignInput.value);
+    }
+  };
+
+  function generateNewNostr() {
+    function bytesToHex(bytes) {
+      return Array.from(bytes)
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+    }
+
+    const privateKeyBytes = window.NostrTools.generateSecretKey();
+    const privateKey = bytesToHex(privateKeyBytes);
+    const publicKey = window.NostrTools.getPublicKey(privateKey);
+
+    const nsec = window.NostrTools.nip19.nsecEncode(privateKeyBytes);
+    const npub = window.NostrTools.nip19.npubEncode(publicKey);
+
+
+    document.getElementById('privkey').value = nsec;
+    document.getElementById('pubkey').value = npub;
+
+    localStorage.setItem('privkey', nsec);
+    localStorage.setItem('pubkey', npub);
   }
 
-  const privateKey = window.NostrTools.generatePrivateKey();
-  const publicKey = window.NostrTools.getPublicKey(privateKey);
 
-  document.getElementById('privkey').value = privateKey;
-  document.getElementById('pubkey').value = publicKey;
+  // reset all values and generate new ones   
+  function generateNewValues() {
+    generateCallsign();
+    generateNewNostr();
+  }
 
-  localStorage.setItem('privkey', privateKey);
-  localStorage.setItem('pubkey', publicKey);
-});
+  // Generate callsign
+  document.getElementById('generate-callsign').addEventListener('click', () => {
+    generateCallsign()
+  });
 
- 
+
+  // Generate a new Nostr key pair
+  document.getElementById('generate-key').addEventListener('click', () => {
+    if (!window.NostrTools) {
+      alert("Nostr library not loaded.");
+      return;
+    }
+    generateNewNostr();
+  });
+
 
   // Countries functionality
-const countries = [
-  "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia",
-  "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
-  "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria",
-  "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad",
-  "Chile", "China", "Colombia", "Comoros", "Congo (Congo-Brazzaville)", "Costa Rica", "Croatia", "Cuba", "Cyprus",
-  "Czech Republic", "Democratic Republic of the Congo", "Denmark", "Djibouti", "Dominica", "Dominican Republic",
-  "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji",
-  "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea",
-  "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq",
-  "Ireland", "Israel", "Italy", "Ivory Coast", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati",
-  "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania",
-  "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania",
-  "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique",
-  "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea",
-  "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay",
-  "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis",
-  "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia",
-  "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands",
-  "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden",
-  "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga",
-  "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine",
-  "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City",
-  "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
-];
+  const countries = [
+    "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia",
+    "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
+    "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria",
+    "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad",
+    "Chile", "China", "Colombia", "Comoros", "Congo (Congo-Brazzaville)", "Costa Rica", "Croatia", "Cuba", "Cyprus",
+    "Czech Republic", "Democratic Republic of the Congo", "Denmark", "Djibouti", "Dominica", "Dominican Republic",
+    "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji",
+    "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea",
+    "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq",
+    "Ireland", "Israel", "Italy", "Ivory Coast", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati",
+    "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania",
+    "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania",
+    "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique",
+    "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea",
+    "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay",
+    "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis",
+    "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia",
+    "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands",
+    "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden",
+    "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga",
+    "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine",
+    "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City",
+    "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+  ];
 
 
   const countrySelect = document.getElementById('country-select');
@@ -232,6 +285,32 @@ const countries = [
     option.value = country;
     option.textContent = country;
     countrySelect.appendChild(option);
+  });
+
+  // Automatically add country when selected
+  countrySelect.addEventListener('change', () => {
+    const country = countrySelect.value;
+    if (!country) return;
+
+    // Prevent duplicates
+    const exists = Array.from(document.querySelectorAll('#country-table tr td:first-child'))
+      .some(td => td.textContent === country);
+    if (exists) return;
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+    <td>${country}</td>
+    <td><button class="remove-country reset-button" style="padding: 0.2em 0.5em;">Remove</button></td>
+  `;
+    row.querySelector('.remove-country').addEventListener('click', () => {
+      row.remove();
+      saveCountries();
+    });
+    document.getElementById('country-table').appendChild(row);
+    saveCountries();
+
+    // Reset selector to placeholder
+    countrySelect.value = '';
   });
 
   function saveCountries() {
@@ -286,7 +365,7 @@ const countries = [
   document.getElementById('add-location').addEventListener('click', () => {
     const coords = document.getElementById('location-coords').value.trim();
     const radius = document.getElementById('location-radius').value.trim();
-    
+
     if (!coords || !radius) return;
 
     const row = document.createElement('tr');
@@ -334,7 +413,18 @@ const countries = [
       });
     }
   });
+
+
+  // Auto-generate values if first visit and fields are empty
+  const username = localStorage.getItem('username');
+  const privkey = localStorage.getItem('privkey');
+  const pubkey = localStorage.getItem('pubkey');
+  if ((!username || username.trim() === '') && (!privkey || privkey.trim() === '') && (!pubkey || pubkey.trim() === '')) {
+    generateNewValues();
+  }
+
 }
+
 
 function applyTheme(theme) {
   document.body.setAttribute('data-theme', theme);
