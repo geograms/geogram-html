@@ -222,6 +222,10 @@ function initializeMap() {
   const weatherClusterGroup = L.markerClusterGroup();
   map.addLayer(weatherClusterGroup);
 
+  // iGates cluster with progressive loading
+  const iGateClusterGroup = L.markerClusterGroup();
+  map.addLayer(iGateClusterGroup);
+
   function loadWeatherStations() {
     const cachedWeather = localStorage.getItem('cachedWeatherStations');
     const cacheExpiry = localStorage.getItem('weatherCacheExpiry');
@@ -280,10 +284,6 @@ function initializeMap() {
       weatherClusterGroup.addLayer(marker);
     });
   }
-
-  // iGates cluster with progressive loading
-  const iGateClusterGroup = L.markerClusterGroup();
-  map.addLayer(iGateClusterGroup);
 
   function loadIGates() {
     if ('indexedDB' in window) {
@@ -383,14 +383,13 @@ function initializeMap() {
   
 
   function cacheIGatesInIndexedDB(db, igates) {
+    // Clear old data first
     const transaction = db.transaction('igates', 'readwrite');
     const store = transaction.objectStore('igates');
-
-    // Clear old data first
     const clearRequest = store.clear();
 
     clearRequest.onsuccess = () => {
-      // Add in batches to avoid blocking
+      // Add in batches, but create a new transaction for each batch
       const batchSize = 2000;
       let i = 0;
 
@@ -401,12 +400,20 @@ function initializeMap() {
           return;
         }
 
+        // New transaction for each batch
+        const tx = db.transaction('igates', 'readwrite');
+        const st = tx.objectStore('igates');
         batch.forEach(igate => {
-          store.put(igate);
+          st.put(igate);
         });
 
-        i += batchSize;
-        setTimeout(addBatch, 0);
+        tx.oncomplete = () => {
+          i += batchSize;
+          setTimeout(addBatch, 0);
+        };
+        tx.onerror = (e) => {
+          console.error("IndexedDB batch put error:", e);
+        };
       }
 
       addBatch();
@@ -493,9 +500,8 @@ function initializeMap() {
         if (!igate.coordinates) continue;
 
         const { lat, lon } = igate.coordinates;
-        //const marker = L.marker([lat, lon]);
         const marker = L.marker([lat, lon], {
-          icon: iGateIcon  // Add this option to use the custom icon
+          icon: iGateIcon
         });
         marker.bindPopup(`
           <div style="max-width: 300px; word-wrap: break-word;">
@@ -521,7 +527,9 @@ function initializeMap() {
     processBatch();
   }
 
-  // Start loading both datasets
-  loadWeatherStations();
-  loadIGates();
+  // Start loading both datasets only after everything is ready
+  setTimeout(() => {
+    loadWeatherStations();
+    loadIGates();
+  }, 0);
 }
