@@ -1,4 +1,5 @@
-window.WEATHER_STATIONS = [
+const window.WEATHER_STATION = 
+[
   {
     "t": 25.0,
     "p": 967.0,
@@ -90,6 +91,21 @@ window.WEATHER_STATIONS = [
     "message": "E27AAA\u003eAESPG4,TCPIP*,qAC,T2THAI:@191600z1403.81N/10148.26E_000/000g000t084r...p...P...h89b10060L000 144.987.50 MHz T\u003d28�� H\u003d89%   P\u003d1006"
   },
   {
+    "t": 28.0,
+    "p": 995.0,
+    "h": 65.0,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "YB2VNE-13",
+    "coordinates": {
+      "lat": -7.7718333333333325,
+      "lon": 10.395666666666667,
+      "alt": 0.0
+    },
+    "date": 1751018547255,
+    "message": "YB2VNE-13\u003eAESPG4,TCPIP*,qAC,T2FUKUOKA:@271002z0746.31S\\11023.74E_000/000g000t084r...p...P...h65b09950L000 WX Station Depok Sleman  : [[Cloudy]] SUN T\u003d28�� H\u003d65%   P\u003d995"
+  },
+  {
     "t": 20.0,
     "p": 719.0,
     "h": 47.0,
@@ -150,6 +166,21 @@ window.WEATHER_STATIONS = [
     "message": "N5EN-9\u003eAPRS,N5VCM-5*,qAR,KC5SQD-1:/210019h2943.43N/09533.43Wk359/020/Temp\u003d111.24/A\u003d000078/Pa\u003d10045/Rh\u003d11.00/batt\u003d7.48 N5EN\u0027s Truck"
   },
   {
+    "t": 36.0,
+    "p": 1006.0,
+    "h": 0.0,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "9M2AFR-1",
+    "coordinates": {
+      "lat": 31.286833333333334,
+      "lon": 21.453333333333333,
+      "alt": 0.0
+    },
+    "date": 1748278878538,
+    "message": "9M2AFR-1\u003eAESPG4,TCPIP*,qAC,T2TAIPEI:@261701z\u003d302.36N/10142.41E_000/000g000t098r...p...P...h00b10060L000 iGate/Wx  T\u003d36�� H\u003d0%   P\u003d1006"
+  },
+  {
     "t": 31.0,
     "p": 989.0,
     "h": 61.0,
@@ -193,6 +224,21 @@ window.WEATHER_STATIONS = [
     },
     "date": 1747670637026,
     "message": "E24YPM-1\u003eAESPG4,TCPIP*,qAC,T2SYDNEY:@191603z1647.77N/10015.34E_000/000g000t096r...p...P...h54b10040L000 Indy T\u003d35�� H\u003d54%   P\u003d1004"
+  },
+  {
+    "t": 23.0,
+    "p": 994.0,
+    "h": 0.0,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "F4GSP-3",
+    "coordinates": {
+      "lat": 45.74583333333333,
+      "lon": 4.771166666666666,
+      "alt": 0.0
+    },
+    "date": 1748279009432,
+    "message": "F4GSP-3\u003eAESPG4,TCPIP*,qAC,T2DENMARK:@261703z4544.75N/00446.27E_000/000g000t075r...p...P...h00b09940L000   /Indy Igate F4GSP-3/ T\u003d23�� H\u003d0%   P\u003d994"
   },
   {
     "t": 32.0,
@@ -405,6 +451,21 @@ window.WEATHER_STATIONS = [
     "message": "E27EKO-13\u003eAESPG4,TCPIP*,qAC,FIRST:@191602z1329.96N/10059.42E_000/000g000t093r...p...P...h76b10070L000 WX Station @Bangpakong T\u003d33�� H\u003d76%   P\u003d1007 PM 1:[9] , 2.5:[11] , 10:[11] (��g/m3)"
   },
   {
+    "t": 25.0,
+    "p": 1008.0,
+    "h": 79.0,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "E25XLD-2",
+    "coordinates": {
+      "lat": 10.4375,
+      "lon": 99.14683333333332,
+      "alt": 0.0
+    },
+    "date": 1751018710423,
+    "message": "E25XLD-2\u003eAESPG4,TCPIP*,qAC,T2HK:@271005z1026.25N/09908.81E_000/000g000t079r...p...P...h79b10080L000 Farm APRS \u0026 WX Station  T\u003d25�� H\u003d79%   P\u003d1008"
+  },
+  {
     "t": 31.0,
     "p": 1000.0,
     "h": 63.0,
@@ -495,19 +556,19 @@ window.WEATHER_STATIONS = [
     "message": "E24CR-1\u003eAESPG4,TCPIP*,qAC,T2UKRAINE:@191604z1851.01N/09912.17E_000/000g000t077r...p...P...h99b09520L000 HS5AC 145.675MHz-600 Alt535m. T\u003d24�� H\u003d99%   P\u003d952 PM 1:[4] , 2.5:[5] , 10:[5] (��g/m3)"
   },
   {
-    "t": 0.0,
-    "p": 290.3,
-    "h": 0.0,
+    "t": -57.3,
+    "p": 236.9,
+    "h": 45.9,
     "extra": [],
     "type": "WEATHER_STATION",
     "callsign": "IQ4SC-13",
     "coordinates": {
-      "lat": 26.886333333333333,
-      "lon": 22.4035,
+      "lat": 26.902666666666665,
+      "lon": 21.37,
       "alt": 0.0
     },
-    "date": 1747131493876,
-    "message": "IQ4SC-13\u003eAPLWS2,qAU,IQ4SC-15:;V3241319 *101811h4748.23N/01045.39EO246/012/A\u003d031208!wYF!Clb\u003d4.7m/s p\u003d290.3hPa t\u003d0.0C h\u003d0.0% 402.50MHz Type\u003dRS41 BK\u003dOff V\u003d2.7V S\u003d-16.2dB ARI Scandiano (RE) IT"
+    "date": 1748279539946,
+    "message": "IQ4SC-13\u003eAPLWS2,qAU,IQ4SC-15:;W1120619 *171217h4740.25N/01142.10EO119/030/A\u003d035669!w.J!Clb\u003d-6.7m/s p\u003d236.9hPa t\u003d-57.3C h\u003d45.9% 402.50MHz Type\u003dRS41-SGP BK\u003dOff SV\u003d20506 V\u003d2.5V S\u003d-16.7dB ARI Scandiano (RE) IT"
   },
   {
     "t": 29.0,
@@ -540,19 +601,19 @@ window.WEATHER_STATIONS = [
     "message": "HS0TK-1\u003eAESPG4,TCPIP*,qAC,T2HK:@191613z1443.21N/10036.30E_000/000g000t093r...p...P...h55b10090L000 Room Ambient \u003e  T\u003d33�� H\u003d55%   P\u003d1009"
   },
   {
-    "t": 1.0,
-    "p": 752.1,
-    "h": 94.5,
+    "t": 0.0,
+    "p": 364.3,
+    "h": 0.0,
     "extra": [],
     "type": "WEATHER_STATION",
     "callsign": "IQ4SC-14",
     "coordinates": {
-      "lat": 26.903166666666667,
-      "lon": 29.370666666666665,
+      "lat": 26.869833333333332,
+      "lon": 22.404166666666665,
       "alt": 0.0
     },
-    "date": 1747141202086,
-    "message": "IQ4SC-14\u003eAPLWS2,qAU,IQ4SC-15:;W4924935 *125959h4440.28N/01143.50EO180/007/A\u003d008283!w\\b!Clb\u003d-11.1m/s p\u003d752.1hPa t\u003d1.0C h\u003d94.5% 404.60MHz Type\u003dRS41-SGP BK\u003d8h7m28s SV\u003d20506 V\u003d2.5V S\u003d-18.8dB ARI Scandiano (RE) IT"
+    "date": 1751019845650,
+    "message": "IQ4SC-14\u003eAPLWS2,qAU,IQ4SC-15:;U4245028 *102404h4428.43N/00739.81EO142/019/A\u003d026058!wYA!Clb\u003d6.2m/s p\u003d364.3hPa t\u003d0.0C h\u003d0.0% Type\u003dRS41 V\u003d2.9V S\u003d-17.3dB ARI Scandiano (RE) IT"
   },
   {
     "t": -51.9,
@@ -583,6 +644,21 @@ window.WEATHER_STATIONS = [
     },
     "date": 1747670850638,
     "message": "HS3NOQ-12\u003eAESPG4,TCPIP*,qAC,T2THAI:\u003d1449.50N/10214.55E_000/000g000t087r...p...P...h99b09880I-Gate LaLomMai 144.390MHz T\u003d31�� H\u003d99%   P\u003d988"
+  },
+  {
+    "t": 32.0,
+    "p": 939.0,
+    "h": 0.0,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "TA1KNN-13",
+    "coordinates": {
+      "lat": 41.13566666666667,
+      "lon": 35.479,
+      "alt": 0.0
+    },
+    "date": 1751018942240,
+    "message": "TA1KNN-13\u003eAESPG4,TCPIP*,qAC,T2YANTAI:@271009z4108.14N/03528.74E_000/000g000t091r...p...P...h00b09390L000 Vezirkopru WX T\u003d32�� H\u003d0%   P\u003d939"
   },
   {
     "t": 27.0,
@@ -720,8 +796,8 @@ window.WEATHER_STATIONS = [
     "message": "E27AFE-1\u003eAESPG4,TCPIP*,qAC,T2TAIWAN:@191608z1404.25N/10148.26E_000/000g000t086r...p...P...h65b10070L000 144.987.50 MHz T\u003d30�� H\u003d65%   P\u003d1007"
   },
   {
-    "t": 35.0,
-    "p": 959.0,
+    "t": 34.0,
+    "p": 956.0,
     "h": 0.0,
     "extra": [],
     "type": "WEATHER_STATION",
@@ -731,8 +807,8 @@ window.WEATHER_STATIONS = [
       "lon": 99.83233333333334,
       "alt": 0.0
     },
-    "date": 1747659918963,
-    "message": "HS5UKT-1\u003eAESPG4,TCPIP*,qAC,T2OSAKA:@191305z1909.45N/09949.94E_000/000g000t095r...p...P...h00b09590L000 Aprs Phayao  144.390 Mhz : [[Cloudy]] SUN T\u003d35�� H\u003d0%   P\u003d959"
+    "date": 1751018520310,
+    "message": "HS5UKT-1\u003eAESPG4,TCPIP*,qAC,T2HAKATA:@271001z1909.45N/09949.94E_000/000g000t095r...p...P...h00b09560L000 Aprs Phayao  144.390 Mhz : [[Cloudy]] SUN T\u003d34�� H\u003d0%   P\u003d956"
   },
   {
     "t": -143.0,
@@ -810,6 +886,21 @@ window.WEATHER_STATIONS = [
     "message": "E21TMW-3\u003eAPESPG,TCPIP*,qAC,T2CHILE:!1243.50N/10132.50E_SAB_WX T\u003d30 H\u003d100%P\u003d1002"
   },
   {
+    "t": -145.0,
+    "p": 1070.0,
+    "h": 551070.0,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "HS2PQV-1",
+    "coordinates": {
+      "lat": 13.440666666666667,
+      "lon": 1.1918333333333333,
+      "alt": 0.0
+    },
+    "date": 1751018857211,
+    "message": "HS2PQV-1\u003eAPESPG,TCPIP*,qAC,T2THAI:\u003d1326.44N\\10111.51E(aprs.fi-Your friends on a Map : ������������������������ 5%T\u003d-145 H\u003d55%P\u003d1070"
+  },
+  {
     "t": 26.0,
     "p": 967.0,
     "h": 38.0,
@@ -870,21 +961,6 @@ window.WEATHER_STATIONS = [
     "message": "VU2COR-13\u003eAESPG4,TCPIP*,qAC,T2CS:@191601z3051.48N/07551.69E_000/000g000t106r...p...P...h36b09710L000 Testing BME280 T\u003d41�� H\u003d36%   P\u003d971"
   },
   {
-    "t": 27.0,
-    "p": 981.0,
-    "h": 0.0,
-    "extra": [],
-    "type": "WEATHER_STATION",
-    "callsign": "TA1KNN-1",
-    "coordinates": {
-      "lat": 41.15033333333334,
-      "lon": 28.78983333333333,
-      "alt": 0.0
-    },
-    "date": 1747432966086,
-    "message": "TA1KNN-1\u003eAESPG4,TCPIP*,qAC,T2CHILE:@162202z4109.02N/02847.39E_000/000g000t081r...p...P...h00b09810L000 433.500Mhz T\u003d27�� H\u003d0%   P\u003d981"
-  },
-  {
     "t": 35.0,
     "p": 1003.0,
     "h": 71.0,
@@ -913,6 +989,21 @@ window.WEATHER_STATIONS = [
     },
     "date": 1747670719732,
     "message": "HS3MXC-2\u003eAESPG4,TCPIP*,qAC,T2THAI:\u003d1520.78N/10409.53E_000/000g000t085r...p...P...h79b09940I-gate Rasisalai 144.3900 MHz T\u003d29�� H\u003d79%   P\u003d994"
+  },
+  {
+    "t": 46.0,
+    "p": 986.0,
+    "h": 28.0,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "HS6NYW-3",
+    "coordinates": {
+      "lat": 16.833166666666667,
+      "lon": 1.2483333333333335,
+      "alt": 0.0
+    },
+    "date": 1751018400305,
+    "message": "HS6NYW-3\u003eAESPG4,TCPIP*,qAC,T2THAI:@270959z1649.99N/10114.90E_IGATE DIGI 144.390 Mhz   T\u003d46�� H\u003d28%  P\u003d986"
   },
   {
     "t": 32.0,
@@ -975,6 +1066,36 @@ window.WEATHER_STATIONS = [
     "message": "E27ASY-4\u003eAESPG4,TCPIP*,qAC,T2TOKYO:@191602z1445.26N/10043.96E_000/000g000t089r...p...P...h99b10060L000 APRS Wx T\u003d31�� H\u003d99%   P\u003d1006 PM 1:[0] , 2.5:[2] , 10:[2] (��g/m3)"
   },
   {
+    "t": 29.0,
+    "p": 995.0,
+    "h": 99.0,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "HS4OJL-1",
+    "coordinates": {
+      "lat": 15.476499999999998,
+      "lon": 3.8870000000000005,
+      "alt": 0.0
+    },
+    "date": 1748278938895,
+    "message": "HS4OJL-1\u003eAESPG4-1,WIDE1-1,qAR,HS2EBX-1:\u003d1528.59N/10353.22E_000/000g000t084r...p...P...h99b09950HS4OJL 145.400 Mhz T\u003d29�� H\u003d99%   P\u003d995"
+  },
+  {
+    "t": 29.0,
+    "p": 1003.0,
+    "h": 41.0,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "E27DPX-1",
+    "coordinates": {
+      "lat": 13.149833333333333,
+      "lon": 0.9591666666666666,
+      "alt": 0.0
+    },
+    "date": 1747746038796,
+    "message": "E27DPX-1\u003eAESPG4,TCPIP*,qAC,T2THAI:@201256z1308.99N/10057.55E_000/000g000t085r...p...P...h41b10030L000  : [[Sunny]] SUN T\u003d29�� H\u003d41%   P\u003d1003"
+  },
+  {
     "t": 25.0,
     "p": 982.0,
     "h": 0.0,
@@ -1005,6 +1126,21 @@ window.WEATHER_STATIONS = [
     "message": "HS6TIM\u003eAESPG4,TCPIP*,qAC,T2INDY:@191602z1355.51N/10041.44E_000/000g000t090r...p...P...h00b10100L000 STM32TNC T\u003d32�� H\u003d0%   P\u003d1010"
   },
   {
+    "t": 36.0,
+    "p": 994.0,
+    "h": 64.0,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "E24BD-10",
+    "coordinates": {
+      "lat": 16.31833333333333,
+      "lon": 0.39216666666666666,
+      "alt": 0.0
+    },
+    "date": 1751018746017,
+    "message": "E24BD-10\u003eAESPG4,TCPIP*,qAC,T2THAI:@271005z1619.10N/10023.53E_000/000g000t098r...p...P...h64b09940L000 HS6AJ 145.6875MHz -600 T103.5 T\u003d36�� H\u003d64%   P\u003d994"
+  },
+  {
     "t": 29.0,
     "p": 1009.0,
     "h": 88.0,
@@ -1018,6 +1154,21 @@ window.WEATHER_STATIONS = [
     },
     "date": 1747671036497,
     "message": "E24MSQ-13\u003eAESPG4,TCPIP*,qAC,T2TAIPEI:@191609z1331.57N/10057.56E_000/000g000t086r...p...P...h88b10090L000 Welcome To Eastern THAILAND  T\u003d29�� H\u003d88%   P\u003d1009"
+  },
+  {
+    "t": -11.8,
+    "p": 529.7,
+    "h": 35.8,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "EA4HVF",
+    "coordinates": {
+      "lat": 40.4435,
+      "lon": -3.548333333333333,
+      "alt": 0.0
+    },
+    "date": 1747825924082,
+    "message": "EA4HVF\u003eAPRRDZ,TCPIP*,qAC,T2FINLAND:;W3430684 *111201h4026.61N/00332.90WO127/001/A\u003d017686!w+C!Clb\u003d4.9m/s p\u003d529.7hPa t\u003d-11.8C h\u003d35.8% 403.000MHz Type\u003dRS41-SGP rdzTTGOsonde"
   },
   {
     "t": 30.0,
@@ -1095,19 +1246,19 @@ window.WEATHER_STATIONS = [
     "message": "TA2BXX-10\u003eAESPG4,TCPIP*,qAC,T2CSNGRAD:@191602z3953.32N\\03241.02E_000/000g000t075r...p...P...h00b08510L000 TA2BXX iGate. QRV@144.800 : [[Sunny]] SUN T\u003d23�� H\u003d0%   P\u003d851"
   },
   {
-    "t": -60.5,
-    "p": 44.7,
-    "h": 2.0,
+    "t": -51.4,
+    "p": 20.9,
+    "h": 1.1,
     "extra": [],
     "type": "WEATHER_STATION",
     "callsign": "PU3IKE",
     "coordinates": {
-      "lat": -29.474666666666668,
-      "lon": -53.239000000000004,
+      "lat": -26.902833333333334,
+      "lon": 28.4035,
       "alt": 0.0
     },
-    "date": 1747141207274,
-    "message": "PU3IKE\u003eTCHE,TCPIP*,qAC,FOURTH:;W3010063 *130021h2928.48S/05314.34WO046/016/A\u003d070292 Clb\u003d-10.0m/s t\u003d-60.5C h\u003d2.0% p\u003d44.7hPa 403.000 MHz Type\u003dRS41-SGP ser\u003dW3010063 Radiosonde !w(h!"
+    "date": 1747746011220,
+    "message": "PU3IKE\u003eTCHE,TCPIP*,qAC,NINTH:;W2841096 *130025h2930.56S/05245.38WO098/041/A\u003d086163 Clb\u003d5.7m/s t\u003d-51.4C h\u003d1.1% p\u003d20.9hPa 403.001 MHz Type\u003dRS41-SGP ser\u003dW2841096 Radiosonde !w%:!"
   },
   {
     "t": 32.0,
@@ -1230,6 +1381,21 @@ window.WEATHER_STATIONS = [
     "message": "VU2RCY-13\u003eAPESPG,TCPIP*,qAC,T2SPAIN:\u003d1257.00N/07744.00E_VU2RCY  APRS STATION T\u003d29 H\u003d55%P\u003d910"
   },
   {
+    "t": -59.6,
+    "p": 202.5,
+    "h": 20.7,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "OE5WHR-13",
+    "coordinates": {
+      "lat": 48.23799999999999,
+      "lon": 11.878000000000002,
+      "alt": 0.0
+    },
+    "date": 1747746019738,
+    "message": "OE5WHR-13\u003eAPLWS2,qAO,OE5WHR-10:;W3411155 *130017h4814.28N/01152.68EO091/015/A\u003d038818!w*\u003d!Clb\u003d-5.4m/s p\u003d202.5hPa t\u003d-59.6C h\u003d20.7% 404.70MHz Type\u003dRS41-SGP azimuth\u003d269 dist\u003d179.423 elevation\u003d2.87"
+  },
+  {
     "t": 28.0,
     "p": 1004.0,
     "h": 0.0,
@@ -1260,6 +1426,36 @@ window.WEATHER_STATIONS = [
     "message": "HS9LWR-1\u003eAESPG4,TCPIP*,qAC,T2TOKYO:@191609z0711.69N/10035.41E_000/000g000t092r...p...P...h64b10090L000 Songkhla Aprs indy HS9LWR T\u003d33�� H\u003d64%   P\u003d1009 PM 1:[9] , 2.5:[12] , 10:[12] (��g/m3)"
   },
   {
+    "t": 26.0,
+    "p": 1009.0,
+    "h": 99.0,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "E29MSK-1",
+    "coordinates": {
+      "lat": 8.7065,
+      "lon": 99.23783333333334,
+      "alt": 0.0
+    },
+    "date": 1748279034954,
+    "message": "E29MSK-1\u003eAESPG4,TCPIP*,qAC,T2HAKATA:@261703z0842.39N/09914.27E_000/000g000t079r...p...P...h99b10090L000 WX PUANG KHIANSA 144.390MHz. : [[Sunny]] SUN T\u003d26�� H\u003d99%   P\u003d1009 PM 1:[17] , 2.5:[24] , 10:[26] (��g/m3)"
+  },
+  {
+    "t": 29.0,
+    "p": 651.0,
+    "h": 99.0,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "HS8KF-10",
+    "coordinates": {
+      "lat": 8.9145,
+      "lon": 99.25150000000001,
+      "alt": 0.0
+    },
+    "date": 1747746060396,
+    "message": "HS8KF-10\u003eAESPG4,TCPIP*,qAC,T2MEXICO:@201300z0854.87N/09915.09E_000/000g000t085r...p...P...h99b06510L000 PHG1260 WX\u0026SGATE 145.825 T\u003d29�� H\u003d99%   P\u003d651"
+  },
+  {
     "t": 25.0,
     "p": 978.0,
     "h": 99.0,
@@ -1273,21 +1469,6 @@ window.WEATHER_STATIONS = [
     },
     "date": 1747207090017,
     "message": "E29MSK-2\u003eAESPG4,TCPIP*,qAC,T2FUKUOKA:@140715z0925.98N\\09850.14E_000/000g000t078r...p...P...h99b09780L000 E29MSK IGATE : [[Cloudy]] SUN T\u003d25�� H\u003d99%   P\u003d978 PM 1:[0] , 2.5:[1] , 10:[1] (��g/m3)"
-  },
-  {
-    "t": 22.0,
-    "p": 646.0,
-    "h": 88.0,
-    "extra": [],
-    "type": "WEATHER_STATION",
-    "callsign": "HS8KF-10",
-    "coordinates": {
-      "lat": 8.9145,
-      "lon": 99.25150000000001,
-      "alt": 0.0
-    },
-    "date": 1747659609919,
-    "message": "HS8KF-10\u003eAESPG4,TCPIP*,qAC,T2PERTH:@191300z0854.87N/09915.09E_000/000g000t073r...p...P...h88b06460L000 WX\u0026SGATE 145.825 (Good Day) T\u003d22�� H\u003d88%   P\u003d646"
   },
   {
     "t": 50.0,
@@ -1425,6 +1606,21 @@ window.WEATHER_STATIONS = [
     "message": "HS5FXK-3\u003eAESPG4,TCPIP*,qAC,T2FINLAND:@191601z1819.54N/09921.95E_000/000g000t078r...p...P...h99b09790L000 ^_^ : [[Cloudy]] SUN T\u003d25�� H\u003d99%   P\u003d979 PM 1:[1] , 2.5:[1] , 10:[3] (��g/m3)"
   },
   {
+    "t": 28.0,
+    "p": 1006.0,
+    "h": 38.0,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "E27EKO-7",
+    "coordinates": {
+      "lat": 13.501166666666666,
+      "lon": 0.9891666666666666,
+      "alt": 0.0
+    },
+    "date": 1747736617653,
+    "message": "E27EKO-7\u003eAESPG4,TCPIP*,qAC,T2INDY:@201023z1330.07N/10059.35E_000/000g000t083r...p...P...h38b10060L000 (Test) Room Temperature  T\u003d28�� H\u003d38%   P\u003d1006"
+  },
+  {
     "t": 34.0,
     "p": 1007.0,
     "h": 66.0,
@@ -1468,6 +1664,36 @@ window.WEATHER_STATIONS = [
     },
     "date": 1747671177629,
     "message": "YB1CAS-1\u003eAESPG4,TCPIP*,qAC,T2TAIWAN:@191612z0618.37S/10717.53E_000/000g000t113r...p...P...h31b10080L000 TERESTERIAL DIGIPEATER KRW T\u003d44�� H\u003d31%   P\u003d1008"
+  },
+  {
+    "t": 35.0,
+    "p": 1008.0,
+    "h": 0.0,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "HS6GVH-1",
+    "coordinates": {
+      "lat": 13.403166666666667,
+      "lon": 1.026,
+      "alt": 0.0
+    },
+    "date": 1747746540273,
+    "message": "HS6GVH-1\u003eAESPG4,TCPIP*,qAC,T2INDY2:@201308z1324.19N/10101.56E_000/000g000t095r...p...P...h00b10080L000 DonKhunWang49 145.2625MHz T\u003d35�� H\u003d0%   P\u003d1008"
+  },
+  {
+    "t": 35.0,
+    "p": 982.0,
+    "h": 60.0,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "HS3LIQ-2",
+    "coordinates": {
+      "lat": 14.974333333333334,
+      "lon": 2.0701666666666667,
+      "alt": 0.0
+    },
+    "date": 1751018675687,
+    "message": "HS3LIQ-2\u003eAESPG4,TCPIP*,qAC,T2TAIPEI:@271004z1458.46N\\10204.21E_000/000g000t096r...p...P...h60b09820L000 WX/Pocsag NMA THA : [[Cloudy]] SUN T\u003d35�� H\u003d60%   P\u003d982 PM 1:[7] , 2.5:[10] , 10:[11] (��g/m3)"
   },
   {
     "t": 25.0,
@@ -1710,19 +1936,34 @@ window.WEATHER_STATIONS = [
     "message": "E22ZMG-1\u003eAESPG4,TCPIP*,qAC,T2PANAMA:@191600z1849.43N/09900.03E_000/000g000t087r...p...P...h78b09740L000  AMATEUR RADIO CHIANGMAI TH. T\u003d30�� H\u003d78%   P\u003d974 PM 1:[6] , 2.5:[9] , 10:[9] (��g/m3)"
   },
   {
-    "t": -52.0,
-    "p": 36.6,
-    "h": 4.2,
+    "t": -46.3,
+    "p": 304.0,
+    "h": 21.6,
     "extra": [],
     "type": "WEATHER_STATION",
     "callsign": "OE3OSB-11",
     "coordinates": {
-      "lat": 51.98216666666667,
-      "lon": 14.227166666666669,
+      "lat": 47.22749999999999,
+      "lon": 19.670833333333334,
       "alt": 0.0
     },
-    "date": 1747677712401,
-    "message": "OE3OSB-11\u003eAPLWS2,qAR,OE3OSB-3:;W2234072 *180150h5158.93N/01413.63EO235/007/A\u003d074796!ww\u0027!Clb\u003d4.5m/s p\u003d36.6hPa t\u003d-52.0C h\u003d4.2% 405.10MHz Type\u003dRS41-SGP FN\u003d6651 Sats\u003d9 powerup\u003d1h50m51s"
+    "date": 1747746002619,
+    "message": "OE3OSB-11\u003eAPLWS2,qAR,OE3OSB-3:;W4845083 *125959h4713.65N/01940.25EO122/045/A\u003d030211!w0n!Clb\u003d-26.6m/s p\u003d304.0hPa t\u003d-46.3C h\u003d21.6% 403.70MHz Type\u003dRS41-SGP TxOff\u003d8h22m batt\u003d2.6V rssi\u003d63.5dB rx\u003d403700(+1/5) sondemod 1.37c"
+  },
+  {
+    "t": -52.0,
+    "p": 31.9,
+    "h": 3.8,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "OE5DRO-11",
+    "coordinates": {
+      "lat": 48.86283333333334,
+      "lon": 20.528833333333335,
+      "alt": 0.0
+    },
+    "date": 1747746006748,
+    "message": "OE5DRO-11\u003eAPLWS2,qAO,OE5DRO-10:;X0324271 *125946h4851.77N/02031.73EO286/005/A\u003d077784!wRX!Clb\u003d-24.1m/s p\u003d31.9hPa t\u003d-52.0C h\u003d3.8% 401.60MHz Type\u003dRS41-SGP sondemod 1.37c"
   },
   {
     "t": 29.0,
@@ -1813,6 +2054,21 @@ window.WEATHER_STATIONS = [
     },
     "date": 1747259158202,
     "message": "E20TWR-1\u003eAESPG4,TCPIP*,qAC,T2TOKYO:@142145z1503.10N/10019.17E_000/000g000t085r...p...P...h65b10090L000 Rig IC-2200 ,ANT Diploe 4 ST T\u003d29�� H\u003d65%   P\u003d1009"
+  },
+  {
+    "t": 33.0,
+    "p": 1001.0,
+    "h": 0.0,
+    "extra": [],
+    "type": "WEATHER_STATION",
+    "callsign": "HS6AJ",
+    "coordinates": {
+      "lat": 16.487333333333332,
+      "lon": 0.48016666666666663,
+      "alt": 0.0
+    },
+    "date": 1751018683326,
+    "message": "HS6AJ\u003eAESPG4,TCPIP*,qAC,T2HAKATA:@271004z1629.24N/10028.81E_000/000g000t093r...p...P...h00b10010L000 145.6875 MHz -600 kHz/E25LO-L T\u003d33�� H\u003d0%   P\u003d1001"
   },
   {
     "t": 28.0,
@@ -1995,21 +2251,6 @@ window.WEATHER_STATIONS = [
     "message": "TA6B-11\u003eAESPG4,TCPIP*,qAC,T2PRT:@191601z4116.98N/03620.12E_000/000g000t070r...p...P...h46b10040L000 APRS Digipeater iGATE WX3in1 T\u003d21�� H\u003d46%   P\u003d1004"
   },
   {
-    "t": 0.9,
-    "p": 753.3,
-    "h": 88.6,
-    "extra": [],
-    "type": "WEATHER_STATION",
-    "callsign": "CHRIGUI",
-    "coordinates": {
-      "lat": 44.67133333333333,
-      "lon": 11.725,
-      "alt": 0.0
-    },
-    "date": 1747141202372,
-    "message": "chrigui\u003eAPRRDZ,qAS,CHRIGUI-3:;W4924935 *125959h4440.28N/01143.50EO176/008/A\u003d008245!wJd!Clb\u003d-11.4m/s p\u003d753.3hPa t\u003d0.9C h\u003d88.6% 404.600MHz Type\u003dRS41-SGP rdzTTGOsonde"
-  },
-  {
     "t": 31.0,
     "p": 1008.0,
     "h": 99.0,
@@ -2039,4 +2280,5 @@ window.WEATHER_STATIONS = [
     "date": 1747670884825,
     "message": "YD1ION-3\u003eAESPG4,TCPIP*,qAC,T2FUKUOKA:@191608z0654.37S/10737.40E_000/000g000t080r...p...P...h00b09330L000 WeatherStation SMKN2BDG T\u003d26�� H\u003d0%   P\u003d933"
   }
-];
+]
+;

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>APRS Web Client</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin-top: 0.25rem;
+      box-sizing: border-box;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 1rem;
+      overflow: auto;
+      margin-top: 2rem;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>APRS Web Client</h1>
+
+  <label for="callsign">Your Callsign:</label>
+  <input type="text" id="callsign" placeholder="e.g. CR7BBQ" />
+
+  <label for="destination">Destination Callsign:</label>
+  <input type="text" id="destination" placeholder="e.g. APRS, NOCALL" />
+
+  <label for="aprs-message">Message:</label>
+  <input type="text" id="aprs-message" placeholder="Type your APRS message" />
+
+  <button onclick="sendAprsMessage()">Send</button>
+
+  <pre id="aprs-log"></pre>
+
+  <script src="aprs.js"></script>
+</body>
+</html>
