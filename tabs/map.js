@@ -67,51 +67,46 @@ function render() {
   `;
   document.head.appendChild(style);
 
- // Load Leaflet only once
-if (!window.L) {
-  const leafletCSS = document.createElement('link');
-  leafletCSS.rel = 'stylesheet';
-  // https://unpkg.com/leaflet@1.9.4/dist/leaflet.css
-  leafletCSS.href = 'lib/map/leaflet.css';
-  document.head.appendChild(leafletCSS);
+  // Load Leaflet only once
+  if (!window.L) {
+    const leafletCSS = document.createElement('link');
+    leafletCSS.rel = 'stylesheet';
+    // https://unpkg.com/leaflet@1.9.4/dist/leaflet.css
+    leafletCSS.href = 'lib/map/leaflet.css';
+    document.head.appendChild(leafletCSS);
 
-  const geocoderCSS = document.createElement('link');
-  geocoderCSS.rel = 'stylesheet';
-  // https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css
-  geocoderCSS.href = 'lib/map/Control.Geocoder.css';
-  document.head.appendChild(geocoderCSS);
+    const geocoderCSS = document.createElement('link');
+    geocoderCSS.rel = 'stylesheet';
+    // https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css
+    geocoderCSS.href = 'lib/map/Control.Geocoder.css';
+    document.head.appendChild(geocoderCSS);
 
-  const clusterCSS = document.createElement('link');
-  clusterCSS.rel = 'stylesheet';
-  // https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css
-  clusterCSS.href = 'lib/map/MarkerCluster.Default.css';
-  document.head.appendChild(clusterCSS);
+    const clusterCSS = document.createElement('link');
+    clusterCSS.rel = 'stylesheet';
+    // https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css
+    clusterCSS.href = 'lib/map/MarkerCluster.Default.css';
+    document.head.appendChild(clusterCSS);
 
-  // Promise-based script loading
-  loadScript('lib/map/leaflet.js') // https://unpkg.com/leaflet@1.9.4/dist/leaflet.js
-    .then(() => loadScript('lib/map/Control.Geocoder.js')) // https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js
-    .then(() => loadScript('lib/map/leaflet.markercluster.js')) // https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js
-    .then(() => {
-      initializeMap();
-    })
-    .catch(err => {
-      console.error("Map dependency loading failed:", err);
-    });
-} else {
-  initializeMap();
-}
-
-// Helper: Promise-based script loader
-function loadScript(src) {
-  return new Promise((resolve, reject) => {
-    const s = document.createElement('script');
-    s.src = src;
-    s.onload = resolve;
-    s.onerror = reject;
-    document.head.appendChild(s);
-  });
-}
-
+    const leafletJS = document.createElement('script');
+    // https://unpkg.com/leaflet@1.9.4/dist/leaflet.js
+    leafletJS.src = 'lib/map/leaflet.js';
+    leafletJS.onload = () => {
+      const geocoderJS = document.createElement('script');
+      // https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js
+      geocoderJS.src = 'lib/map/Control.Geocoder.js';
+      geocoderJS.onload = () => {
+        const clusterJS = document.createElement('script');
+        // https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js
+        clusterJS.src = 'lib/map/leaflet.markercluster.js';
+        clusterJS.onload = initializeMap;
+        document.head.appendChild(clusterJS);
+      };
+      document.head.appendChild(geocoderJS);
+    };
+    document.head.appendChild(leafletJS);
+  } else {
+    initializeMap();
+  }
 }
 
 function initializeMap() {
@@ -222,10 +217,6 @@ function initializeMap() {
   const weatherClusterGroup = L.markerClusterGroup();
   map.addLayer(weatherClusterGroup);
 
-  // iGates cluster with progressive loading
-  const iGateClusterGroup = L.markerClusterGroup();
-  map.addLayer(iGateClusterGroup);
-
   function loadWeatherStations() {
     const cachedWeather = localStorage.getItem('cachedWeatherStations');
     const cacheExpiry = localStorage.getItem('weatherCacheExpiry');
@@ -285,6 +276,10 @@ function initializeMap() {
     });
   }
 
+  // iGates cluster with progressive loading
+  const iGateClusterGroup = L.markerClusterGroup();
+  map.addLayer(iGateClusterGroup);
+
   function loadIGates() {
     if ('indexedDB' in window) {
       // Use IndexedDB for large dataset
@@ -336,7 +331,7 @@ function initializeMap() {
             if (getAllRequest.result.length > 0) {
               processIGates(getAllRequest.result, true);
             }
-            loadFreshIGates(db); // Load fresh data after showing cached data
+            loadFreshIGates(db);
           };
         }
       } else {
@@ -344,52 +339,35 @@ function initializeMap() {
         loadFreshIGates(db);
       }
     };
-
-    countRequest.onerror = () => {
-      console.error("Failed to count iGates in IndexedDB");
-      loadFreshIGates(db); // Fallback to fresh load
-    };
   }
 
   function loadFreshIGates(db = null) {
-    loadScript('./data/IGATE.js')
-      .then(() => {
-        if (!Array.isArray(window.IGATE)) {
-          throw new Error("IGATE data not available after script load.");
-        }
-  
+    const iGateScript = document.createElement('script');
+    iGateScript.src = './data/IGATE.js';
+    iGateScript.onload = () => {
+      if (Array.isArray(window.IGATE)) {
         processIGates(window.IGATE, false);
-  
+
+        // Cache the data
         if (db) {
           cacheIGatesInIndexedDB(db, window.IGATE);
         } else {
           cacheIGatesInLocalStorage(window.IGATE);
         }
-      })
-      .catch(err => {
-        console.error("Failed to load IGATE.js:", err);
-      });
+      }
+    };
+    document.body.appendChild(iGateScript);
   }
-  
-  function loadScript(src) {
-    return new Promise((resolve, reject) => {
-      const s = document.createElement('script');
-      s.src = src;
-      s.onload = () => resolve();
-      s.onerror = err => reject(err);
-      document.body.appendChild(s);
-    });
-  }
-  
 
   function cacheIGatesInIndexedDB(db, igates) {
-    // Clear old data first
     const transaction = db.transaction('igates', 'readwrite');
     const store = transaction.objectStore('igates');
+
+    // Clear old data first
     const clearRequest = store.clear();
 
     clearRequest.onsuccess = () => {
-      // Add in batches, but create a new transaction for each batch
+      // Add in batches to avoid blocking
       const batchSize = 2000;
       let i = 0;
 
@@ -400,20 +378,12 @@ function initializeMap() {
           return;
         }
 
-        // New transaction for each batch
-        const tx = db.transaction('igates', 'readwrite');
-        const st = tx.objectStore('igates');
         batch.forEach(igate => {
-          st.put(igate);
+          store.put(igate);
         });
 
-        tx.oncomplete = () => {
-          i += batchSize;
-          setTimeout(addBatch, 0);
-        };
-        tx.onerror = (e) => {
-          console.error("IndexedDB batch put error:", e);
-        };
+        i += batchSize;
+        setTimeout(addBatch, 0);
       }
 
       addBatch();
@@ -500,8 +470,9 @@ function initializeMap() {
         if (!igate.coordinates) continue;
 
         const { lat, lon } = igate.coordinates;
+        //const marker = L.marker([lat, lon]);
         const marker = L.marker([lat, lon], {
-          icon: iGateIcon
+          icon: iGateIcon  // Add this option to use the custom icon
         });
         marker.bindPopup(`
           <div style="max-width: 300px; word-wrap: break-word;">
@@ -527,9 +498,7 @@ function initializeMap() {
     processBatch();
   }
 
-  // Start loading both datasets only after everything is ready
-  setTimeout(() => {
-    loadWeatherStations();
-    loadIGates();
-  }, 0);
+  // Start loading both datasets
+  loadWeatherStations();
+  loadIGates();
 }
