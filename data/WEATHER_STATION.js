@@ -1,5 +1,4 @@
-const window.WEATHER_STATION = 
-[
+window.WEATHER_STATION = [
   {
     "t": 25.0,
     "p": 967.0,
@@ -2280,5 +2279,4 @@ const window.WEATHER_STATION =
     "date": 1747670884825,
     "message": "YD1ION-3\u003eAESPG4,TCPIP*,qAC,T2FUKUOKA:@191608z0654.37S/10737.40E_000/000g000t080r...p...P...h00b09330L000 WeatherStation SMKN2BDG T\u003d26�� H\u003d0%   P\u003d933"
   }
-]
-;
+];
