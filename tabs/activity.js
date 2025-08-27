@@ -1,22 +1,11 @@
 function render() {
   document.getElementById('content').innerHTML = `
     <div class="left-column">
-      <h2>Recent</h2>
+      <h2>Local activity</h2>
 
-      <!-- Recent GEO events (last 50) -->
-      <div id="recent-geo" class="card" style="padding: 12px;">
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
-          <div>
-            <strong>Last 50 events</strong>
-            <small id="recent-geo-meta" style="margin-left:8px; opacity:0.7;"></small>
-          </div>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <button id="recent-geo-refresh" class="btn" style="padding:6px 10px; border-radius:6px; border:1px solid #ddd; background:#f7f7f7; cursor:pointer;">Refresh</button>
-          </div>
-        </div>
-        <ul id="recent-geo-list" style="margin-top:10px; list-style:none; padding:0; max-height:360px; overflow:auto;"></ul>
-        <div id="recent-geo-error" style="margin-top:10px; color:#b00020; display:none;"></div>
-      </div>
+
+      <!-- Nearby Maps section is now fully rendered by nearby.js -->
+      <div id="recent-nearby"></div>
 
       <div class="card" id="voice-notes">
         <div id="recording-indicator" style="display: none; margin: 10px 0;">
@@ -99,13 +88,13 @@ function render() {
     </div>
   `;
 
-  // Existing hooks
+  // SMS + recording UI hooks (unchanged)
   document.getElementById('newSmsBtn')?.addEventListener('click', openSmsDialog);
   document.getElementById('closeSmsDialog')?.addEventListener('click', closeSmsDialog);
   document.getElementById('sendSmsBtn')?.addEventListener('click', sendAprsMessage);
   if (typeof initRecordingUI === 'function') initRecordingUI();
 
-  // Recent GEO events
+  // Recent GEO events list (left as-is, independent of maps)
   const API_URL = 'http://api.geogram.info/messages?lat=40.2056&lon=-8.4196&radius=50';
 
   async function fetchAndRenderRecent() {
@@ -122,7 +111,6 @@ function render() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
-      // take last 50 (API returns oldest at bottom) and show newest first
       const items = (Array.isArray(data) ? data : []).slice(-50).reverse();
 
       listEl.innerHTML = items.map((e) => {
@@ -149,12 +137,18 @@ function render() {
       listEl.innerHTML = '';
     }
   }
-
   document.getElementById('recent-geo-refresh')?.addEventListener('click', fetchAndRenderRecent);
-
-  // Initial load + light auto-refresh (optional; 60s)
   fetchAndRenderRecent();
-  // setInterval(fetchAndRenderRecent, 60000);
+
+  // NEW: Let nearby.js render the whole Nearby Maps section (or hide it if no locations)
+  if (window.Nearby && typeof window.Nearby.renderRecentNearby === 'function') {
+    window.Nearby.renderRecentNearby('#recent-nearby');
+  } else {
+    console.warn('nearby.js not loaded; no Nearby Maps will be shown.');
+    // If you want, you could hide the container:
+    const cont = document.getElementById('recent-nearby');
+    if (cont) cont.style.display = 'none';
+  }
 
   console.log("Activity tab loaded");
 }
