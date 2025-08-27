@@ -18,8 +18,7 @@ function render() {
         <h2>User</h2>
         <div class="card">
           <div style="display: flex; flex-direction: column; gap: 1em;">
-          
-          
+
 <div>
   <label for="username" style="display: block; margin-bottom: 0.25em;">Geogram Id / Call Sign</label>
   <div style="display: flex; gap: 0.5em;">
@@ -44,92 +43,71 @@ function render() {
   <small>Pubic identifier of your profile on NOSTR — can be shared.</small>
 </div>
 
-   
-   
-   
           </div>
         </div>
       </div>
-
 
       <div id="locations" style="margin-bottom: 4em;">
         <h2>Locations of interest</h2>
         <div class="card">
           <div style="display: flex; flex-direction: column; gap: 1em;">
-<div style="margin-bottom: 3em;">
-  <label>Countries</label>
-  <div style="display: flex; gap: 0.5em; margin-top: 0.5em; align-items: flex-start;">
-    <div style="flex: 1;">
-      <select id="country-select" class="styled-select" style="width: 100%;">
-        <option value="">Select a country...</option>
-        <!-- Countries will be populated by JavaScript -->
-      </select>
-      <small style="display: block; margin-top: 0.5em;">Select countries you want to receive updates about.</small>
-    </div>
-    <button id="add-country" class="reset-button" style="margin-top: 0;">Add Country</button>
-  </div>
-  <table class="styled-table" style="margin-top: 1em; width: 100%;">
-     <tbody id="country-table"></tbody>
-  </table>
-</div>
 
+            <div style="margin-bottom: 4em;">
+              <label>Coordinates</label>
+              <div style="display: grid; grid-template-columns: 2fr 2fr 1fr auto auto; gap: 0.5em; margin-top: 0.5em; align-items: center;">
+                <input type="text" id="location-label" class="styled-select" placeholder="Label (required)" />
+                <input type="text" id="location-coords" class="styled-select" placeholder="Latitude, Longitude" />
+                <input type="number" id="location-radius" value="50" class="styled-select" placeholder="Radius (km)" min="1" />
+                <button id="get-coords" class="reset-button" style="margin-top: 0">Use My Current Location</button>
+                <button id="add-location" class="reset-button" style="margin-top: 0">Add Location</button>
+              </div>
+              <small style="display: block; margin-top: 0.5em;">Add specific locations with radius for alerts. Labels are required and editable.</small>
 
-<div style="margin-bottom: 4em;">
-  <label>Coordinates</label>
-  <div style="display: flex; gap: 0.5em; margin-top: 0.5em;">
-    <input type="text" id="location-coords" class="styled-select" placeholder="Latitude, Longitude" style="flex: 2;" />
-    <input type="number" id="location-radius" value="50" class="styled-select" placeholder="Radius (km)" min="1" style="flex: 1;" />
-    <button id="get-coords" class="reset-button" style="margin-top: 0">Use My Current Location</button>
-    <button id="add-location" class="reset-button" style="margin-top: 0">Add Location</button>
-    </div>
-   <small style="display: block; margin-top: 0.5em;">Add specific locations with radius for alerts.</small>
-  <table class="styled-table" style="margin-top: 0.5em; width: 100%; border-collapse: collapse;">
-    <thead>
-      <tr>
-        <th style="text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border);">Coordinates</th>
-        <th style="text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border);">Radius (km)</th>
-        <th style="text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border);">Actions</th>
-      </tr>
-    </thead>
-    <tbody id="location-table">
-      <!-- Rows will be added dynamically -->
-    </tbody>
-  </table>
-  
-</div>
-            
-            
+              <table class="styled-table" style="margin-top: 0.5em; width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th style="text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border);">Label</th>
+                    <th style="text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border);">Coordinates</th>
+                    <th style="text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border);">Radius (km)</th>
+                    <th style="text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border);">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="location-table">
+                  <!-- Rows will be added dynamically -->
+                </tbody>
+              </table>
+            </div>
+
           </div>
-          
+
           <div id="customization">
-        <h2>Customization</h2>
-        <div class="card">
-        <div style="display: flex; flex-direction: column; gap: 1em; margin-bottom: 2em">
-          <label for="theme-select">Color Theme</label>
-          <div class="custom-select-wrapper">
-            <select id="theme-select" class="styled-select">
-              <option value="blue">Low-light Blue</option>
-              <option value="monster">Monster Energy</option>
-              <option value="red">Red Alert</option>
-              <option value="yellow">Bruce Lee</option>
-              <option value="evangelion">Evangelion</option>
-            </select>
-          </div>
-        </div>
-      </div>
+            <h2>Customization</h2>
+            <div class="card">
+              <div style="display: flex; flex-direction: column; gap: 1em; margin-bottom: 2em">
+                <label for="theme-select">Color Theme</label>
+                <div class="custom-select-wrapper">
+                  <select id="theme-select" class="styled-select">
+                    <option value="blue">Low-light Blue</option>
+                    <option value="monster">Monster Energy</option>
+                    <option value="red">Red Alert</option>
+                    <option value="yellow">Bruce Lee</option>
+                    <option value="evangelion">Evangelion</option>
+                  </select>
+                </div>
+              </div>
+            </div>
 
-      <div>
-        <label for="brand-text">Header Text</label>
-        <input type="text" id="brand-text" class="styled-select" maxlength="20" 
-               value="GEOGRAM" style="width: 100%;">
-        <small style="display: block; margin-top: 0.5em;">Custom text to display next to logo</small>
-      </div>
-          
+            <div>
+              <label for="brand-text">Header Text</label>
+              <input type="text" id="brand-text" class="styled-select" maxlength="20" 
+                     value="GEOGRAM" style="width: 100%;">
+              <small style="display: block; margin-top: 0.5em;">Custom text to display next to logo</small>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   `;
-
 
   setupAnchorNavigation("config");
 
@@ -137,13 +115,11 @@ function render() {
   const currentTheme = localStorage.getItem('theme') || 'green';
   document.getElementById('theme-select').value = currentTheme;
   applyTheme(currentTheme);
-
   document.getElementById('theme-select').addEventListener('change', (e) => {
     const selectedTheme = e.target.value;
     localStorage.setItem('theme', selectedTheme);
     applyTheme(selectedTheme);
   });
-
 
   // Brand text input
   const brandTextInput = document.getElementById('brand-text');
@@ -152,13 +128,11 @@ function render() {
     brandTextInput.value = savedBrandText;
     updateBrandText(savedBrandText);
   }
-
   brandTextInput.addEventListener('input', (e) => {
     const text = e.target.value.trim();//.toUpperCase();
     localStorage.setItem('brandText', text);
     updateBrandText(text);
   });
-
   function updateBrandText(text) {
     const brandElement = document.querySelector('.radio-brand');
     if (brandElement) {
@@ -183,30 +157,26 @@ function render() {
     });
   });
 
+  // --- Callsign derivation helpers ---
+  function extractNpubData(npub) {
+    if (!npub) return '';
+    // Get the bech32 data part after 'npub1'
+    const m = npub.toLowerCase().match(/^npub1([0-9a-z]+)$/);
+    return m ? m[1] : '';
+  }
+  function deriveCallsignFromNpub(npub) {
+    const data = extractNpubData(npub);
+    const suffix = (data.slice(0, 4) || 'XXXX').toUpperCase(); // fallback if anything odd
+    return `X1${suffix}`;
+  }
 
-
-
-  // generate callsign
-  function generateCallsign() {
-    // Generate a 6-character string
-    // remove confusing characters like '0', 'O', 'I', 'l'
-    const chars = 'ACDEFHJKLMNPQRSTUVWXYZ234579';
-    //const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let code = '';
-    for (let i = 0; i < 4; i++) {
-      code += chars.charAt(Math.floor(Math.random() * chars.length));
+  // Generate a normal Nostr keypair and set callsign from npub
+  function generateNewNostrAndCallsign() {
+    if (!window.NostrTools) {
+      alert("Nostr library not loaded.");
+      return;
     }
-    const callsign = `X1${code}`;
 
-    // Display in an input or element with id 'callsign'
-    const callsignInput = document.getElementById('username');
-    if (callsignInput) {
-      callsignInput.value = callsign;
-      localStorage.setItem('username', callsignInput.value);
-    }
-  };
-
-  function generateNewNostr() {
     function bytesToHex(bytes) {
       return Array.from(bytes)
         .map(b => b.toString(16).padStart(2, '0'))
@@ -214,192 +184,151 @@ function render() {
     }
 
     const privateKeyBytes = window.NostrTools.generateSecretKey();
-    const privateKey = bytesToHex(privateKeyBytes);
-    const publicKey = window.NostrTools.getPublicKey(privateKey);
+    const privateKeyHex = bytesToHex(privateKeyBytes);
+    const publicKeyHex = window.NostrTools.getPublicKey(privateKeyHex);
 
     const nsec = window.NostrTools.nip19.nsecEncode(privateKeyBytes);
-    const npub = window.NostrTools.nip19.npubEncode(publicKey);
+    const npub = window.NostrTools.nip19.npubEncode(publicKeyHex);
 
-
+    // Fill fields
     document.getElementById('privkey').value = nsec;
     document.getElementById('pubkey').value = npub;
 
     localStorage.setItem('privkey', nsec);
     localStorage.setItem('pubkey', npub);
+
+    // Derive and set callsign from npub
+    const callsign = deriveCallsignFromNpub(npub);
+    const callsignInput = document.getElementById('username');
+    callsignInput.value = callsign;
+    localStorage.setItem('username', callsign);
   }
 
-
-  // reset all values and generate new ones   
-  function generateNewValues() {
-    generateCallsign();
-    generateNewNostr();
+  // For completeness: recompute callsign from existing npub (no regen)
+  function recomputeCallsignFromExistingNpub() {
+    const npub = document.getElementById('pubkey').value.trim() || localStorage.getItem('pubkey') || '';
+    if (!npub) return;
+    const callsign = deriveCallsignFromNpub(npub);
+    document.getElementById('username').value = callsign;
+    localStorage.setItem('username', callsign);
   }
 
-  // Generate callsign
+  // Buttons
   document.getElementById('generate-callsign').addEventListener('click', () => {
-    generateCallsign()
+    // Create a normal pair, then set callsign = X1 + first 4 after 'npub1'
+    generateNewNostrAndCallsign();
   });
 
-
-  // Generate a new Nostr key pair
   document.getElementById('generate-key').addEventListener('click', () => {
-    if (!window.NostrTools) {
-      alert("Nostr library not loaded.");
-      return;
-    }
-    generateNewNostr();
+    // Keep keys + callsign in sync
+    generateNewNostrAndCallsign();
   });
 
-
-  // Countries functionality
-  const countries = [
-    "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia",
-    "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
-    "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria",
-    "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad",
-    "Chile", "China", "Colombia", "Comoros", "Congo (Congo-Brazzaville)", "Costa Rica", "Croatia", "Cuba", "Cyprus",
-    "Czech Republic", "Democratic Republic of the Congo", "Denmark", "Djibouti", "Dominica", "Dominican Republic",
-    "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji",
-    "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea",
-    "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq",
-    "Ireland", "Israel", "Italy", "Ivory Coast", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati",
-    "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania",
-    "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania",
-    "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique",
-    "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea",
-    "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay",
-    "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis",
-    "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia",
-    "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands",
-    "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden",
-    "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga",
-    "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine",
-    "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City",
-    "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
-  ];
-
-
-  const countrySelect = document.getElementById('country-select');
-  countries.forEach(country => {
-    const option = document.createElement('option');
-    option.value = country;
-    option.textContent = country;
-    countrySelect.appendChild(option);
-  });
-
-  // Automatically add country when selected
-  countrySelect.addEventListener('change', () => {
-    const country = countrySelect.value;
-    if (!country) return;
-
-    // Prevent duplicates
-    const exists = Array.from(document.querySelectorAll('#country-table tr td:first-child'))
-      .some(td => td.textContent === country);
-    if (exists) return;
-
-    const row = document.createElement('tr');
-    row.innerHTML = `
-    <td>${country}</td>
-    <td><button class="remove-country reset-button" style="padding: 0.2em 0.5em;">Remove</button></td>
-  `;
-    row.querySelector('.remove-country').addEventListener('click', () => {
-      row.remove();
-      saveCountries();
-    });
-    document.getElementById('country-table').appendChild(row);
-    saveCountries();
-
-    // Reset selector to placeholder
-    countrySelect.value = '';
-  });
-
-  function saveCountries() {
-    const rows = Array.from(document.querySelectorAll('#country-table tr'));
-    const data = rows.map(row => row.querySelector('td:first-child').textContent);
-    localStorage.setItem("countries", JSON.stringify(data));
-  }
-
-  document.getElementById('add-country').addEventListener('click', () => {
-    const country = countrySelect.value;
-    if (!country) return;
-
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${country}</td>
-      <td><button class="remove-country reset-button" style="padding: 0.2em 0.5em;">Remove</button></td>
-    `;
-    row.querySelector('.remove-country').addEventListener('click', () => {
-      row.remove();
-      saveCountries();
-    });
-    document.getElementById('country-table').appendChild(row);
-    saveCountries();
-  });
-
-  const savedCountries = localStorage.getItem("countries");
-  if (savedCountries) {
-    JSON.parse(savedCountries).forEach(country => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${country}</td>
-        <td><button class="remove-country reset-button" style="padding: 0.2em 0.5em;">Remove</button></td>
-      `;
-      row.querySelector('.remove-country').addEventListener('click', () => {
-        row.remove();
-        saveCountries();
-      });
-      document.getElementById('country-table').appendChild(row);
-    });
-  }
-
-  // Locations functionality
+  // ---- Locations functionality (with mandatory labels) ----
   function saveLocations() {
     const rows = Array.from(document.querySelectorAll('#location-table tr'));
-    const data = rows.map(row => ({
-      coords: row.querySelector('td:first-child').textContent,
-      radius: row.querySelector('td:nth-child(2)').textContent
-    }));
+    const data = rows.map((row) => {
+      const labelInput = row.querySelector('input.label-input');
+      const coordsCell = row.querySelector('td.coords-cell');
+      const radiusCell = row.querySelector('td.radius-cell');
+      return {
+        label: (labelInput?.value || '').trim(),
+        coords: (coordsCell?.textContent || '').trim(),
+        radius: (radiusCell?.textContent || '').trim()
+      };
+    });
     localStorage.setItem("locations", JSON.stringify(data));
   }
 
-  document.getElementById('add-location').addEventListener('click', () => {
-    const coords = document.getElementById('location-coords').value.trim();
-    const radius = document.getElementById('location-radius').value.trim();
-
-    if (!coords || !radius) return;
-
+  function createLocationRow({ label, coords, radius }) {
     const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${coords}</td>
-      <td>${radius}</td>
-      <td><button class="remove-location reset-button" style="padding: 0.2em 0.5em;">Remove</button></td>
-    `;
-    row.querySelector('.remove-location').addEventListener('click', () => {
+
+    // Label (editable input, mandatory on blur)
+    const tdLabel = document.createElement('td');
+    const labelInput = document.createElement('input');
+    labelInput.type = 'text';
+    labelInput.className = 'styled-select label-input';
+    labelInput.maxLength = 60;
+    labelInput.placeholder = 'Label (required)';
+    labelInput.value = label || '';
+    labelInput.style.width = '100%';
+    let lastLabelValue = labelInput.value;
+    labelInput.addEventListener('input', () => {
+      lastLabelValue = labelInput.value;
+      saveLocations();
+    });
+    labelInput.addEventListener('blur', () => {
+      if (!labelInput.value.trim()) {
+        // enforce mandatory label
+        labelInput.value = lastLabelValue && lastLabelValue.trim() ? lastLabelValue : 'Location';
+      }
+      saveLocations();
+    });
+    tdLabel.appendChild(labelInput);
+
+    // Coords (text)
+    const tdCoords = document.createElement('td');
+    tdCoords.className = 'coords-cell';
+    tdCoords.textContent = coords;
+
+    // Radius (text)
+    const tdRadius = document.createElement('td');
+    tdRadius.className = 'radius-cell';
+    tdRadius.textContent = radius;
+
+    // Actions
+    const tdActions = document.createElement('td');
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-location reset-button';
+    removeBtn.style.padding = '0.2em 0.5em';
+    removeBtn.textContent = 'Remove';
+    removeBtn.addEventListener('click', () => {
       row.remove();
       saveLocations();
     });
+    tdActions.appendChild(removeBtn);
+
+    row.appendChild(tdLabel);
+    row.appendChild(tdCoords);
+    row.appendChild(tdRadius);
+    row.appendChild(tdActions);
+
     document.getElementById('location-table').appendChild(row);
+  }
+
+  document.getElementById('add-location').addEventListener('click', () => {
+    const label = (document.getElementById('location-label').value || '').trim();
+    const coords = (document.getElementById('location-coords').value || '').trim();
+    const radius = (document.getElementById('location-radius').value || '').trim();
+
+    // Label is mandatory
+    if (!label) {
+      alert('Please enter a label for this location.');
+      return;
+    }
+    if (!coords || !radius) return;
+
+    createLocationRow({ label, coords, radius });
     saveLocations();
 
     // Clear inputs
+    document.getElementById('location-label').value = '';
     document.getElementById('location-coords').value = '';
-    document.getElementById('location-radius').value = '';
+    document.getElementById('location-radius').value = '50';
   });
 
+  // Load saved locations (backward compatible with old schema)
   const savedLocations = localStorage.getItem("locations");
   if (savedLocations) {
-    JSON.parse(savedLocations).forEach(location => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${location.coords}</td>
-        <td>${location.radius}</td>
-        <td><button class="remove-location reset-button" style="padding: 0.2em 0.5em;">Remove</button></td>
-      `;
-      row.querySelector('.remove-location').addEventListener('click', () => {
-        row.remove();
-        saveLocations();
+    JSON.parse(savedLocations).forEach((location, idx) => {
+      const label = (location.label && location.label.trim())
+        ? location.label
+        : `Location ${idx + 1}`;
+      createLocationRow({
+        label,
+        coords: location.coords,
+        radius: location.radius
       });
-      document.getElementById('location-table').appendChild(row);
     });
   }
 
@@ -414,17 +343,17 @@ function render() {
     }
   });
 
-
   // Auto-generate values if first visit and fields are empty
   const username = localStorage.getItem('username');
   const privkey = localStorage.getItem('privkey');
   const pubkey = localStorage.getItem('pubkey');
   if ((!username || username.trim() === '') && (!privkey || privkey.trim() === '') && (!pubkey || pubkey.trim() === '')) {
-    generateNewValues();
+    generateNewNostrAndCallsign();
+  } else if (username && (!username.startsWith('X1') || username.length < 6)) {
+    // keep old keys but ensure callsign matches new scheme
+    recomputeCallsignFromExistingNpub();
   }
-
 }
-
 
 function applyTheme(theme) {
   document.body.setAttribute('data-theme', theme);
