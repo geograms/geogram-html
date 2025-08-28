@@ -2,97 +2,20 @@ function render() {
   document.getElementById('content').innerHTML = `
     <div class="left-column">
       <h2>Local activity</h2>
-
-
       <!-- Nearby Maps section is now fully rendered by nearby.js -->
       <div id="recent-nearby"></div>
-
-      <div class="card" id="voice-notes">
-        <div id="recording-indicator" style="display: none; margin: 10px 0;">
-          <div class="pulse-circle"></div>
-          <span>Recording...</span>
-          <span id="recording-timer" style="margin-left: 10px; font-weight: bold;">00:00</span>
-        </div>
-        <div id="volume-bar-wrapper" style="margin-top: 10px; display: none;">
-          <div id="volume-bar" style="
-            height: 10px;
-            width: 0;
-            background-color: limegreen;
-            transition: width 0.1s ease;
-          "></div>
-        </div>
-        <ul id="recording-list" class="card" style="margin-top: 10px;"></ul>
-      </div>
-
-      <h2>Favorites</h2>
-      <div id="activity-feed" class="card"></div>
     </div>
 
     <div class="right-column">
-      <button id="toggle-listening" class="card" style="
-        font-size: 1.2em;
-        padding: 12px;
-        background-color:rgb(22, 51, 23);
-        color: white;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        justify-content: center;
-        border-radius: 6px;">
-        🎧 Start Listening
-      </button>
+     
+    
+    
+      <h2>Stream</h2>
+      <div id="stream" class="card"></div>
+   
 
-      <h2>SMS</h2>
-      <div id="smsDialog" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:1000; align-items:center; justify-content:center;">
-        <div style="background:#fff; padding:2em; border-radius:8px; max-width:400px; margin:auto; position:relative;">
-          <h3>Send APRS Message</h3>
-          <label>
-            Destination Callsign:<br>
-            <input type="text" id="smsDest" maxlength="9" style="width:100%;" />
-          </label>
-          <br><br>
-          <label>
-            Message:<br>
-            <textarea id="smsContent" rows="4" style="width:100%;"></textarea>
-          </label>
-          <br><br>
-          <button id="sendSmsBtn">Send</button>
-          <button id="closeSmsDialog" style="margin-left:1em;">Cancel</button>
-          <div id="smsStatus" style="margin-top:1em; color:green;"></div>
-        </div>
-      </div>
-
-      <h2>Channel</h2>
-      <select id="channel-selector" class="styled-select">
-        <option value="">Not Defined</option>
-        <option value="446.00625">446.00625 MHz (PMR channel 1)</option>
-        <option value="446.01875">446.01875 MHz (PMR channel 2)</option>
-        <option value="446.03125">446.03125 MHz (PMR channel 3)</option>
-        <option value="446.04375">446.04375 MHz (PMR channel 4)</option>
-        <option value="446.05625">446.05625 MHz (PMR channel 5)</option>
-        <option value="446.06875">446.06875 MHz (PMR channel 6)</option>
-        <option value="446.08125">446.08125 MHz (PMR channel 7)</option>
-        <option value="446.09375">446.09375 MHz (PMR channel 8)</option>
-      </select>
-
-      <h2>Nearby</h2>
-      <div id="nearby-stations" class="card"></div>
-      <h2>Groups</h2>
-      <div id="groups" class="card"></div>
-      <h2>People</h2>
-      <div id="people" class="card"></div>
-      <h2>Things</h2>
-      <div id="things" class="card"></div>
     </div>
   `;
-
-  // SMS + recording UI hooks (unchanged)
-  document.getElementById('newSmsBtn')?.addEventListener('click', openSmsDialog);
-  document.getElementById('closeSmsDialog')?.addEventListener('click', closeSmsDialog);
-  document.getElementById('sendSmsBtn')?.addEventListener('click', sendAprsMessage);
-  if (typeof initRecordingUI === 'function') initRecordingUI();
 
   // Recent GEO events list (left as-is, independent of maps)
   const API_URL = 'http://api.geogram.info/messages?lat=40.2056&lon=-8.4196&radius=50';

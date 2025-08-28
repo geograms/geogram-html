@@ -650,3 +650,13 @@ a:hover {
   filter: none !important;
   -webkit-filter: none !important;
 }
+
+/* Make links in Nearby tables and popups visibly links */
+.nm-table a {
+  text-decoration: underline;
+}
+
+.leaflet-popup-content a {
+  text-decoration: underline;
+  font-weight: 600;          /* optional */
+}
