@@ -9,6 +9,7 @@
 (function () {
   const LOCAL_PREFIX = 'profileCache:';         // localStorage key prefix
   const API_ORIGIN = (location.protocol === 'https:' ? 'https://api.geogram.info' : 'http://api.geogram.info');
+  const REPLAY_WINDOW_SEC = 300;                // server allows ±300s skew
 
   let currentCallsign = '';
   let ownCallsign = '';
@@ -50,6 +51,25 @@
       fr.onerror = reject;
       fr.readAsDataURL(file);
     });
+  }
+
+  // ---------- server time (for created_at skew handling) ----------
+  async function fetchServerEpochSeconds() {
+    try {
+      const res = await fetch(`${API_ORIGIN}/time`, {
+        mode: 'cors',
+        credentials: 'omit',
+        cache: 'no-store',
+        headers: { 'Accept': 'application/json' }
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const j = await res.json();
+      if (typeof j.serverUnixSeconds === 'number') return j.serverUnixSeconds;
+      if (typeof j.serverUnixMillis === 'number') return Math.floor(j.serverUnixMillis / 1000);
+    } catch (_) {
+      // fall back to local clock if /time isn’t available
+    }
+    return Math.floor(Date.now() / 1000);
   }
 
   // ---------- URL / API ----------
@@ -246,6 +266,91 @@
       }
     }
 
+    // ---------- Nostr signing (helpers used by Save) ----------
+    function getNostrKeys() {
+      if (!window.NostrTools) throw new Error('Nostr library not loaded');
+      const nsecBech = (localStorage.getItem('privkey') || '').trim();
+      const npubBech = (localStorage.getItem('pubkey') || '').trim();
+      if (!nsecBech) throw new Error('Missing nsec (privkey) in local storage');
+      if (!npubBech) throw new Error('Missing npub (pubkey) in local storage');
+
+      const decPriv = window.NostrTools.nip19.decode(nsecBech);
+      if (decPriv.type !== 'nsec' || !decPriv.data) throw new Error('Invalid nsec');
+      const skBytes = decPriv.data; // Uint8Array (what finalizeEvent expects)
+
+      const decPub = window.NostrTools.nip19.decode(npubBech);
+      if (decPub.type !== 'npub' || !decPub.data) throw new Error('Invalid npub');
+      const pubHexFromStorage = String(decPub.data).toLowerCase();
+
+      const pubHexFromSk = window.NostrTools.getPublicKey(skBytes).toLowerCase();
+      if (pubHexFromSk !== pubHexFromStorage) {
+        throw new Error('npub does not match nsec');
+      }
+      return { skBytes, pubHex: pubHexFromSk, npubBech };
+    }
+
+    async function buildSignedEventForBody(callsign, bodyObject, postUrl) {
+      const { skBytes, pubHex } = getNostrKeys();
+      const created_at = await fetchServerEpochSeconds(); // seconds
+
+      // Hash the body **without** the event using the bundle’s nip-98 helper
+      const payloadHash = window.NostrTools.nip98.hashPayload(bodyObject);
+
+      // NIP-98 HTTP auth-like event
+      const eventTemplate = {
+        kind: window.NostrTools.kinds.HTTPAuth,
+        created_at,
+        pubkey: pubHex, // finalizeEvent will also set pubkey; including is fine
+        tags: [
+          ['u', postUrl],
+          ['method', 'POST'],
+          ['payload', payloadHash],
+          ['callsign', callsign]
+        ],
+        content: ''
+      };
+
+      // Signs and fills id/sig
+      const event = window.NostrTools.finalizeEvent(eventTemplate, skBytes);
+      return event;
+    }
+
+    async function postSignedProfileUpdate(cs, editablePayload) {
+      const saveUrl = profileUrlJSON(cs);
+
+      // Build the body *without* the event first
+      const bodyWithoutEvent = { profile: editablePayload };
+      if (pendingAvatarDataUrl) bodyWithoutEvent.avatarDataUrl = pendingAvatarDataUrl;
+
+      // Sign an auth event that binds method+URL+hash(body)
+      const event = await buildSignedEventForBody(cs, bodyWithoutEvent, saveUrl);
+
+      // Final body includes the event
+      const fullBody = { event, ...bodyWithoutEvent };
+
+      const res = await fetch(saveUrl, {
+        method: 'POST',
+        mode: 'cors',
+        credentials: 'omit',
+        cache: 'no-store',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(fullBody)
+      });
+
+      const text = await res.text();
+      let json;
+      try { json = JSON.parse(text); } catch { json = { value: res.status, comment: text || 'Non-JSON reply' }; }
+
+      if (!res.ok || (json?.value && json.value !== 200)) {
+        const msg = json?.comment || `HTTP ${res.status}`;
+        const err = new Error(msg);
+        err.status = res.status;
+        err.payload = json;
+        throw err;
+      }
+      return json;
+    }
+
     // paint function: fills DETAILS (top), SUMMARY (below), associated
     function paint(d, editable) {
       const cs = d.callsign || callsign;
@@ -412,25 +517,43 @@
         assocList.innerHTML = '';
       }
 
-      // Save button visibility & click (no backend yet)
+      // Save button visibility & click (NOW IMPLEMENTED)
       saveBtn.style.display = editable ? '' : 'none';
       saveStatus.textContent = '';
       if (editable && !saveBtn._wired) {
         saveBtn._wired = true;
-        saveBtn.addEventListener('click', () => {
-          const payload = {
-            callsign: cs,
-            npub: (localStorage.getItem('pubkey') || '').trim(), // read-only source
-            name: $('#pf-edit-name')?.value?.trim() || '',
-            description: $('#pf-edit-description')?.value?.trim() || '',
-            profileType: ($('#pf-edit-type')?.value || 'PERSON').toUpperCase(),
-            profileVisibility: ($('#pf-edit-visibility')?.value || 'PUBLIC').toUpperCase(),
-            // Optional avatar (data URL if selected this session)
-            avatarDataUrl: pendingAvatarDataUrl || null
-          };
-          // In a future iteration we will POST this payload.
-          console.log('Profile save (pending backend):', payload);
-          saveStatus.textContent = 'Changes prepared (saving not implemented yet).';
+        saveBtn.addEventListener('click', async () => {
+          try {
+            saveStatus.style.color = 'var(--text, #ddd)';
+            saveStatus.textContent = 'Preparing…';
+
+            const payload = {
+              callsign: cs,
+              npub: (localStorage.getItem('pubkey') || '').trim(), // read-only source
+              name: $('#pf-edit-name')?.value?.trim() || '',
+              description: $('#pf-edit-description')?.value?.trim() || '',
+              profileType: ($('#pf-edit-type')?.value || 'PERSON').toUpperCase(),
+              profileVisibility: ($('#pf-edit-visibility')?.value || 'PUBLIC').toUpperCase(),
+              lastUpdated: Date.now()
+            };
+
+            const result = await postSignedProfileUpdate(cs, payload);
+
+            saveStatus.style.color = 'var(--text, #ddd)';
+            saveStatus.textContent = 'Saved.';
+
+            // Update cache optimistically
+            const cacheK = cacheKeyFor(cs);
+            writeCache(cacheK, {
+              ...payload,
+              hasProfilePic: !!pendingAvatarDataUrl || !!d.hasProfilePic
+            });
+
+          } catch (err) {
+            console.error(err);
+            saveStatus.style.color = 'var(--accent, #f55)';
+            saveStatus.textContent = `Save failed: ${err.message || err}`;
+          }
         });
       }
     }
