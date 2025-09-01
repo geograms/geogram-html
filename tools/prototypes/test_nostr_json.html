@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nostr JSON/HTTPAuth Prototype</title>
+  <style>
+    :root { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+    body { margin: 0; padding: 24px; background: #0b1020; color: #e8f0ff; }
+    h1 { margin-top: 0; font-size: 20px; letter-spacing: 0.3px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .card { background: #121832; border: 1px solid #243056; border-radius: 14px; padding: 14px; box-shadow: 0 10px 25px rgba(0,0,0,.25); }
+    .card h2 { font-size: 14px; margin: 0 0 10px; color: #9fb4ff; text-transform: uppercase; letter-spacing: .1em; }
+    label { font-size: 12px; color: #a7b3da; display: block; margin-bottom: 6px; }
+    input[type="text"], input[type="number"], select, textarea { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #2c3967; background: #0e1530; color: #eaf1ff; outline: none; }
+    textarea { min-height: 120px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .btn { -webkit-appearance: none; appearance: none; border: 1px solid #3a4aa3; background: #1e2a7a; color: white; padding: 10px 14px; border-radius: 10px; font-weight: 600; cursor: pointer; }
+    .btn.secondary { background: #15204f; border-color: #2a3879; }
+    .btn:disabled { opacity: .6; cursor: not-allowed; }
+    .muted { color: #95a2cd; font-size: 12px; }
+    pre { background: #0c122a; border: 1px solid #233060; border-radius: 12px; padding: 12px; overflow: auto; max-height: 320px; }
+    .cols-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .hint { margin-top: 6px; font-size: 12px; color: #9fb4ff; }
+    .inline { display: inline-flex; align-items: center; gap: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Nostr JSON Prototype (Event + NIP-98 Authorization)</h1>
+
+  <div class="grid">
+    <!-- LEFT: Settings -->
+    <section class="card">
+      <h2>Keys & Settings</h2>
+
+      <div class="row">
+        <div>
+          <label for="nsec">NSEC (stored as <code>privkey</code>)</label>
+          <input id="nsec" type="text" placeholder="nsec1..." />
+        </div>
+        <div>
+          <label for="npub">NPUB (stored as <code>pubkey</code>)</label>
+          <input id="npub" type="text" placeholder="npub1..." />
+        </div>
+      </div>
+      <div class="inline" style="margin: 10px 0 14px; gap:10px; flex-wrap: wrap">
+        <button id="regen" class="btn">Regenerate Keys</button>
+        <span class="muted">Generated keys are saved to <code>localStorage</code> and reused.</span>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="method">HTTP Method</label>
+          <select id="method">
+            <option>POST</option>
+            <option>PUT</option>
+            <option>PATCH</option>
+          </select>
+        </div>
+        <div>
+          <label for="url">Request URL</label>
+          <input id="url" type="text" value="http://localhost:8787/api/nostr" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="kind">Event Kind</label>
+          <input id="kind" type="number" value="30000" />
+        </div>
+        <div>
+          <label for="created">created_at (seconds) — auto if empty</label>
+          <input id="created" type="number" placeholder="auto" />
+        </div>
+      </div>
+
+      <div style="margin-top: 8px">
+        <label class="inline"><input id="sendRawBody" type="checkbox" checked /> Include signed event as request body</label>
+        <label class="inline" style="margin-left:12px"><input id="useNip98" type="checkbox" checked /> Use NIP-98 Authorization header</label>
+      </div>
+
+      <div class="hint">Tip: Edit values, they persist automatically. Use “Regenerate Keys” to create a fresh nsec/npub pair in localStorage.</div>
+    </section>
+
+    <!-- RIGHT: Editors -->
+    <section class="card">
+      <h2>Event Data</h2>
+      <div class="row">
+        <div>
+          <label for="tags">Tags (JSON array of arrays)</label>
+          <textarea id="tags">[["t","demo"],["client","geogram-proto"]]</textarea>
+        </div>
+        <div>
+          <label for="content">Content (string — put JSON or text)</label>
+          <textarea id="content">{"message":"hello from prototype","ts":"${new Date().toISOString()}"}</textarea>
+        </div>
+      </div>
+      <div style="margin-top: 12px; display:flex; gap:8px; align-items:center">
+        <button id="send" class="btn">Sign & Send</button>
+        <button id="previewBtn" class="btn secondary">Preview Signed Event</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="grid" style="margin-top: 16px">
+    <section class="card">
+      <h2>Signed Event Preview</h2>
+      <pre id="eventOut" class="muted">—</pre>
+    </section>
+    <section class="card">
+      <h2>Server Result</h2>
+      <pre id="result">—</pre>
+      <details style="margin-top:8px">
+        <summary class="muted">Authorization token (NIP-98)</summary>
+        <pre id="authOut">—</pre>
+      </details>
+    </section>
+  </div>
+
+  <!-- Load the bundled nostr tools (make sure this file is served alongside this HTML) -->
+  <script src="./nostr.bundle.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    // Persist a few inputs automatically
+    ["nsec","npub","url","kind","tags","content"].forEach((id)=>{
+      const saved = localStorage.getItem(id);
+      if (saved) $(id).value = saved;
+      $(id).addEventListener("input", ()=> localStorage.setItem(id, $(id).value));
+    });
+
+    // Also mirror to the app-wide keys used elsewhere
+    function syncPrivPubToAppKeys(nsec, npub){
+      localStorage.setItem('privkey', nsec); // as used in config.js
+      localStorage.setItem('pubkey', npub);
+    }
+
+    function nowSec(){ return Math.floor(Date.now()/1000); }
+
+    function toSecretBytes(nsecOrHex){
+      try {
+        if (!nsecOrHex) throw new Error('empty key');
+        if (nsecOrHex.startsWith('nsec1')){
+          const decoded = NostrTools.nip19.decode(nsecOrHex);
+          return decoded.data; // Uint8Array(32)
+        }
+        // fallback: assume hex
+        return NostrTools.utils.hexToBytes(nsecOrHex);
+      } catch(e){
+        throw new Error('Invalid secret key. Expecting nsec1... or 64-hex. ' + e.message);
+      }
+    }
+
+    async function ensureKeys(){
+      let nsec = localStorage.getItem('privkey') || localStorage.getItem('nsec');
+      let npub = localStorage.getItem('pubkey') || localStorage.getItem('npub');
+      if (!nsec || !npub){
+        await regenerateKeys();
+      } else {
+        $('nsec').value = nsec; $('npub').value = npub;
+        localStorage.setItem('nsec', nsec); localStorage.setItem('npub', npub);
+      }
+    }
+
+    async function regenerateKeys(){
+      if (!window.NostrTools){ alert('nostr.bundle.js not loaded'); return; }
+      const skBytes = NostrTools.generateSecretKey();
+      const pkHex = NostrTools.getPublicKey(skBytes); // returns hex string
+      const nsec = NostrTools.nip19.nsecEncode(skBytes);
+      const npub = NostrTools.nip19.npubEncode(pkHex);
+      $('nsec').value = nsec; $('npub').value = npub;
+      localStorage.setItem('nsec', nsec); localStorage.setItem('npub', npub);
+      syncPrivPubToAppKeys(nsec, npub);
+    }
+
+    $('regen').addEventListener('click', regenerateKeys);
+
+    function parseTagsInput(){
+      const raw = $('tags').value.trim();
+      if (!raw) return [];
+      try {
+        const arr = JSON.parse(raw);
+        if (!Array.isArray(arr)) throw new Error('Tags must be an array of arrays');
+        for (const t of arr){ if (!Array.isArray(t)) throw new Error('Each tag must be an array'); }
+        return arr;
+      } catch(e){ throw new Error('Tags JSON invalid: ' + e.message); }
+    }
+
+    function buildEventTemplate(){
+      return {
+        kind: Number($('kind').value || 30000),
+        created_at: Number($('created').value) || nowSec(),
+        tags: parseTagsInput(),
+        content: $('content').value
+      };
+    }
+
+    function signWithLocalSecret(unsigned){
+      const nsec = $('nsec').value.trim();
+      const sk = toSecretBytes(nsec); // Uint8Array
+      return NostrTools.finalizeEvent(unsigned, sk);
+    }
+
+    async function previewEvent(){
+      try {
+        const evt = signWithLocalSecret(buildEventTemplate());
+        $('eventOut').textContent = JSON.stringify(evt, null, 2);
+      } catch(e){ $('eventOut').textContent = 'Error: ' + e.message; }
+    }
+
+    $('previewBtn').addEventListener('click', previewEvent);
+
+    async function send(){
+      $('send').disabled = true; $('result').textContent = 'Sending…'; $('authOut').textContent = '—';
+      try {
+        // 1) Create & sign an arbitrary event from user inputs
+        const signedEvent = signWithLocalSecret(buildEventTemplate());
+        $('eventOut').textContent = JSON.stringify(signedEvent, null, 2);
+
+        // 2) Optionally include the signed event in the request body
+        const includeBody = $('sendRawBody').checked;
+        const bodyPayload = includeBody ? signedEvent : { note: 'no-body' };
+
+        // 3) Optionally attach a NIP-98 Authorization token that signs (url, method, and body hash)
+        let headers = { 'Content-Type':'application/json' };
+        if ($('useNip98').checked){
+          const url = $('url').value.trim();
+          const method = $('method').value.trim().toUpperCase();
+          const signer = (t) => signWithLocalSecret(t);
+          const token = await NostrTools.nip98.getToken(url, method, signer, true, bodyPayload);
+          headers['Authorization'] = token;
+          $('authOut').textContent = token;
+        }
+
+        // 4) Send
+        const res = await fetch($('url').value.trim(), {
+          method: $('method').value.trim().toUpperCase(),
+          headers,
+          body: JSON.stringify(bodyPayload)
+        });
+        const text = await res.text();
+        try { $('result').textContent = JSON.stringify(JSON.parse(text), null, 2); }
+        catch { $('result').textContent = text; }
+      } catch (e){
+        $('result').textContent = 'Error: ' + e.message;
+      } finally {
+        $('send').disabled = false;
+      }
+    }
+
+    $('send').addEventListener('click', send);
+
+    // Boot
+    (async function init(){
+      await ensureKeys();
+      // Mirror inputs to app-level keys if user types over them
+      $('nsec').addEventListener('input', ()=> syncPrivPubToAppKeys($('nsec').value, $('npub').value));
+      $('npub').addEventListener('input', ()=> syncPrivPubToAppKeys($('nsec').value, $('npub').value));
+      // Initial preview
+      previewEvent();
+    })();
+  </script>
+</body>
+</html>
