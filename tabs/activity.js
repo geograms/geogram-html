@@ -18,61 +18,11 @@ function render() {
   `;
 
   // Recent GEO events list (left as-is, independent of maps)
-  const API_URL = 'http://api.geogram.info/messages?lat=40.2056&lon=-8.4196&radius=50';
+  //const API_URL = 'http://api.geogram.info/messages?lat=40.2056&lon=-8.4196&radius=50';
 
-  async function fetchAndRenderRecent() {
-    const listEl = document.getElementById('recent-geo-list');
-    const metaEl = document.getElementById('recent-geo-meta');
-    const errEl  = document.getElementById('recent-geo-error');
-    if (!listEl) return;
+  activityStartLocalMaps();
 
-    errEl.style.display = 'none';
-    metaEl.textContent = 'Loading…';
-
-    try {
-      const res = await fetch(API_URL, { cache: 'no-store' });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-
-      const items = (Array.isArray(data) ? data : []).slice(-50).reverse();
-
-      listEl.innerHTML = items.map((e) => {
-        const ts = Number(e.timestamp);
-        const d  = isFinite(ts) ? new Date(ts) : null;
-        const iso = d ? d.toISOString() : '';
-        const rel = d ? formatRelative(d) : '';
-        return `
-          <li style="padding:6px 0; border-bottom:1px solid #eee;">
-            <div style="display:flex; gap:8px; align-items:baseline; flex-wrap:wrap;">
-              <span style="font-weight:600;">${rel || '—'}</span>
-              <span style="opacity:.6; font-size:.9em;" title="${iso}">${iso}</span>
-            </div>
-            <div style="margin-top:4px;"><code style="white-space:pre-wrap; word-break:break-word;">${escapeHtml(e.content || '')}</code></div>
-          </li>
-        `;
-      }).join('');
-
-      metaEl.textContent = `Showing ${items.length} / 50 · source: ${API_URL}`;
-    } catch (err) {
-      metaEl.textContent = '';
-      errEl.textContent = `Failed to load events: ${err.message}`;
-      errEl.style.display = 'block';
-      listEl.innerHTML = '';
-    }
-  }
-  document.getElementById('recent-geo-refresh')?.addEventListener('click', fetchAndRenderRecent);
-  fetchAndRenderRecent();
-
-  // NEW: Let nearby.js render the whole Nearby Maps section (or hide it if no locations)
-  if (window.Nearby && typeof window.Nearby.renderRecentNearby === 'function') {
-    window.Nearby.renderRecentNearby('#recent-nearby');
-  } else {
-    console.warn('nearby.js not loaded; no Nearby Maps will be shown.');
-    // If you want, you could hide the container:
-    const cont = document.getElementById('recent-nearby');
-    if (cont) cont.style.display = 'none';
-  }
-
+  
   console.log("Activity tab loaded");
 }
 
