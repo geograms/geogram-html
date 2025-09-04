@@ -8,7 +8,6 @@ function render() {
         </button>
         <h2>Messages</h2>
       </div>
-      
       <div class="messages-list">
         <div class="message-item" onclick="openConversation('user123')">
           <div class="message-avatar">JD</div>
@@ -18,7 +17,6 @@ function render() {
           </div>
           <div class="message-time">2:30 PM</div>
         </div>
-        
         <div class="message-item" onclick="openConversation('group456')">
           <div class="message-avatar">AS</div>
           <div class="message-content">
@@ -27,51 +25,48 @@ function render() {
           </div>
           <div class="message-time">Yesterday</div>
         </div>
-        
         <!-- Add more message items here -->
       </div>
     </div>
   `;
-
   console.log("Messages page loaded");
 }
 
 // Global function to load messages (called from anywhere)
 function loadMessages() {
-  const script = document.createElement("script");
-  script.src = "tabs/messages.js";
-  script.id = "dynamic-tab";
+  // Delegate to the unified `loadTab` helper when available.  This will
+  // handle loading the messages script, updating the URL hash and
+  // managing tab highlighting.  The `additionalPages` mapping in
+  // `main.js` must include a `messages` entry for this to work.
+  if (typeof window.loadTab === 'function') {
+    window.loadTab('messages');
+    return;
+  }
+  // Fallback: manually inject the messages script if loadTab() is not
+  // defined.  Remove any existing dynamic script first.
+  const existingScript = document.getElementById('dynamic-tab');
+  if (existingScript) existingScript.remove();
+  const script = document.createElement('script');
+  script.src = 'messages.js';
+  script.id = 'dynamic-tab';
   script.onload = () => {
-    if (typeof render === "function") {
+    if (typeof render === 'function') {
       render();
-      // Update URL hash for deep linking
-      window.location.hash = '#messages';
-      // Update last tab for proper back navigation
-      localStorage.setItem("lastTab", "activity");
     }
   };
-  
-  // Clean up current tab
-  const existingScript = document.getElementById("dynamic-tab");
-  if (existingScript) existingScript.remove();
-  
-  // Remove active tab highlighting
-  document.querySelectorAll(".tab").forEach(btn =>
-    btn.classList.remove("active")
-  );
-  
   document.body.appendChild(script);
+  // Update the hash to reflect the messages page without altering
+  // lastTab, allowing the back button to return to the previous tab.
+  window.location.hash = '#messages';
 }
 
 // Function to open individual conversations
 function openConversation(conversationId) {
-  // You can implement conversation view here
   console.log("Opening conversation:", conversationId);
-  // For now, just show an alert
   alert(`Opening conversation: ${conversationId}`);
 }
 
 // Optional cleanup function
 function cleanupMessages() {
-  // Clean up any event listeners or intervals
+  // Clean up any event listeners or intervals if needed
 }

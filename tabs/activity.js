@@ -9,7 +9,12 @@ function render() {
 
     <div class="right-column">
       <h2>Actions</h2>
-      <div id="actions" class="card"></div>
+      <div id="actions" class="card">
+          <a href="#messages" onclick="loadTab('messages'); return false;" style="display: flex; align-items: center;">
+            <i class="fas fa-envelope" aria-hidden="true" style="margin-right: 0.5rem;"></i>
+            <span>Messages</span>
+          </a>      
+      </div>
         
       <h2>Stream</h2>
       <div id="stream" class="card"></div>

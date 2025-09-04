@@ -48,7 +48,7 @@
     <div class="logo-block">
       <a href="#" id="home-link">
         <img src="lib/logo_small.svg" alt="geogram logo">
-        <span class="radio-brand">GEOGRAM</span> 
+        <span class="radio-brand">GEOGRAM</span>
       </a>
     </div>
     <div class="topbar">
@@ -83,32 +83,33 @@
   <script src="lib/programming.js"></script>
   <script src="lib/navigation.js"></script>
 
-  <script src="tabs/messages.js"></script>
-
+  <!--
+    The Messages page is now loaded on demand via the `loadTab()`
+    helper defined in `main.js` (see `additionalPages`).  It is no
+    longer necessary to preload the Messages script here.
+  -->
 
   <script src="lib/main.js"></script>
-  
-  <script>
 
+  <script>
     // Set and apply the default theme for new visitors
     (function initializeTheme() {
       const defaultTheme = 'red'; // Default theme: Red Alert
       const savedTheme = localStorage.getItem('theme') || defaultTheme;
-    
+
       // Apply the theme
       applyTheme(savedTheme);
-    
+
       // Save the default theme if it's a new visitor
       if (!localStorage.getItem('theme')) {
         localStorage.setItem('theme', defaultTheme);
       }
     })();
-    
+
     // Function to apply the theme
     function applyTheme(theme) {
       document.body.setAttribute('data-theme', theme);
     }
-
 
     // Hide loading screen when everything is loaded
     window.addEventListener('load', function() {
