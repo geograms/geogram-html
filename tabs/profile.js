@@ -4,15 +4,14 @@
 // Auto-loads the user's callsign if no deep link is set.
 //
 // API:
-//   GET  https://api.geogram.info/profile/<CALLSIGN>
-//   POST https://api.geogram.info/nostr  (Nostr-signed event)
+//   GET  https://api.geogram.radio/profile/<CALLSIGN>
+//   POST https://api.geogram.radio/nostr  (Nostr-signed event)
 
 (function () {
   const LOCAL_PREFIX = 'profileCache:'; // localStorage key prefix
-  const API_ORIGIN =
-    location.protocol === 'https:'
-      ? 'https://api.geogram.info'
-      : 'http://api.geogram.info';
+  const API_ORIGIN = API_URL; // from internal.config.js
+
+  // state
 
   let currentCallsign = '';
   let ownCallsign = '';

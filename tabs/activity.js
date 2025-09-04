@@ -18,8 +18,10 @@ function render() {
   // Initialize the stream - wait a bit for DOM to be fully ready
   setTimeout(() => {
     activityLoadStream();
+    // Start auto-refresh when the activity tab is loaded
+    startStreamAutoRefresh();
   }, 100);
-  
+
   console.log("Activity tab loaded");
 }
 
