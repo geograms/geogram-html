@@ -1,3 +1,4 @@
+// tabs/activity.js (unchanged)
 function render() {
   document.getElementById('content').innerHTML = `
     <div class="left-column">
@@ -7,6 +8,9 @@ function render() {
     </div>
 
     <div class="right-column">
+      <h2>Actions</h2>
+      <div id="actions" class="card"></div>
+        
       <h2>Stream</h2>
       <div id="stream" class="card"></div>
     </div>
