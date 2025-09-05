@@ -36,6 +36,9 @@ function render() {
     startStreamAutoRefresh(); // refresh the stream every 30 seconds
   }, 100);
 
+  // Remove the hash from the URL without reloading
+  history.replaceState(null, "", location.pathname);
+
   console.log("Activity tab loaded");
 }
 
