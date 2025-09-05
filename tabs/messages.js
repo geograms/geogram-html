@@ -3,19 +3,39 @@
 // available.  These objects map each conversation ID to a unique
 // color and a set of initials.  If new conversations are added,
 // update these objects accordingly.
-const avatarColors = {
+var avatarColors = {
   group1: '#c0392b', // Family Group
   group2: '#8e44ad', // Work Project
   user123: '#3498db', // John Doe
   user456: '#27ae60'  // Alice Smith
 };
 
-const avatarInitials = {
+var avatarInitials = {
   group1: 'FG',
   group2: 'WP',
   user123: 'JD',
   user456: 'AS'
 };
+
+// Make loadMessages globally available immediately
+window.loadMessages = function() {
+  if (typeof window.loadTab === 'function') {
+    window.loadTab('messages');
+  } else {
+    // fallback for older main.js versions
+    const existingScript = document.getElementById('dynamic-tab');
+    if (existingScript) existingScript.remove();
+    const script = document.createElement('script');
+    script.src = 'tabs/messages.js';
+    script.id = 'dynamic-tab';
+    script.onload = function() {
+      if (typeof render === 'function') render();
+    };
+    document.body.appendChild(script);
+  }
+};
+
+
 
 function render() {
   const contentEl = document.getElementById('content');
@@ -149,7 +169,7 @@ function openConversation(conversationId) {
   renderChatArea(conversationId);
 }
 
-const mockChats = {
+var mockChats = {
   group1: {
     name: 'Family Group',
     messages: [
