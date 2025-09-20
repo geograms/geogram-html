@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Geogram Messenger — Demo UI</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121832;
+      --muted: #95a2cd;
+      --border: #243056;
+      --text: #e8f0ff;
+      --accent: #5f88ff;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; }
+    header { padding: 16px 20px; border-bottom: 1px solid var(--border); background: #0d142b; position: sticky; top: 0; z-index: 10; }
+    h1 { font-size: 16px; margin: 0; letter-spacing: .2px; }
+    .container { display: grid; grid-template-columns: 320px 1fr; height: calc(100vh - 58px); }
+    .sidebar { border-right: 1px solid var(--border); background: var(--panel); display: flex; flex-direction: column; }
+    .controls { padding: 12px; border-bottom: 1px solid var(--border); }
+    .row { display: grid; grid-template-columns: 1fr; gap: 8px; }
+    label { font-size: 12px; color: var(--muted); display: block; margin: 10px 0 6px; }
+    input { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #2c3967; background: #0e1530; color: var(--text); }
+    button { padding: 10px 12px; border-radius: 10px; border: 1px solid #2a3879; background: #1a2554; color: #dfe6ff; font-weight: 600; cursor: pointer; }
+    .list { overflow: auto; padding: 8px; }
+    .item { padding: 10px 12px; border-radius: 10px; border: 1px solid transparent; cursor: pointer; }
+    .item:hover { background: rgba(255,255,255,0.04); border-color: #1e2a55; }
+    .item.active { background: rgba(95,136,255,0.15); border-color: var(--accent); }
+    .main { display: flex; flex-direction: column; }
+    .chathead { padding: 12px 16px; border-bottom: 1px solid var(--border); display:flex; align-items:center; gap:8px; }
+    .bubble-area { flex: 1; overflow: auto; padding: 16px; background: #0c122a; }
+    .msg { max-width: 65ch; padding: 10px 12px; border-radius: 12px; margin: 6px 0; white-space: pre-wrap; }
+    .from-self { background: #1f2a57; align-self: flex-end; }
+    .from-peer { background: #172046; align-self: flex-start; }
+    .meta { color: var(--muted); font-size: 12px; margin-bottom: 2px; }
+    .footer { padding: 12px 16px; border-top: 1px solid var(--border); display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+    .pill { font-size: 12px; color: var(--muted); }
+    .status { padding: 8px 12px; }
+    .info { font-size: 12px; color: var(--muted); padding: 8px 12px; }
+  </style>
+</head>
+<body>
+  <header><h1>Geogram Messenger — Demo UI</h1></header>
+
+  <div class="container">
+    <aside class="sidebar">
+      <div class="controls">
+        <div class="row">
+          <div>
+            <label>Endpoint</label>
+            <input id="endpoint" type="text" value="http://localhost:8080/nostr"/>
+          </div>
+          <div>
+            <label>Secret (nsec1… or 64-hex)</label>
+            <input id="secret" type="text" value="nsec1fjekxqzjvp4rzke7af34kvp5fkzahc4e595mf8d5ywgte8pn96hsmd97hc"/>
+          </div>
+          <div>
+            <label>Your callsign</label>
+            <input id="caller" type="text" value="CR7BBQ"/>
+          </div>
+          <button id="find">Find messages</button>
+          <div class="info">Click a callsign below to fetch the chat.</div>
+        </div>
+        <div id="status" class="status pill">Idle</div>
+      </div>
+      <div id="list" class="list" aria-label="Conversation list"></div>
+    </aside>
+
+    <main class="main">
+      <div class="chathead">
+        <div class="pill">Active chat:</div>
+        <div id="activePeer" class="pill" style="color:#fff">—</div>
+      </div>
+      <div id="bubbles" class="bubble-area" aria-label="Messages"></div>
+      <div id="debug" class="info" style="border-top:1px dashed #243056;">Debug: —</div>
+      <div class="footer">
+        <input id="compose" type="text" placeholder="(viewer only)"/>
+        <button id="send" disabled>Send</button>
+      </div>
+    </main>
+  </div>
+
+  <script src="nostr.bundle.js"></script>
+  <script src="messages-lib.js"></script>
+  <script>
+    const $ = id => document.getElementById(id);
+
+    // ---------- Unified cache (per caller) ----------
+    const CACHE_KEY = 'geogram_cache_v1';
+    function readCache(){ try{ return JSON.parse(localStorage.getItem(CACHE_KEY)||'{}'); } catch(e){ return {}; } }
+    function writeCache(obj){ try{ localStorage.setItem(CACHE_KEY, JSON.stringify(obj)); } catch(e){} }
+    function ensureBucket(caller){
+      const c = readCache();
+      if (!c[caller]) c[caller] = { contacts:{list:[],ts:0}, messages:{}, lastUsed: Date.now() };
+      return c;
+    }
+    function setLastSession(caller, endpoint, secret){
+      const c = ensureBucket(caller);
+      c[caller].lastEndpoint = endpoint;
+      c[caller].lastSecret   = secret;
+      c[caller].lastUsed     = Date.now();
+      writeCache(c);
+    }
+    function getLastSession(){
+      const c = readCache(); let best=null, ts=-1;
+      Object.keys(c).forEach(k=>{ if (c[k]?.lastUsed>ts){ ts=c[k].lastUsed; best={caller:k, endpoint:c[k].lastEndpoint, secret:c[k].lastSecret}; } });
+      return best;
+    }
+    function getCachedContacts(caller){
+      const c = readCache(); return (c[caller]?.contacts) || {list:[], ts:0};
+    }
+    function setCachedContacts(caller, list){
+      const c = ensureBucket(caller); c[caller].contacts = { list: Array.from(new Set(list||[])), ts: Date.now() }; writeCache(c);
+    }
+    function getCachedMessage(caller, peer){
+      const c = readCache(); return (c[caller]?.messages?.[peer]) || { content:'', ts:0 };
+    }
+    function setCachedMessage(caller, peer, content){
+      const c = ensureBucket(caller); if (!c[caller].messages) c[caller].messages={}; c[caller].messages[peer]={ content:String(content||''), ts: Date.now() }; writeCache(c);
+    }
+
+    const state = { endpoint:'', secret:'', caller:'', peers:[], activePeer:null };
+
+    function setStatus(t){ $('status').textContent = t; }
+
+    function renderList(){
+      const list = $('list'); list.innerHTML='';
+      if (!state.peers.length){
+        const d=document.createElement('div'); d.className='info'; d.textContent='No conversations yet.'; list.appendChild(d); return;
+      }
+      state.peers.forEach(cs=>{
+        const div=document.createElement('div');
+        div.className='item'+(state.activePeer===cs?' active':'');
+        div.textContent=cs;
+        div.addEventListener('click', ()=>openPeer(cs));
+        list.appendChild(div);
+      });
+    }
+
+    function parseMarkdownChat(md, caller){
+      const lines = md.split(/\r?\n/); const messages=[];
+      for (let i=0;i<lines.length;i++){
+        const L = lines[i];
+        if (L.startsWith('>')){
+          const meta = L.replace(/^>\s?/, '').trim();
+          let content=''; i++;
+          while (i<lines.length && lines[i].trim()!==''){ content += (content?'\n':'') + lines[i]; i++; }
+          const fromSelf = /--\s*([A-Za-z0-9_-]+)/.test(meta) ? RegExp.$1===caller : false;
+          messages.push({ meta, content, fromSelf });
+        }
+      }
+      return messages;
+    }
+
+    function renderBubbles(md){
+      const cont=$('bubbles'); cont.innerHTML='';
+      if (!md){ const p=document.createElement('div'); p.className='info'; p.textContent='No messages.'; cont.appendChild(p); return; }
+      const msgs = parseMarkdownChat(md, state.caller);
+      if (!msgs.length){ const p=document.createElement('div'); p.className='info'; p.textContent='No messages.'; cont.appendChild(p); return; }
+      msgs.forEach(m=>{
+        const wrap=document.createElement('div'); wrap.style.display='flex'; wrap.style.flexDirection='column'; wrap.style.alignItems=m.fromSelf?'flex-end':'flex-start';
+        const meta=document.createElement('div'); meta.className='meta'; meta.textContent=m.meta;
+        const bub=document.createElement('div'); bub.className='msg '+(m.fromSelf?'from-self':'from-peer'); bub.textContent=m.content;
+        wrap.appendChild(meta); wrap.appendChild(bub); cont.appendChild(wrap);
+      });
+      cont.scrollTop = cont.scrollHeight;
+    }
+
+    async function openPeer(peer){
+      state.activePeer = peer;
+      $('activePeer').textContent = peer;
+      renderList();
+
+      // 1) Render cached first (if any)
+      const cached = getCachedMessage(state.caller, peer);
+      if (cached.content){
+        renderBubbles(String(cached.content));
+        setStatus('Loaded cached chat ('+new Date(cached.ts).toLocaleString()+'). Updating…');
+      } else {
+        $('bubbles').innerHTML = '<div class="info">Loading…</div>';
+      }
+
+      // 2) Fetch fresh transcript
+      try {
+        const pathUsed = `/messages/${peer}-chat.md`;
+        const json = await window.MessagesLib.messages_get(state.caller, peer, {
+          endpoint: state.endpoint, secret: state.secret, kind: 30000, path: pathUsed
+        });
+
+        // Show path + raw JSON for quick diagnosis
+        const dbg = document.getElementById('debug');
+        if (dbg) dbg.textContent = 'messages_get ' + pathUsed + ' → ' + JSON.stringify(json);
+
+        if (json && typeof json.content === 'string' && json.content.length){
+          renderBubbles(json.content);
+          setCachedMessage(state.caller, peer, json.content);
+          setStatus('Updated chat with '+peer);
+        } else if (cached.content){
+          setStatus('No content from server; showing cached.');
+        } else {
+          $('bubbles').innerHTML = '<div class="info">No messages.</div>';
+          setStatus('No content received for '+peer+'.');
+        }
+      } catch(e){
+        if (cached.content){
+          setStatus('Using cached chat (server error: '+ (e && e.message ? e.message : e) +')');
+        } else {
+          $('bubbles').innerHTML = '<div class="info">Failed to load: '+ (e && e.message ? e.message : e) +'</div>';
+          setStatus('Failed to load chat for '+peer);
+        }
+      }
+    }
+
+    $('find').addEventListener('click', async () => {
+      state.endpoint = $('endpoint').value.trim();
+      state.secret = $('secret').value.trim();
+      state.caller = $('caller').value.trim();
+      $('bubbles').innerHTML=''; $('activePeer').textContent='—'; state.activePeer=null;
+
+      // 1) Cached first
+      const cc = getCachedContacts(state.caller);
+      if (cc.list && cc.list.length){
+        state.peers = cc.list;
+        renderList();
+        setStatus('Loaded cached contacts ('+new Date(cc.ts).toLocaleString()+'). Updating…');
+      } else {
+        state.peers = [];
+        renderList();
+        setStatus('No cached contacts. Querying…');
+      }
+
+      // 2) Fetch fresh from server
+      try {
+        const json = await window.MessagesLib.messages_list(state.caller, {
+          endpoint: state.endpoint, secret: state.secret, kind: 30000, path:'/'
+        });
+        state.peers = Array.isArray(json.content_list) ? json.content_list : [];
+        setCachedContacts(state.caller, state.peers);
+        renderList();
+        setStatus('Updated contact list from server.');
+      } catch(e){
+        setStatus('Using cached contact list (server error: '+ (e && e.message ? e.message : e) +')');
+      } finally {
+        setLastSession(state.caller, state.endpoint, state.secret);
+      }
+    });
+
+    // Bootstrap last session
+    (function(){
+      const last = getLastSession();
+      if (last){
+        if (last.endpoint) $('endpoint').value = last.endpoint;
+        if (last.secret)   $('secret').value   = last.secret;
+        if (last.caller)   $('caller').value   = last.caller;
+        state.endpoint = $('endpoint').value.trim();
+        state.secret   = $('secret').value.trim();
+        state.caller   = $('caller').value.trim();
+        const cc = getCachedContacts(state.caller);
+        state.peers = cc.list || [];
+        renderList();
+        setStatus(state.peers.length ? ('Loaded cached contacts for '+state.caller+'.') : ('Idle — no cached contacts for '+state.caller+'.'));
+      }
+    })();
+
+    // Viewer only
+    $('send').addEventListener('click', () => {});
+  </script>
+</body>
+</html>

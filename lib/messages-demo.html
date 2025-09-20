@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Messages Demo — NOSTR</title>
+  <style>
+    body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; margin: 0; padding: 24px; background: #0b1020; color: #e8f0ff; }
+    h1 { margin: 0 0 16px; font-size: 18px; letter-spacing: .2px; }
+    h2 { font-size: 15px; margin: 24px 0 10px; color: #b9c9ff; }
+    .card { background: #121832; border: 1px solid #243056; border-radius: 14px; padding: 16px; box-shadow: 0 10px 25px rgba(0,0,0,.25); }
+    label { font-size: 12px; color: #9fb4ff; display: block; margin: 10px 0 6px; }
+    input, textarea, button { width: 100%; box-sizing: border-box; }
+    input[type="text"], textarea { border: 1px solid #2c3967; background: #0e1530; color: #eaf1ff; border-radius: 10px; padding: 10px 12px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .btn { margin-top: 14px; padding: 10px 14px; border-radius: 10px; border: 1px solid #2a3879; background: #1a2554; color: #dfe6ff; font-weight: 600; cursor: pointer; }
+    pre { background: #0c122a; border: 1px solid #233060; border-radius: 12px; padding: 12px; overflow: auto; white-space: pre-wrap; }
+    .muted { color: #95a2cd; font-size: 12px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  </style>
+</head>
+<body>
+  <h1>Messages Demo (messages_list & messages_get)</h1>
+  <div class="card">
+    <div class="row">
+      <div>
+        <label>Endpoint URL</label>
+        <input id="endpoint" type="text" value="http://localhost:8080/nostr" />
+      </div>
+      <div>
+        <label>Event kind</label>
+        <input id="kind" type="text" value="30000" />
+      </div>
+    </div>
+    <label>Secret key (nsec1… or 64-hex)</label>
+    <input id="nsec" type="text" value="nsec1fjekxqzjvp4rzke7af34kvp5fkzahc4e595mf8d5ywgte8pn96hsmd97hc" />
+
+    <div class="grid-3">
+      <div>
+        <label>Your callsign</label>
+        <input id="callsign" type="text" value="CR7BBQ" />
+      </div>
+      <div>
+        <label>Peer callsign (for messages_get)</label>
+        <input id="peer" type="text" value="X1ABCD" />
+      </div>
+      <div>
+        <label>Path override (optional)</label>
+        <input id="path" type="text" placeholder="/messages/X1ABCD-chat.md" />
+      </div>
+    </div>
+
+    <button id="go-list" class="btn">Run messages_list</button>
+    <button id="go-get" class="btn">Run messages_get</button>
+
+    <h2>Raw response</h2>
+    <pre id="out">—</pre>
+    <h2>Parsed content_list (for messages_list)</h2>
+    <pre id="parsed">—</pre>
+  </div>
+
+  <!-- Load requirements and library -->
+  <script src="nostr.bundle.js"></script>
+  <script src="messages-lib.js"></script>
+  <script>
+    function $(id){ return document.getElementById(id); }
+    function val(id){ return $(id).value.trim(); }
+
+    $('go-list').addEventListener('click', async () => {
+      $('go-list').disabled = true;
+      $('go-get').disabled = true;
+      $('out').textContent = 'Calling messages_list…';
+      $('parsed').textContent = '—';
+      try {
+        const json = await window.MessagesLib.messages_list(val('callsign'), {
+          endpoint: val('endpoint'),
+          secret: val('nsec'),
+          kind: Number(val('kind')) || 30000,
+          path: '/' // explicit default to be clear
+        });
+        $('out').textContent = JSON.stringify(json, null, 2);
+        $('parsed').textContent = Array.isArray(json.content_list) ? JSON.stringify(json.content_list, null, 2) : '—';
+      } catch(e){
+        $('out').textContent = 'Error: ' + e.message;
+      } finally {
+        $('go-list').disabled = false;
+        $('go-get').disabled = false;
+      }
+    });
+
+    $('go-get').addEventListener('click', async () => {
+      $('go-list').disabled = true;
+      $('go-get').disabled = true;
+      $('out').textContent = 'Calling messages_get…';
+      $('parsed').textContent = '—';
+      try {
+        const pathOverride = val('path') || undefined; // allow auto generation
+        const json = await window.MessagesLib.messages_get(val('callsign'), val('peer'), {
+          endpoint: val('endpoint'),
+          secret: val('nsec'),
+          kind: Number(val('kind')) || 30000,
+          path: pathOverride
+        });
+        $('out').textContent = JSON.stringify(json, null, 2);
+      } catch(e){
+        $('out').textContent = 'Error: ' + e.message;
+      } finally {
+        $('go-list').disabled = false;
+        $('go-get').disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
