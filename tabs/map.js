@@ -98,7 +98,11 @@ function render() {
         const clusterJS = document.createElement('script');
         // https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js
         clusterJS.src = 'lib/map/leaflet.markercluster.js';
-        clusterJS.onload = initializeMap;
+        clusterJS.onload = () => {
+          initializeMap();
+          window.loadWeatherStations();
+          window.loadIGates();
+        };
         document.head.appendChild(clusterJS);
       };
       document.head.appendChild(geocoderJS);
@@ -106,6 +110,8 @@ function render() {
     document.head.appendChild(leafletJS);
   } else {
     initializeMap();
+    window.loadWeatherStations();
+    window.loadIGates();
   }
 }
 
@@ -217,7 +223,7 @@ function initializeMap() {
   const weatherClusterGroup = L.markerClusterGroup();
   map.addLayer(weatherClusterGroup);
 
-  function loadWeatherStations() {
+  window.loadWeatherStations = function loadWeatherStations() {
     const cachedWeather = localStorage.getItem('cachedWeatherStations');
     const cacheExpiry = localStorage.getItem('weatherCacheExpiry');
     const now = Date.now();
@@ -235,7 +241,7 @@ function initializeMap() {
       // Load fresh data
       loadFreshWeatherStations();
     }
-  }
+  };
 
   function loadFreshWeatherStations() {
     const weatherScript = document.createElement('script');
@@ -280,7 +286,7 @@ function initializeMap() {
   const iGateClusterGroup = L.markerClusterGroup();
   map.addLayer(iGateClusterGroup);
 
-  function loadIGates() {
+  window.loadIGates = function loadIGates() {
     if ('indexedDB' in window) {
       // Use IndexedDB for large dataset
       const request = indexedDB.open('APRSCache', 1);
@@ -497,8 +503,4 @@ function initializeMap() {
 
     processBatch();
   }
-
-  // Start loading both datasets
-  loadWeatherStations();
-  loadIGates();
 }
