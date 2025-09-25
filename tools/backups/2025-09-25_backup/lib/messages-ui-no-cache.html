@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Geogram Messenger — Demo UI</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121832;
+      --muted: #95a2cd;
+      --border: #243056;
+      --text: #e8f0ff;
+      --accent: #5f88ff;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;}
+    header { padding: 16px 20px; border-bottom: 1px solid var(--border); background: #0d142b; position: sticky; top: 0; z-index: 10;}
+    h1 { font-size: 16px; margin: 0; letter-spacing: .2px;}
+    .container { display: grid; grid-template-columns: 320px 1fr; height: calc(100vh - 58px); }
+    .sidebar { border-right: 1px solid var(--border); background: var(--panel); display: flex; flex-direction: column; }
+    .controls { padding: 12px; border-bottom: 1px solid var(--border); }
+    .row { display: grid; grid-template-columns: 1fr; gap: 8px; }
+    label { font-size: 12px; color: var(--muted); }
+    input { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #2c3967; background: #0e1530; color: var(--text); }
+    button { padding: 10px 12px; border-radius: 10px; border: 1px solid #2a3879; background: #1a2554; color: #dfe6ff; font-weight: 600; cursor: pointer;}
+    .list { overflow: auto; padding: 8px; }
+    .item { padding: 10px 12px; border-radius: 10px; border: 1px solid transparent; cursor: pointer; }
+    .item:hover { background: rgba(255,255,255,0.04); border-color: #1e2a55; }
+    .item.active { background: rgba(95,136,255,0.15); border-color: var(--accent); }
+    .main { display: flex; flex-direction: column; }
+    .chathead { padding: 12px 16px; border-bottom: 1px solid var(--border); display:flex; align-items:center; gap:8px; }
+    .bubble-area { flex: 1; overflow: auto; padding: 16px; background: #0c122a; }
+    .msg { max-width: 65ch; padding: 10px 12px; border-radius: 12px; margin: 6px 0; white-space: pre-wrap; }
+    .from-self { background: #1f2a57; align-self: flex-end; }
+    .from-peer { background: #172046; align-self: flex-start; }
+    .meta { color: var(--muted); font-size: 12px; margin-bottom: 2px; }
+    .footer { padding: 12px 16px; border-top: 1px solid var(--border); display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+    .pill { font-size: 12px; color: var(--muted); }
+    .status { padding: 8px 12px; }
+    .info { font-size: 12px; color: var(--muted); padding: 8px 12px; }
+  </style>
+</head>
+<body>
+  <header><h1>Geogram Messenger — Demo UI</h1></header>
+
+  <div class="container">
+    <aside class="sidebar">
+      <div class="controls">
+        <div class="row">
+          <div>
+            <label>Endpoint</label>
+            <input id="endpoint" type="text" value="http://localhost:8080/nostr"/>
+          </div>
+          <div>
+            <label>Secret (nsec1… or 64-hex)</label>
+            <input id="secret" type="text" value="nsec1fjekxqzjvp4rzke7af34kvp5fkzahc4e595mf8d5ywgte8pn96hsmd97hc"/>
+          </div>
+          <div>
+            <label>Your callsign</label>
+            <input id="caller" type="text" value="CR7BBQ"/>
+          </div>
+          <button id="find">Find messages</button>
+          <div class="info">Click a callsign below to fetch the chat.</div>
+        </div>
+        <div id="status" class="status pill">Idle</div>
+      </div>
+      <div id="list" class="list" aria-label="Conversation list"></div>
+    </aside>
+
+    <main class="main">
+      <div class="chathead">
+        <div class="pill">Active chat:</div>
+        <div id="activePeer" class="pill" style="color:#fff">—</div>
+      </div>
+      <div id="bubbles" class="bubble-area" aria-label="Messages"></div>
+      <div class="footer">
+        <input id="compose" type="text" placeholder="(demo viewer only)"/>
+        <button id="send" disabled>Send</button>
+      </div>
+    </main>
+  </div>
+
+  <script src="nostr.bundle.js"></script>
+  <script src="messages-lib.js"></script>
+  <script>
+    const $ = id => document.getElementById(id);
+    const state = {
+      endpoint: '', secret: '', caller: '',
+      peers: [], activePeer: null
+    };
+
+    function setStatus(text){ $('status').textContent = text; }
+    function renderList(){
+      const list = $('list');
+      list.innerHTML = '';
+      if (!state.peers.length){
+        const d = document.createElement('div');
+        d.className = 'info';
+        d.textContent = 'No conversations yet.';
+        list.appendChild(d);
+        return;
+      }
+      state.peers.forEach(cs => {
+        const div = document.createElement('div');
+        div.className = 'item' + (state.activePeer === cs ? ' active':'');
+        div.textContent = cs;
+        div.addEventListener('click', () => openPeer(cs));
+        list.appendChild(div);
+      });
+    }
+
+    function parseMarkdownChat(md, caller, peer){
+      // Very lightweight parser: keep headings, split on blank lines; treat pairs of
+      // (meta line starting with '>' then following line) as a message.
+      const lines = md.split(/\r?\n/);
+      const messages = [];
+      for (let i=0;i<lines.length;i++){
+        const L = lines[i];
+        if (L.startsWith('>')){
+          // meta line like >[001] 13:21_10 -- CR7BBQ
+          const meta = L.replace(/^>\s?/, '').trim();
+          let content = '';
+          // next non-empty line(s) until blank -> content
+          i++;
+          while (i < lines.length && lines[i].trim() !== ''){
+            content += (content ? '\n' : '') + lines[i];
+            i++;
+          }
+          const fromSelf = /--\s*([A-Za-z0-9_-]+)/.test(meta) ? RegExp.$1 === caller : false;
+          messages.push({ meta, content, fromSelf });
+        }
+      }
+      return messages;
+    }
+
+    function renderBubbles(md){
+      const cont = $('bubbles');
+      cont.innerHTML = '';
+      if (!md) return;
+      const msgs = parseMarkdownChat(md, state.caller, state.activePeer);
+      if (!msgs.length){
+        const p = document.createElement('div'); p.className='info'; p.textContent='No messages.'; cont.appendChild(p); return;
+      }
+      msgs.forEach(m => {
+        const wrap = document.createElement('div');
+        wrap.style.display = 'flex';
+        wrap.style.flexDirection = 'column';
+        wrap.style.alignItems = m.fromSelf ? 'flex-end' : 'flex-start';
+
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        meta.textContent = m.meta;
+        const bub = document.createElement('div');
+        bub.className = 'msg ' + (m.fromSelf ? 'from-self' : 'from-peer');
+        bub.textContent = m.content;
+
+        wrap.appendChild(meta);
+        wrap.appendChild(bub);
+        cont.appendChild(wrap);
+      });
+      cont.scrollTop = cont.scrollHeight;
+    }
+
+    async function openPeer(peer){
+      state.activePeer = peer;
+      $('activePeer').textContent = peer;
+      renderList();
+      setStatus('Fetching messages_get for ' + peer + ' …');
+      try {
+        const json = await window.MessagesLib.messages_get(state.caller, peer, {
+          endpoint: state.endpoint,
+          secret: state.secret,
+          kind: 30000,
+          path: `/messages/${peer}-chat.md`
+        });
+        // Expect a markdown transcript in json.content
+        renderBubbles(String(json.content || ''));
+        setStatus('Loaded chat with ' + peer);
+      } catch (e){
+        setStatus('Error: ' + e.message);
+        $('bubbles').innerHTML = '<div class="info">Failed to load: ' + e.message + '</div>';
+      }
+    }
+
+    $('find').addEventListener('click', async () => {
+      state.endpoint = $('endpoint').value.trim();
+      state.secret = $('secret').value.trim();
+      state.caller = $('caller').value.trim();
+      setStatus('Fetching messages_list …');
+      $('list').innerHTML = '';
+      $('bubbles').innerHTML = '';
+      $('activePeer').textContent = '—';
+      try {
+        const json = await window.MessagesLib.messages_list(state.caller, {
+          endpoint: state.endpoint,
+          secret: state.secret,
+          kind: 30000,
+          path: '/'
+        });
+        state.peers = Array.isArray(json.content_list) ? json.content_list : [];
+        renderList();
+        setStatus('Found ' + state.peers.length + ' conversation(s).');
+      } catch (e){
+        setStatus('Error: ' + e.message);
+        renderList();
+      }
+    });
+
+    // Disable send (viewer only)
+    $('send').addEventListener('click', () => {});
+  </script>
+</body>
+</html>
