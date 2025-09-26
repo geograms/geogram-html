@@ -24,7 +24,7 @@ function render() {
     
     #map {
       position: absolute;
-      top: 0;
+      top: 60;
       bottom: 60px; /* Toolbar height */
       left: 0;
       right: 0;

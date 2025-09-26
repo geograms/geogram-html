@@ -694,3 +694,68 @@ a:hover {
   font-weight: bold;
   box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
+
+#content {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: block;
+}
+
+#map {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+#recent-nearby {
+  position: absolute;
+  top: 40px;
+  right: 20px;
+  width: 450px;
+  height: 550px;
+  z-index: 100;
+  background: rgba(0,0,0,0.95);
+  box-sizing: border-box;
+  padding: 1em;
+  border-radius: 12px;
+  border: 1px solid #222;
+  overflow: hidden; /* allow scrolling if needed */
+}
+
+.nearby-tab-panel {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.nearby-tab-panel[style*="display:none"] {
+  display: none !important;
+}
+
+.chat-area {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #000;
+  border-radius: 4px;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  padding-right: 4px;
+}
