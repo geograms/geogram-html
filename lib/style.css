@@ -751,13 +751,14 @@ a:hover {
 
 #content {
   position: relative;
-  width: 100vw;
-  height: 100vh;
-  max-width: 100vw;
+  width: 100%;
+  max-width: 100%;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   display: block;
+  flex: 1 1 auto;   /* fill space below header */
+  min-height: 0;
 }
 
 #map {
@@ -766,7 +767,7 @@ a:hover {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 0;
 }
 
 #recent-nearby {
@@ -814,3 +815,18 @@ a:hover {
   min-height: 0;
   padding-right: 4px;
 }
+
+/* 1) Keep the header always above the map */
+.header-wrapper {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 2000;
+}
+
+/* 2) Reserve space so content/map don't slide under the fixed header */
+:root { --header-height: 30px; }        /* tweak if your header is taller/shorter */
+body { padding-top: var(--header-height); }
+
+/* 3) Ensure map stack stays below header regardless of Leaflet panes */
+#map,
+#nearbyMap { z-index: 0; }
