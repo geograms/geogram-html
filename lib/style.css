@@ -1,37 +1,41 @@
 @font-face {
   font-family: 'Inter';
   font-style: normal;
-  font-weight: 400; /* Regular weight is typically 400 */
-  src: local('Inter'), 
-       local('Inter-Regular'),
-       url('fonts/Inter-Regular.ttf') format('truetype');
+  font-weight: 400;
+  /* Regular weight is typically 400 */
+  src: local('Inter'),
+    local('Inter-Regular'),
+    url('fonts/Inter-Regular.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'Inter';
   font-style: normal;
-  font-weight: 500; /* Medium weight */
-  src: local('Inter Medium'), 
-       local('Inter-Medium'),
-       url('fonts/Inter-Medium.ttf') format('truetype');
+  font-weight: 500;
+  /* Medium weight */
+  src: local('Inter Medium'),
+    local('Inter-Medium'),
+    url('fonts/Inter-Medium.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'FasterOne';
   font-style: normal;
-  font-weight: 400; /* Regular weight is typically 400 */
-  src: local('FasterOne'), 
-       local('FasterOne-Regular'),
-       url('fonts/FasterOne-Regular.ttf') format('truetype');
+  font-weight: 400;
+  /* Regular weight is typically 400 */
+  src: local('FasterOne'),
+    local('FasterOne-Regular'),
+    url('fonts/FasterOne-Regular.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'Audiowide';
   font-style: normal;
-  font-weight: 400; /* Regular weight is typically 400 */
-  src: local('Audiowide'), 
-       local('Audiowide-Regular'),
-       url('fonts/Audiowide-Regular.ttf') format('truetype');
+  font-weight: 400;
+  /* Regular weight is typically 400 */
+  src: local('Audiowide'),
+    local('Audiowide-Regular'),
+    url('fonts/Audiowide-Regular.ttf') format('truetype');
 }
 
 
@@ -41,7 +45,8 @@
 }
 
 .right-column .nav-links li {
-  margin-bottom: 0.5em; /* optional: adds some spacing between items */
+  margin-bottom: 0.5em;
+  /* optional: adds some spacing between items */
 }
 
 .nav-links li {
@@ -54,7 +59,8 @@
   content: ">";
   position: absolute;
   left: 0;
-  color: var(--accent); /* optional for visual emphasis */
+  color: var(--accent);
+  /* optional for visual emphasis */
 }
 
 .card {
@@ -96,39 +102,60 @@ body[data-theme="blue"] {
 }
 
 body[data-theme="yellow"] {
-  --bg: #000000;             /* Pure black background */
-  --text: #f8f8f8;           /* Off-white text */
-  --accent: #FFCC00;         /* Bruce Lee's iconic yellow */
-  --link: #FFD700;           /* Slightly brighter yellow for links */
-  --card: #1a1a1a;           /* Dark gray cards */
-  --border: #333333;         /* Medium gray borders */
+  --bg: #000000;
+  /* Pure black background */
+  --text: #f8f8f8;
+  /* Off-white text */
+  --accent: #FFCC00;
+  /* Bruce Lee's iconic yellow */
+  --link: #FFD700;
+  /* Slightly brighter yellow for links */
+  --card: #1a1a1a;
+  /* Dark gray cards */
+  --border: #333333;
+  /* Medium gray borders */
   --logo-filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
   --wave-color: rgb(255, 208, 0.5);
 }
 
 body[data-theme="evangelion"] {
-  --bg: #0a0a2a;             /* Deep navy blue background */
-  --text: #e0e0ff;           /* Light lavender text */
-  --accent: #ff00ff;         /* Neon magenta (Eva-01 purple) */
-  --link: #00ffff;           /* Cyan highlights (NERV green/cyan) */
-  --card: #1a1a3a;           /* Dark purple cards */
-  --border: #4d4dff;         /* Electric blue borders */
+  --bg: #0a0a2a;
+  /* Deep navy blue background */
+  --text: #e0e0ff;
+  /* Light lavender text */
+  --accent: #ff00ff;
+  /* Neon magenta (Eva-01 purple) */
+  --link: #00ffff;
+  /* Cyan highlights (NERV green/cyan) */
+  --card: #1a1a3a;
+  /* Dark purple cards */
+  --border: #4d4dff;
+  /* Electric blue borders */
   --logo-filter: brightness(0) saturate(100%) invert(28%) sepia(98%) saturate(2475%) hue-rotate(292deg) brightness(104%) contrast(147%);
-  --wave-color: rgba(255, 0, 255, 0.15); /* Pulsing magenta waves */
+  --wave-color: rgba(255, 0, 255, 0.15);
+  /* Pulsing magenta waves */
 }
 
 body[data-theme="monster"] {
-  --bg: #000000;             /* Pure black background */
-  --text: #ffffff;           /* Bright white text */
-  --accent: #94ff00;         /* Toxic neon green (Monster's signature color) */
-  --link: #00ffaa;           /* Electric teal for links */
-  --card: #121212;           /* Slightly lighter black cards */
-  --border: #94ff00;         /* Glowing green borders */
+  --bg: #000000;
+  /* Pure black background */
+  --text: #ffffff;
+  /* Bright white text */
+  --accent: #94ff00;
+  /* Toxic neon green (Monster's signature color) */
+  --link: #00ffaa;
+  /* Electric teal for links */
+  --card: #121212;
+  /* Slightly lighter black cards */
+  --border: #94ff00;
+  /* Glowing green borders */
   --logo-filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
-  --wave-color: rgba(148, 255, 0, 0.50); /* Pulsing neon green energy waves */
+  --wave-color: rgba(148, 255, 0, 0.50);
+  /* Pulsing neon green energy waves */
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   background-color: var(--bg);
@@ -145,7 +172,12 @@ body {
   z-index: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: 'Audiowide', sans-serif;
   font-weight: 500;
 }
@@ -171,19 +203,22 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   min-width: 180px;
-  border-radius: 0 0 0.5em 0;
-  padding: 0.5em 1em; /* Adjusted padding */
+  padding: 0.0em 0.5em;
   background-color: var(--card);
   cursor: pointer;
+  /* 
+  border-radius: 0 0 0.5em 0;
   z-index: 1001;
+  */
 }
 
-
+/*
 .logo-block img {
   width: 40px;
   height: 40px;
   filter: var(--logo-filter);
 }
+*/
 
 #home-link {
   display: flex;
@@ -194,8 +229,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .radio-brand {
   font-family: 'Audiowide', 'Orbitron', 'Arial Narrow', sans-serif;
-  font-weight: 900;
-  font-size: 1.5rem;
+  font-weight: 600;
+  font-size: 1.2rem;
   letter-spacing: 1px;
   color: var(--accent);
   white-space: nowrap;
@@ -209,9 +244,16 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: space-between;
   align-items: center;
   background: var(--card);
+  /*
   height: 36px;
   padding: 0 1em;
+  */
+  height: 30px;
+  padding: 0em 0em;
+  flex-direction: column;
+  align-items: stretch;
 }
+
 
 .tabs-container {
   display: flex;
@@ -279,8 +321,10 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 768px) {
 
   .logo-block {
-    padding: 0; /* Remove padding on mobile */
-    border-radius: 0; /* Remove border-radius on mobile */
+    padding: 0;
+    /* Remove padding on mobile */
+    border-radius: 0;
+    /* Remove border-radius on mobile */
   }
 
   .burger-menu {
@@ -292,12 +336,7 @@ h1, h2, h3, h4, h5, h6 {
     height: 50px;
   }
 
-  .topbar {
-    height: auto;
-    padding: 0.5em 1em;
-    flex-direction: column;
-    align-items: stretch;
-  }
+
 
   .tabs {
     flex-direction: column;
@@ -339,7 +378,7 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   width: 200px;
   z-index: 1000;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 0 0 4px 4px;
 }
 
@@ -434,8 +473,10 @@ a:hover {
 }
 
 .action-button.running {
-  background-color: var(--accent); /* Same as .action-button:hover */
-  color: var(--card); /* Same as .action-button:hover */
+  background-color: var(--accent);
+  /* Same as .action-button:hover */
+  color: var(--card);
+  /* Same as .action-button:hover */
 }
 
 .reset-button {
@@ -494,14 +535,15 @@ a:hover {
 
 .content-column {
   flex: 4;
-  min-width: 0; /* Allows content to shrink below min-content size */
+  min-width: 0;
+  /* Allows content to shrink below min-content size */
 }
 
 @media (max-width: 768px) {
   .main-layout {
     flex-direction: column;
   }
-  
+
   .nav-column,
   .content-column {
     width: 100%;
@@ -525,24 +567,35 @@ a:hover {
   border-bottom: 1px solid var(--border);
 }
 
-  .pulse-circle {
-    width: 12px;
-    height: 12px;
-    background: red;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 6px;
-    animation: pulse 1s infinite;
-    vertical-align: middle;
+.pulse-circle {
+  width: 12px;
+  height: 12px;
+  background: red;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+  animation: pulse 1s infinite;
+  vertical-align: middle;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
   }
 
-  @keyframes pulse {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.5); opacity: 0.6; }
-    100% { transform: scale(1); opacity: 1; }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.6;
   }
 
-  /* Update existing burger-menu styles */
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Update existing burger-menu styles */
 .burger-menu {
   font-size: 1.3em;
   background: none;
@@ -658,7 +711,8 @@ a:hover {
 
 .leaflet-popup-content a {
   text-decoration: underline;
-  font-weight: 600;          /* optional */
+  font-weight: 600;
+  /* optional */
 }
 
 .nearby-tabs {
@@ -692,7 +746,7 @@ a:hover {
   color: #222;
   border-bottom: 2px solid #559df0;
   font-weight: bold;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 #content {
@@ -722,12 +776,13 @@ a:hover {
   width: 450px;
   height: 550px;
   z-index: 100;
-  background: rgba(0,0,0,0.95);
+  background: rgba(0, 0, 0, 0.95);
   box-sizing: border-box;
   padding: 1em;
   border-radius: 12px;
   border: 1px solid #222;
-  overflow: hidden; /* allow scrolling if needed */
+  overflow: hidden;
+  /* allow scrolling if needed */
 }
 
 .nearby-tab-panel {
