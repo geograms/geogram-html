@@ -7,23 +7,13 @@
 function render() {
   document.getElementById("content").innerHTML = `
     <div class="left-column">
-      <h2>Local activity</h2>
-      <!-- Nearby maps and points of interest (rendered by nearby.js) -->
-      <div id="recent-nearby"></div>
+      <h2>Activity</h2>
+      <div id="map"></div>
     </div>
 
     <div class="right-column">
-      <h2>Actions</h2>
-      <div id="actions" class="card">
-        <!-- Clicking this link loads the Messages page via loadMessages() -->
-          <a href="#messages" style="display: flex; align-items: center;">
-            <i class="fas fa-envelope" aria-hidden="true" style="margin-right: 0.5rem;"></i>
-            <span>Messages</span>
-        </a>
-      </div>
-      
-      <h2>Stream</h2>
-      <div id="stream" class="card"></div>
+      <h2>Chat</h2>
+      <div id="recent-nearby"></div>
     </div>
   `;
 
@@ -38,7 +28,6 @@ function render() {
 
   // Remove the hash from the URL without reloading
   history.replaceState(null, "", location.pathname);
-
   console.log("Activity tab loaded");
 }
 

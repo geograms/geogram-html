@@ -6,7 +6,9 @@ function render() {
         <h2>Sections</h2>
         <ul class="nav-links" style="list-style: none; padding-left: 0;">
           <li><a href="#user" class="nav-link">User</a></li>
+           <!-- 
           <li><a href="#locations" class="nav-link">Locations</a></li>
+          -->
           <li><a href="#customization" class="nav-link">Customization</a></li>
         </ul>
         <button id="reset-settings" class="reset-button">Reset to Default</button>
@@ -47,6 +49,7 @@ function render() {
         </div>
       </div>
 
+      <!-- 
       <div id="locations" style="margin-bottom: 4em;">
         <h2>Locations of interest</h2>
         <div class="card">
@@ -73,12 +76,12 @@ function render() {
                   </tr>
                 </thead>
                 <tbody id="location-table">
-                  <!-- Rows will be added dynamically -->
                 </tbody>
               </table>
             </div>
 
           </div>
+          -->
 
           <div id="customization">
             <h2>Customization</h2>
