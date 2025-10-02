@@ -112,7 +112,7 @@ function render() {
     </div>
   `;
 
-  setupAnchorNavigation("config");
+  //setupAnchorNavigation("config");
 
   // Theme selection
   const currentTheme = localStorage.getItem('theme') || 'green';
