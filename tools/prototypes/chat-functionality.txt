@@ -1,0 +1,133 @@
+Create a new javascript file called chat.js that will be integrated inside the chat window of nearby.js
+The purpose is to read and write messages to a server.
+
+1) it should use nostr.bundle.js (assume it is already loaded by another source code file)
+
+2) Add on the header of chat.js the boolean variable to switch between development and production.
+Then add option for the URL used in development to http://localhost:8080/nostr and for production https://api.geogram.radio/nostr
+2) to read messages a NOSTR note needs to be created, here is an example:
+
+/*
+    Example request:
+    
+    {
+        "kind": 1,
+        "created_at": 1759339662,
+        "tags": [
+          [
+            "app",
+            "geogram-web"
+          ],
+          [
+            "g",
+            "geo:41.7128,-74.0060"
+          ]
+        ],
+        "content": "{\"action\":\"chat_read\", \"callsign\":\"CR7BBQ\", \"path\":\"/\", \"message\":\"Test 3\", \"radius\":\"100\"}",
+        "pubkey": "71ad3d8cd7c6bdee732448e6330d4e0c548c07f4a1e1fc5f095e491317eea825",
+        "id": "9dc2f809c5bfde2db605ffbe0a1aeab7b68c4f6deef8325889ae6863f1b86ca5",
+        "sig": "921b02f93ad47107762b8ad43550648f68f6bc4c3240274c4778d757abe8a2e844654b76d2b590b82aa45f7147cfd108ccceab2652cdb9414526eb28497b76d8"
+    }
+    
+    The most important details are the tags for geo location, they action
+    keyword, callsign and radius in kilometers.
+    
+    The result needs to be something like:
+    
+        {
+          "result": "OK",
+          "details": [
+            {
+              "author": "CR7BBQ",
+              "timestamp": "2025-09-30 13:41_54",
+              "content": "Test 1",
+              "messageType": "SIMPLE",
+              "metadata": {
+                "lon": "-74.0060",
+                "lat": "41.7128"
+              }
+            },
+            {
+              "author": "CR7BBQ",
+              "timestamp": "2025-09-30 13:42_05",
+              "content": "Test 2",
+              "messageType": "SIMPLE",
+              "metadata": {
+                "lon": "-74.0060",
+                "lat": "41.7128"
+              }
+            },
+            {
+              "author": "CR7BBQ",
+              "timestamp": "2025-09-30 13:42_22",
+              "content": "Test 3",
+              "messageType": "SIMPLE",
+              "metadata": {
+                "lon": "-74.0060",
+                "lat": "41.7128"
+              }
+            }
+          ]
+        }
+
+
+3) to write a chat message:
+
+    Example request:
+    
+    {
+      "kind": 1,
+      "created_at": 1759180108,
+      "tags": [
+        [
+          "app",
+          "geogram-web"
+        ],
+        [
+          "g",
+          "geo:40.7128,-74.0060"
+        ]
+      ],
+      "content": "{\"action\":\"chat_write\", \"callsign\":\"CR7BBQ\", \"path\":\"/\", \"message\":\"Hello World!\"}",
+      "pubkey": "71ad3d8cd7c6bdee732448e6330d4e0c548c07f4a1e1fc5f095e491317eea825",
+      "id": "eb43189329cc94c40f7586b0ed41e5f9c71be64064bee08a22b00515d07c3e1c",
+      "sig": "75d741f1c45720085475a8a17633e726c5a353b25c8c7ac25c11175a728f45d1e25786a825c1c1a8c14214b43664bd41bfcda76e4a8d0c5e5df73d728ccbf140"
+    }
+    
+    The most important details are the tags for geo location, they action
+    keyword, callsign and message.
+    
+    The result needs to be something like:
+    
+    {
+        "result": "OK",
+        "details": "Message was written to: /2025/2025-09-29-chat.md"
+    }
+
+
+
+
+4) get the user credentials to fill those messages through code like this one:
+
+function getChatIdentityFromCache() {
+  
+  // Flat-string fallbacks
+  const npub = localStorage.getItem("pubkey");
+  const nsec = localStorage.getItem("privkey");
+  const callsign = localStorage.getItem("username");
+
+  return { npub, nsec, callsign };
+}
+
+This will provide the npub, nsec and callsign already stored
+
+4) radius and location is available on nearby.js and written to the browser cache
+
+5) first provide the code for chat.js
+
+6) the integration with nearby.js should need minimal code changes, all the chat logic should happen on chat.js
+This code should add new messages on the chat when loading and write new messages when the user types them as expected from normal chat operations.
+
+
+
+
