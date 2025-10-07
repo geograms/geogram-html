@@ -433,6 +433,7 @@ h2 {
   overflow: hidden;
 }
 
+
 .nearby-tabs {
   display: flex;
   border-bottom: 2px solid #333;
@@ -516,5 +517,15 @@ h2 {
   }
 
   .mobile-tabs { display: flex; }
+
+    #recent-nearby {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+    height: 40vh !important;
+    max-height: 350px !important;
+    right: 10px !important;
+    left: 10px !important;
+    top: 50px !important;
+  }
 }
 
