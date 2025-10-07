@@ -434,6 +434,7 @@ h2 {
 }
 
 
+
 .nearby-tabs {
   display: flex;
   border-bottom: 2px solid #333;
@@ -500,7 +501,7 @@ h2 {
   .main-layout { flex-direction: column; }
   .nav-column, .content-column { width: 100%; max-width: 100%; }
 
-  .logo-block { padding: 0; border-radius: 0; }
+  .logo-block { padding: 3px; border-radius: 0; }
   .burger-menu { display: flex; }
 
   .tabs { display: none; }
