@@ -134,6 +134,7 @@ window.MessagesModule = window.MessagesModule || {};
         <h2 style="margin-top:16px;">Search</h2>
         <div class="card search-card" style="padding:8px;">
           <input id="searchInput" type="text" placeholder="Search..." style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px;background:#111;color:var(--text,#fff);" />
+          <div id="search-results" style="margin-top:8px;max-height:400px;overflow-y:auto;"></div>
         </div>
       </div>
     `;
@@ -261,7 +262,7 @@ window.MessagesModule = window.MessagesModule || {};
     });
   }
 
-  function _renderBubblesFromMarkdown(md) {
+  function _renderBubblesFromMarkdown(md, highlightMessageIndex = null, searchQuery = null) {
     const chatArea = document.getElementById('chat-area');
     if (!chatArea) return;
     const msgs = _parseMarkdownChat(md, _state.caller);
@@ -270,26 +271,33 @@ window.MessagesModule = window.MessagesModule || {};
     if (!msgs.length) {
       chunks = '<div style="color:var(--muted,#888);padding:12px;">No messages yet. Start the conversation!</div>';
     } else {
-      chunks = msgs.map(m => {
+      chunks = msgs.map((m, index) => {
         const align = m.fromSelf ? 'flex-end' : 'flex-start';
         const bubbleBg = m.fromSelf ? '#222' : '#111';
         const textColor = m.fromSelf ? '#fff' : 'var(--text)';
-        const escapedContent = m.content.replace(/[&<>]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[s]));
+
+        // Highlight the search query if provided
+        const displayContent = searchQuery ? _highlightText(m.content, searchQuery) : m.content.replace(/[&<>]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[s]));
 
         // Extract author name and timestamp from meta
         const authorMatch = m.meta.match(/--\s*([A-Za-z0-9_-]+)/);
         const authorName = authorMatch ? authorMatch[1] : 'Unknown';
         const timestamp = m.meta.replace(/--\s*[A-Za-z0-9_-]+/, '').trim();
 
+        // Determine if this message should be highlighted
+        const isHighlighted = highlightMessageIndex !== null && index === highlightMessageIndex;
+        const highlightStyle = isHighlighted ? 'box-shadow:0 0 0 3px #f39c12;animation:pulse 1.5s ease-in-out;' : '';
+        const messageId = isHighlighted ? 'highlighted-message' : '';
+
         return `
-          <div class="chat-message" style="margin-bottom:12px; display:flex; flex-direction:column; align-items:${align};">
+          <div class="chat-message" id="${messageId}" style="margin-bottom:12px; display:flex; flex-direction:column; align-items:${align};">
             ${!m.fromSelf ? `
               <div style="font-size:0.72em;font-weight:600;opacity:.8;margin:0 0 4px 4px;align-self:${align};">
                 ${authorName}
               </div>
             ` : ''}
-            <div style="background:${bubbleBg};color:${textColor};padding:10px 14px;border-radius:14px;max-width:70%; align-self:${align};font-size:0.9em;">
-              <div style="white-space:pre-wrap;">${escapedContent}</div>
+            <div style="background:${bubbleBg};color:${textColor};padding:10px 14px;border-radius:14px;max-width:70%; align-self:${align};font-size:0.9em;${highlightStyle}">
+              <div style="white-space:pre-wrap;">${displayContent}</div>
               <div style="font-size:0.6em;color:var(--muted,#888);margin-top:3px;text-align:right;width:100%;">${timestamp}</div>
             </div>
           </div>
@@ -298,6 +306,12 @@ window.MessagesModule = window.MessagesModule || {};
     }
 
     chatArea.innerHTML = `
+      <style>
+        @keyframes pulse {
+          0%, 100% { box-shadow: 0 0 0 3px #f39c12; }
+          50% { box-shadow: 0 0 0 6px rgba(243, 156, 18, 0.5); }
+        }
+      </style>
       <div class="chat-messages" style="overflow-y:auto;max-height:420px;padding-right:4px;">${chunks}</div>
       <div class="chat-input" style="margin-top:12px;display:flex;align-items:center;gap:4px;">
         <div style="position:relative;">
@@ -320,7 +334,20 @@ window.MessagesModule = window.MessagesModule || {};
       </div>
     `;
     const messagesDiv = chatArea.querySelector('.chat-messages');
-    if (messagesDiv) messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    if (messagesDiv) {
+      // If highlighting a specific message, scroll to it
+      if (highlightMessageIndex !== null) {
+        setTimeout(() => {
+          const highlightedMsg = document.getElementById('highlighted-message');
+          if (highlightedMsg) {
+            highlightedMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 100);
+      } else {
+        // Otherwise scroll to bottom
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
+    }
 
     // Set up emoji button click handler
     const emojiBtn = document.getElementById('emojiBtn');
@@ -610,11 +637,157 @@ window.MessagesModule = window.MessagesModule || {};
     }
   }
 
-  // --- Optional search over the peer list (client-side only) ---
+  // --- Search through cached conversations ---
   function _searchFilter(e) {
-    const q = (e?.target?.value || document.getElementById('searchInput')?.value || '').toLowerCase();
-    const peers = _state.peers.filter(p => p.toLowerCase().includes(q));
-    _renderPeerList(peers);
+    const query = (e?.target?.value || document.getElementById('searchInput')?.value || '').trim();
+
+    if (!query) {
+      // No search query, clear search results
+      const searchResultsEl = document.getElementById('search-results');
+      if (searchResultsEl) searchResultsEl.innerHTML = '';
+      return;
+    }
+
+    const q = query.toLowerCase();
+    const results = [];
+
+    // Search through all cached conversations
+    for (const peer of _state.peers) {
+      const cachedContent = _loadFromCache('conversation', peer);
+      if (!cachedContent) continue;
+
+      const messages = _parseMarkdownChat(cachedContent, _state.caller);
+      const matches = [];
+
+      // Search through each message
+      messages.forEach((msg, index) => {
+        if (msg.content.toLowerCase().includes(q)) {
+          matches.push({
+            messageIndex: index,
+            content: msg.content,
+            meta: msg.meta,
+            fromSelf: msg.fromSelf
+          });
+        }
+      });
+
+      if (matches.length > 0) {
+        results.push({
+          peer: peer,
+          matches: matches
+        });
+      }
+    }
+
+    _renderSearchResults(results, query);
+  }
+
+  function _renderSearchResults(results, query) {
+    const listEl = document.getElementById('search-results');
+    if (!listEl) return;
+
+    listEl.innerHTML = '';
+
+    if (!results || results.length === 0) {
+      const empty = document.createElement('div');
+      empty.style.cssText = 'padding:8px; color:var(--muted,#888);font-size:0.85em;';
+      empty.textContent = `No messages found for "${query}"`;
+      listEl.appendChild(empty);
+      return;
+    }
+
+    // Display results grouped by peer/author
+    results.forEach(result => {
+      const groupHeader = document.createElement('div');
+      groupHeader.style.cssText = 'padding:6px 8px;font-weight:bold;color:var(--text);background:rgba(255,255,255,0.05);margin-bottom:2px;border-radius:4px;font-size:0.9em;';
+
+      const color = _getColorFromHash(result.peer);
+      const emoji = _getEmojiFromHash(result.peer);
+
+      groupHeader.innerHTML = `
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="avatar-text" style="width:24px;height:24px;border-radius:50%;display:flex;justify-content:center;align-items:center;background:${color};color:#fff;font-weight:bold;font-size:0.8em;">
+            ${emoji}
+          </div>
+          <span style="font-size:0.85em;">${result.peer}</span>
+          <span style="font-size:0.7em;color:var(--muted,#888);font-weight:normal;">(${result.matches.length} match${result.matches.length > 1 ? 'es' : ''})</span>
+        </div>
+      `;
+      listEl.appendChild(groupHeader);
+
+      // Display each match
+      result.matches.forEach(match => {
+        const item = document.createElement('div');
+        item.style.cssText = 'padding:6px 8px 6px 38px;margin-bottom:2px;cursor:pointer;border-left:2px solid transparent;border-radius:2px;';
+
+        // Highlight the search query in the content
+        const highlightedContent = _highlightText(match.content, query);
+
+        // Extract author and timestamp
+        const authorMatch = match.meta.match(/--\s*([A-Za-z0-9_-]+)/);
+        const authorName = authorMatch ? authorMatch[1] : 'Unknown';
+        const timestamp = match.meta.replace(/--\s*[A-Za-z0-9_-]+/, '').trim();
+
+        // Truncate content if too long
+        const maxLength = 80;
+        let displayContent = highlightedContent;
+        if (match.content.length > maxLength) {
+          const queryPos = match.content.toLowerCase().indexOf(query.toLowerCase());
+          const start = Math.max(0, queryPos - 25);
+          const end = Math.min(match.content.length, queryPos + query.length + 40);
+          const truncated = (start > 0 ? '...' : '') + match.content.substring(start, end) + (end < match.content.length ? '...' : '');
+          displayContent = _highlightText(truncated, query);
+        }
+
+        item.innerHTML = `
+          <div style="font-size:0.65em;color:var(--muted,#888);margin-bottom:2px;">
+            ${authorName} • ${timestamp}
+          </div>
+          <div style="font-size:0.8em;line-height:1.3;color:var(--text);">
+            ${displayContent}
+          </div>
+        `;
+
+        // Click handler to open conversation and jump to the message
+        item.addEventListener('click', () => {
+          _openConversationWithHighlight(result.peer, match.messageIndex, query);
+        });
+
+        item.addEventListener('mouseenter', () => {
+          item.style.backgroundColor = 'rgba(255,255,255,0.08)';
+          item.style.borderLeftColor = color;
+        });
+
+        item.addEventListener('mouseleave', () => {
+          item.style.backgroundColor = 'transparent';
+          item.style.borderLeftColor = 'transparent';
+        });
+
+        listEl.appendChild(item);
+      });
+    });
+  }
+
+  function _highlightText(text, query) {
+    if (!query) return text.replace(/[&<>]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[s]));
+
+    const escapedText = text.replace(/[&<>]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[s]));
+    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    return escapedText.replace(regex, '<mark style="background:#f39c12;color:#000;padding:2px 4px;border-radius:2px;">$1</mark>');
+  }
+
+  async function _openConversationWithHighlight(peer, messageIndex, query) {
+    _state.activePeer = peer;
+
+    // Re-render peer list to show active state
+    _renderPeerList(_state.peers);
+
+    // Load the conversation from cache
+    const cachedContent = _loadFromCache('conversation', peer);
+    if (cachedContent) {
+      _renderBubblesFromMarkdown(cachedContent, messageIndex, query);
+      _state.messageCountCache[peer] = _countMessagesInMarkdown(cachedContent);
+    }
   }
 
   // --- New message dialog ---
