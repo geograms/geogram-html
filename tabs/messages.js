@@ -265,37 +265,38 @@ window.MessagesModule = window.MessagesModule || {};
     const chatArea = document.getElementById('chat-area');
     if (!chatArea) return;
     const msgs = _parseMarkdownChat(md, _state.caller);
+
+    let chunks = '';
     if (!msgs.length) {
-      chatArea.innerHTML = '<div style="color:var(--muted,#888);">No messages.</div>';
-      return;
-    }
-    
-    const chunks = msgs.map(m => {
-      const align = m.fromSelf ? 'flex-end' : 'flex-start';
-      const bubbleBg = m.fromSelf ? '#222' : '#111';
-      const textColor = m.fromSelf ? '#fff' : 'var(--text)';
-      const escapedContent = m.content.replace(/[&<>]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[s]));
-      
-      // Extract author name and timestamp from meta
-      const authorMatch = m.meta.match(/--\s*([A-Za-z0-9_-]+)/);
-      const authorName = authorMatch ? authorMatch[1] : 'Unknown';
-      const timestamp = m.meta.replace(/--\s*[A-Za-z0-9_-]+/, '').trim();
-      
-      return `
-        <div class="chat-message" style="margin-bottom:12px; display:flex; flex-direction:column; align-items:${align};">
-          ${!m.fromSelf ? `
-            <div style="font-size:0.72em;font-weight:600;opacity:.8;margin:0 0 4px 4px;align-self:${align};">
-              ${authorName}
+      chunks = '<div style="color:var(--muted,#888);padding:12px;">No messages yet. Start the conversation!</div>';
+    } else {
+      chunks = msgs.map(m => {
+        const align = m.fromSelf ? 'flex-end' : 'flex-start';
+        const bubbleBg = m.fromSelf ? '#222' : '#111';
+        const textColor = m.fromSelf ? '#fff' : 'var(--text)';
+        const escapedContent = m.content.replace(/[&<>]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[s]));
+
+        // Extract author name and timestamp from meta
+        const authorMatch = m.meta.match(/--\s*([A-Za-z0-9_-]+)/);
+        const authorName = authorMatch ? authorMatch[1] : 'Unknown';
+        const timestamp = m.meta.replace(/--\s*[A-Za-z0-9_-]+/, '').trim();
+
+        return `
+          <div class="chat-message" style="margin-bottom:12px; display:flex; flex-direction:column; align-items:${align};">
+            ${!m.fromSelf ? `
+              <div style="font-size:0.72em;font-weight:600;opacity:.8;margin:0 0 4px 4px;align-self:${align};">
+                ${authorName}
+              </div>
+            ` : ''}
+            <div style="background:${bubbleBg};color:${textColor};padding:10px 14px;border-radius:14px;max-width:70%; align-self:${align};font-size:0.9em;">
+              <div style="white-space:pre-wrap;">${escapedContent}</div>
+              <div style="font-size:0.6em;color:var(--muted,#888);margin-top:3px;text-align:right;width:100%;">${timestamp}</div>
             </div>
-          ` : ''}
-          <div style="background:${bubbleBg};color:${textColor};padding:10px 14px;border-radius:14px;max-width:70%; align-self:${align};font-size:0.9em;">
-            <div style="white-space:pre-wrap;">${escapedContent}</div>
-            <div style="font-size:0.6em;color:var(--muted,#888);margin-top:3px;text-align:right;width:100%;">${timestamp}</div>
           </div>
-        </div>
-      `;
-    }).join('');
-    
+        `;
+      }).join('');
+    }
+
     chatArea.innerHTML = `
       <div class="chat-messages" style="overflow-y:auto;max-height:420px;padding-right:4px;">${chunks}</div>
       <div class="chat-input" style="margin-top:12px;display:flex;align-items:center;gap:4px;">
