@@ -111,18 +111,21 @@ window.MessagesModule = window.MessagesModule || {};
   }
 
   // --- Helpers for avatar generation ---
-  function _hashString(str) {
-    let hash = 0;
+  function _betterHash(str, seed = 0) {
+    let h1 = 0xdeadbeef ^ seed;
+    let h2 = 0x41c6ce57 ^ seed;
     for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32bit integer
+      const ch = str.charCodeAt(i);
+      h1 = Math.imul(h1 ^ ch, 2654435761);
+      h2 = Math.imul(h2 ^ ch, 1597334677);
     }
-    return Math.abs(hash);
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return 4294967296 * (2097151 & h2) + (h1 >>> 0);
   }
 
   function _getColorFromHash(str) {
-    const hash = _hashString(str);
+    const hash = _betterHash(str, 12345);
     const colors = [
       '#c0392b', '#e74c3c', '#9b59b6', '#8e44ad', '#3498db',
       '#2980b9', '#1abc9c', '#16a085', '#27ae60', '#2ecc71',
@@ -133,11 +136,15 @@ window.MessagesModule = window.MessagesModule || {};
   }
 
   function _getEmojiFromHash(str) {
-    const hash = _hashString(str);
+    // Use a different seed for emoji to make it independent from color
+    const hash = _betterHash(str, 67890);
     const emojis = [
       '😊', '😎', '🤖', '👨‍💻', '🦊', '🐱', '🐶', '🐼',
       '🦁', '🐯', '🦄', '🐸', '🦉', '🐙', '🦋', '🐝',
-      '🌟', '⚡', '🔥', '💎', '🎯', '🎨', '🎭', '🎪'
+      '🌟', '⚡', '🔥', '💎', '🎯', '🎨', '🎭', '🎪',
+      '🚀', '🎸', '🎺', '🎮', '🏆', '🌈', '🍕', '🍔',
+      '🍣', '🌮', '🎂', '☕', '🍺', '🏖️', '⛰️', '🌊',
+      '🎓', '💡', '🔧', '🔬', '🎬', '📚', '✈️', '🏠'
     ];
     return emojis[hash % emojis.length];
   }
