@@ -25,11 +25,22 @@ function render() {
 }
 
 /**
- * Optional cleanup if needed when leaving the Activity tab. Stops the
- * stream auto-refresh to avoid memory leaks.
+ * Cleanup when leaving the Activity tab. Stops the nearby map and cleans up resources.
  */
-/*
 function cleanupActivity() {
-  stopStreamAutoRefresh();
+  // Clean up the nearby map
+  if (typeof window.cleanupNearbyMap === 'function') {
+    window.cleanupNearbyMap();
+  }
+
+  // Clear the content area
+  const contentEl = document.getElementById('content');
+  if (contentEl) {
+    contentEl.innerHTML = '';
+  }
+
+  console.log('[activity] Cleaned up');
 }
-*/
+
+// Expose cleanup function globally
+window.cleanupActivity = cleanupActivity;

@@ -902,11 +902,19 @@ window.MessagesModule = window.MessagesModule || {};
     _state.activePeer = null;
     _state.messageCountCache = {};
 
+    // Clear the chat area specifically to prevent interference with nearby.js
+    const chatArea = document.getElementById('chat-area');
+    if (chatArea) {
+      chatArea.innerHTML = '';
+    }
+
     // Remove event listeners by clearing the content
     const contentEl = document.getElementById('content');
     if (contentEl) {
       contentEl.innerHTML = '';
     }
+
+    console.log('[messages] Cleaned up');
   }
 
   // --- Public API ---
