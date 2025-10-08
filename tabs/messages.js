@@ -118,9 +118,17 @@ window.MessagesModule = window.MessagesModule || {};
       <div class="right-column">
         <h2>Actions</h2>
         <div class="card actions-card">
+          <button class="action-btn" id="btn-new-message" style="display:flex;align-items:center;width:100%;margin-bottom:8px;">
+            <i class="fas fa-plus"></i>
+            <span style="margin-left:6px;">New Message</span>
+          </button>
           <button class="action-btn" id="btn-reload" style="display:flex;align-items:center;width:100%;margin-bottom:8px;">
             <i class="fas fa-sync"></i>
             <span style="margin-left:6px;">Reload Conversations</span>
+          </button>
+          <button class="action-btn" id="btn-delete-conversation" style="display:flex;align-items:center;width:100%;color:#e74c3c;">
+            <i class="fas fa-trash"></i>
+            <span style="margin-left:6px;">Delete Conversation</span>
           </button>
         </div>
         <h2 style="margin-top:16px;">Search</h2>
@@ -131,9 +139,11 @@ window.MessagesModule = window.MessagesModule || {};
     `;
 
     // Hook up actions
+    const newMessageBtn = document.getElementById('btn-new-message');
     const reloadBtn = document.getElementById('btn-reload');
     const searchInput = document.getElementById('searchInput');
-    
+
+    if (newMessageBtn) newMessageBtn.addEventListener('click', _showNewMessageDialog);
     if (reloadBtn) reloadBtn.addEventListener('click', _loadConversations);
     if (searchInput) searchInput.addEventListener('input', _searchFilter);
 
@@ -330,6 +340,7 @@ window.MessagesModule = window.MessagesModule || {};
       if (!text) return;
       _sendMessage(text);
       messageInput.value = '';
+      messageInput.focus(); // Refocus the input field
     };
 
     if (sendBtn) sendBtn.onclick = sendMessage;
@@ -405,6 +416,12 @@ window.MessagesModule = window.MessagesModule || {};
       if (json.result === 'OK') {
         // Reload the conversation to show the new message and update cache
         await openConversation(_state.activePeer);
+
+        // Refocus the input field after the conversation is reloaded
+        setTimeout(() => {
+          const input = document.getElementById('messageInput');
+          if (input) input.focus();
+        }, 100);
       } else {
         console.error('[messages_write] Failed:', json);
         alert('Failed to send message: ' + (json.details || 'Unknown error'));
@@ -440,7 +457,7 @@ window.MessagesModule = window.MessagesModule || {};
 
       // Try to load from cache first
       const cachedPeers = _loadFromCache('peers');
-      if (cachedPeers) {
+      if (cachedPeers && cachedPeers.length > 0) {
         _state.peers = cachedPeers;
 
         // Initialize message count cache from cached conversations
@@ -453,8 +470,8 @@ window.MessagesModule = window.MessagesModule || {};
 
         _renderPeerList(_state.peers);
         console.log('[messages_list] Loaded from cache:', _state.peers.length, 'peers');
-        // Auto-open first peer for convenience
-        if (_state.peers.length) openConversation(_state.peers[0]);
+        // Always auto-open first peer
+        openConversation(_state.peers[0]);
       }
 
       // Fetch from server (will update cache)
@@ -485,8 +502,10 @@ window.MessagesModule = window.MessagesModule || {};
       _saveToCache('peers', _state.peers);
 
       _renderPeerList(_state.peers);
-      // Auto-open first peer for convenience (only if we didn't already open from cache)
-      if (_state.peers.length && !cachedPeers) openConversation(_state.peers[0]);
+      // Auto-open first peer if not already open
+      if (_state.peers.length && !_state.activePeer) {
+        openConversation(_state.peers[0]);
+      }
 
       // Start auto-refresh timer
       _startAutoRefresh();
@@ -496,11 +515,14 @@ window.MessagesModule = window.MessagesModule || {};
 
       // If we have cached data, use it despite the error
       const cachedPeers = _loadFromCache('peers');
-      if (cachedPeers) {
+      if (cachedPeers && cachedPeers.length > 0) {
         _state.peers = cachedPeers;
         _renderPeerList(_state.peers);
         _renderError('Server unreachable. Showing cached conversations.');
         console.log('[messages_list] Using cached data due to error');
+
+        // Auto-open first conversation
+        openConversation(_state.peers[0]);
 
         // Start auto-refresh even with cached data
         _startAutoRefresh();
@@ -592,6 +614,36 @@ window.MessagesModule = window.MessagesModule || {};
     const q = (e?.target?.value || document.getElementById('searchInput')?.value || '').toLowerCase();
     const peers = _state.peers.filter(p => p.toLowerCase().includes(q));
     _renderPeerList(peers);
+  }
+
+  // --- New message dialog ---
+  function _showNewMessageDialog() {
+    const callsign = prompt('Enter the callsign/username of the person you want to message:');
+    if (!callsign || !callsign.trim()) {
+      return; // User cancelled or entered nothing
+    }
+
+    const recipient = callsign.trim();
+
+    // Check if this conversation already exists
+    if (_state.peers.includes(recipient)) {
+      // Just open the existing conversation
+      openConversation(recipient);
+      return;
+    }
+
+    // Add the new peer to the list
+    _state.peers.unshift(recipient); // Add to the beginning
+    _saveToCache('peers', _state.peers); // Update cache
+
+    // Initialize message count for new conversation
+    _state.messageCountCache[recipient] = 0;
+
+    // Render the updated list and open the conversation
+    _renderPeerList(_state.peers);
+    openConversation(recipient);
+
+    console.log('[new-message] Started new conversation with:', recipient);
   }
 
   // --- Auto-refresh functionality ---
