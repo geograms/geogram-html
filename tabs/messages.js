@@ -14,7 +14,44 @@ window.MessagesModule = window.MessagesModule || {};
     secret: '',
     peers: [],
     activePeer: null,
+    refreshTimer: null,
+    messageCountCache: {}, // Track message counts per conversation
   };
+
+  // --- Cache helpers ---
+  function _getCacheKey(type, id = '') {
+    // Format: messages_cache:{callsign}:{type}:{id}
+    return `messages_cache:${_state.caller}:${type}${id ? ':' + id : ''}`;
+  }
+
+  function _saveToCache(type, data, id = '') {
+    try {
+      const key = _getCacheKey(type, id);
+      const cacheData = {
+        timestamp: Date.now(),
+        data: data
+      };
+      localStorage.setItem(key, JSON.stringify(cacheData));
+      console.log('[cache] Saved:', key);
+    } catch (e) {
+      console.warn('[cache] Failed to save:', e);
+    }
+  }
+
+  function _loadFromCache(type, id = '') {
+    try {
+      const key = _getCacheKey(type, id);
+      const cached = localStorage.getItem(key);
+      if (cached) {
+        const cacheData = JSON.parse(cached);
+        console.log('[cache] Loaded:', key, 'age:', Math.floor((Date.now() - cacheData.timestamp) / 1000), 'seconds');
+        return cacheData.data;
+      }
+    } catch (e) {
+      console.warn('[cache] Failed to load:', e);
+    }
+    return null;
+  }
 
   // --- Helpers ported from the no-cache prototype (trimmed) ---
   function _parseMarkdownChat(md, caller) { // from >meta + content pairs
@@ -149,6 +186,17 @@ window.MessagesModule = window.MessagesModule || {};
     return emojis[hash % emojis.length];
   }
 
+  // --- Helper to count messages in markdown ---
+  function _countMessagesInMarkdown(md) {
+    if (!md) return 0;
+    const lines = String(md).split(/\r?\n/);
+    let count = 0;
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].startsWith('>')) count++;
+    }
+    return count;
+  }
+
   // --- Renderers ---
   function _renderPeerList(peers) {
     const listEl = document.querySelector('.messages-list');
@@ -166,17 +214,35 @@ window.MessagesModule = window.MessagesModule || {};
       const item = document.createElement('div');
       item.className = 'message-item';
       item.dataset.conversationId = peer;
-      item.style.cssText = 'display:flex;align-items:center;padding:12px;margin-bottom:8px;cursor:pointer;';
+
+      // Check if this is the active peer
+      const isActive = _state.activePeer === peer;
+      const baseStyle = 'display:flex;align-items:center;padding:12px;margin-bottom:8px;cursor:pointer;position:relative;';
+      const activeStyle = isActive ? 'background-color:rgba(255,255,255,0.1);' : '';
+      item.style.cssText = baseStyle + activeStyle;
+
       // Generate color and emoji from hash
       const color = _getColorFromHash(peer);
       const emoji = _getEmojiFromHash(peer);
+
+      // Check for new messages
+      const cachedContent = _loadFromCache('conversation', peer);
+      const currentCount = cachedContent ? _countMessagesInMarkdown(cachedContent) : 0;
+      const lastKnownCount = _state.messageCountCache[peer] || 0;
+      const newMessageCount = currentCount > lastKnownCount ? currentCount - lastKnownCount : 0;
+
+      // Show badge if there are new messages and this isn't the active conversation
+      const showBadge = newMessageCount > 0 && !isActive;
+
       item.innerHTML = `
-        <div class="avatar-text" style="width:48px;height:48px;border-radius:50%;margin-right:12px;display:flex;justify-content:center;align-items:center;background:${color};color:#fff;font-weight:bold;font-size:1.5em;">
+        <div class="avatar-text" style="width:48px;height:48px;border-radius:50%;margin-right:12px;display:flex;justify-content:center;align-items:center;background:${color};color:#fff;font-weight:bold;font-size:1.5em;position:relative;">
           ${emoji}
+          ${showBadge ? `<div style="position:absolute;top:-4px;right:-4px;background:#e74c3c;color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:0.6em;font-weight:bold;border:2px solid #000;">${newMessageCount > 9 ? '9+' : newMessageCount}</div>` : ''}
         </div>
         <div class="msg-details" style="flex:1;">
           <div class="top-row" style="display:flex;justify-content:space-between;align-items:center;">
             <span class="sender-name">${peer}</span>
+            ${showBadge ? `<span style="background:#e74c3c;color:#fff;border-radius:10px;padding:2px 6px;font-size:0.7em;font-weight:bold;">${newMessageCount}</span>` : ''}
           </div>
         </div>
       `;
@@ -337,7 +403,7 @@ window.MessagesModule = window.MessagesModule || {};
       console.log('[messages_write] Response JSON:', JSON.stringify(json, null, 2));
 
       if (json.result === 'OK') {
-        // Reload the conversation to show the new message
+        // Reload the conversation to show the new message and update cache
         await openConversation(_state.activePeer);
       } else {
         console.error('[messages_write] Failed:', json);
@@ -371,6 +437,27 @@ window.MessagesModule = window.MessagesModule || {};
         _renderError('Missing identity in cache (username/privkey).');
         return;
       }
+
+      // Try to load from cache first
+      const cachedPeers = _loadFromCache('peers');
+      if (cachedPeers) {
+        _state.peers = cachedPeers;
+
+        // Initialize message count cache from cached conversations
+        _state.peers.forEach(peer => {
+          const cachedContent = _loadFromCache('conversation', peer);
+          if (cachedContent) {
+            _state.messageCountCache[peer] = _countMessagesInMarkdown(cachedContent);
+          }
+        });
+
+        _renderPeerList(_state.peers);
+        console.log('[messages_list] Loaded from cache:', _state.peers.length, 'peers');
+        // Auto-open first peer for convenience
+        if (_state.peers.length) openConversation(_state.peers[0]);
+      }
+
+      // Fetch from server (will update cache)
       const requestParams = {
         endpoint: _state.endpoint,
         secret: _state.secret,
@@ -394,27 +481,54 @@ window.MessagesModule = window.MessagesModule || {};
       _state.peers = Array.isArray(json.content_list) ? json.content_list : [];
       console.log('[messages_list] Parsed peers:', _state.peers);
 
+      // Save to cache
+      _saveToCache('peers', _state.peers);
+
       _renderPeerList(_state.peers);
-      // Auto-open first peer for convenience
-      if (_state.peers.length) openConversation(_state.peers[0]);
+      // Auto-open first peer for convenience (only if we didn't already open from cache)
+      if (_state.peers.length && !cachedPeers) openConversation(_state.peers[0]);
+
+      // Start auto-refresh timer
+      _startAutoRefresh();
     } catch (e) {
       console.error('[messages_list] Error:', e);
       console.error('[messages_list] Error stack:', e.stack);
-      _renderPeerList([]);
-      _renderError('messages_list failed: ' + e.message);
+
+      // If we have cached data, use it despite the error
+      const cachedPeers = _loadFromCache('peers');
+      if (cachedPeers) {
+        _state.peers = cachedPeers;
+        _renderPeerList(_state.peers);
+        _renderError('Server unreachable. Showing cached conversations.');
+        console.log('[messages_list] Using cached data due to error');
+
+        // Start auto-refresh even with cached data
+        _startAutoRefresh();
+      } else {
+        _renderPeerList([]);
+        _renderError('messages_list failed: ' + e.message);
+      }
     }
   }
 
   async function openConversation(conversationId) {
-    // highlight
-    const items = document.querySelectorAll('.messages-list .message-item');
-    items.forEach(item => item.style.backgroundColor = '');
-    const selectedItem = document.querySelector(`.messages-list .message-item[data-conversation-id="${conversationId}"]`);
-    if (selectedItem) selectedItem.style.backgroundColor = 'rgba(255,255,255,0.1)';
-
     _state.activePeer = conversationId;
+
+    // Re-render peer list to show active state
+    _renderPeerList(_state.peers);
     try {
       _requireDeps();
+
+      // Try to load from cache first for instant display
+      const cachedContent = _loadFromCache('conversation', conversationId);
+      if (cachedContent) {
+        _renderBubblesFromMarkdown(cachedContent);
+        // Mark as read by updating the message count cache
+        _state.messageCountCache[conversationId] = _countMessagesInMarkdown(cachedContent);
+        console.log('[messages_get] Loaded from cache for:', conversationId);
+      }
+
+      // Fetch from server (will update cache)
       const requestParams = {
         endpoint: _state.endpoint,
         secret: _state.secret,
@@ -439,11 +553,37 @@ window.MessagesModule = window.MessagesModule || {};
       console.log('[messages_get] Content length:', (json.content || '').length);
       console.log('[messages_get] Content preview:', (json.content || '').substring(0, 200));
 
-      _renderBubblesFromMarkdown(String(json.content || ''));
+      const content = String(json.content || '');
+
+      // Save to cache
+      _saveToCache('conversation', content, conversationId);
+
+      // Update message count and mark as read
+      _state.messageCountCache[conversationId] = _countMessagesInMarkdown(content);
+
+      _renderBubblesFromMarkdown(content);
     } catch (e) {
       console.error('[messages_get] Error:', e);
       console.error('[messages_get] Error stack:', e.stack);
-      _renderError('messages_get failed: ' + e.message);
+
+      // If we have cached data, use it despite the error
+      const cachedContent = _loadFromCache('conversation', conversationId);
+      if (cachedContent) {
+        _renderBubblesFromMarkdown(cachedContent);
+        // Mark as read even with cached content
+        _state.messageCountCache[conversationId] = _countMessagesInMarkdown(cachedContent);
+        console.log('[messages_get] Using cached data due to error for:', conversationId);
+        // Show error but don't overwrite the messages
+        const chatArea = document.getElementById('chat-area');
+        if (chatArea) {
+          const errorDiv = document.createElement('div');
+          errorDiv.style.cssText = 'color:#ff9b9b;font-size:0.8em;padding:4px 8px;background:rgba(255,0,0,0.1);border-radius:4px;margin-bottom:8px;';
+          errorDiv.textContent = 'Server unreachable. Showing cached messages.';
+          chatArea.insertBefore(errorDiv, chatArea.firstChild);
+        }
+      } else {
+        _renderError('messages_get failed: ' + e.message);
+      }
     }
   }
 
@@ -452,6 +592,61 @@ window.MessagesModule = window.MessagesModule || {};
     const q = (e?.target?.value || document.getElementById('searchInput')?.value || '').toLowerCase();
     const peers = _state.peers.filter(p => p.toLowerCase().includes(q));
     _renderPeerList(peers);
+  }
+
+  // --- Auto-refresh functionality ---
+  function _startAutoRefresh() {
+    // Clear any existing timer
+    if (_state.refreshTimer) {
+      clearInterval(_state.refreshTimer);
+    }
+
+    // Refresh every 60 seconds (1 minute)
+    _state.refreshTimer = setInterval(async () => {
+      console.log('[auto-refresh] Checking for updates...');
+
+      // Silently update all conversations in the background
+      if (_state.peers && _state.peers.length > 0) {
+        for (const peer of _state.peers) {
+          try {
+            const requestParams = {
+              endpoint: _state.endpoint,
+              secret: _state.secret,
+              kind: 30000,
+              path: `/messages/${peer}-chat.md`
+            };
+
+            const json = await window.MessagesLib.messages_get(_state.caller, peer, requestParams);
+            const content = String(json.content || '');
+
+            // Save to cache
+            _saveToCache('conversation', content, peer);
+
+            // If this is the active conversation, update the display
+            if (_state.activePeer === peer) {
+              _renderBubblesFromMarkdown(content);
+              _state.messageCountCache[peer] = _countMessagesInMarkdown(content);
+            }
+          } catch (e) {
+            console.warn('[auto-refresh] Failed to update', peer, ':', e.message);
+          }
+        }
+
+        // Refresh the peer list to show any new message badges
+        _renderPeerList(_state.peers);
+        console.log('[auto-refresh] Update complete');
+      }
+    }, 60000); // 60000ms = 1 minute
+
+    console.log('[auto-refresh] Started (interval: 60s)');
+  }
+
+  function _stopAutoRefresh() {
+    if (_state.refreshTimer) {
+      clearInterval(_state.refreshTimer);
+      _state.refreshTimer = null;
+      console.log('[auto-refresh] Stopped');
+    }
   }
 
   // --- Emoji picker functionality ---
@@ -470,13 +665,17 @@ window.MessagesModule = window.MessagesModule || {};
 
   // --- Cleanup function ---
   function cleanupMessages() {
+    // Stop auto-refresh
+    _stopAutoRefresh();
+
     // Reset state
     _state.endpoint = 'http://localhost:8080/nostr';
     _state.caller = '';
     _state.secret = '';
     _state.peers = [];
     _state.activePeer = null;
-    
+    _state.messageCountCache = {};
+
     // Remove event listeners by clearing the content
     const contentEl = document.getElementById('content');
     if (contentEl) {
