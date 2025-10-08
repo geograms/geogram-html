@@ -197,13 +197,136 @@ window.MessagesModule = window.MessagesModule || {};
     
     chatArea.innerHTML = `
       <div class="chat-messages" style="overflow-y:auto;max-height:420px;padding-right:4px;">${chunks}</div>
-      <div class="chat-input" style="margin-top:12px;display:flex;align-items:center;opacity:.6;">
-        <input type="text" disabled placeholder="(viewer demo)" style="flex:1;padding:8px;border:1px solid var(--border);border-radius:4px;background:#111;color:#999;" />
-        <div style="margin-left:8px;padding:8px 12px;border-radius:4px;background:#111;color:#999;border:1px solid var(--border);">Send</div>
+      <div class="chat-input" style="margin-top:12px;display:flex;align-items:center;gap:4px;">
+        <div style="position:relative;">
+          <button id="emojiBtn" class="action-button" title="Emoticons" style="padding:6px 8px;min-width:36px;background:#111;border:1px solid var(--border);border-radius:4px;color:var(--text);cursor:pointer;">
+            <i class="fa-regular fa-face-smile"></i>
+          </button>
+          <div id="emoji-picker"
+               style="display:none;position:absolute;left:0;bottom:calc(100% + 8px);background:var(--card);border:1px solid var(--border);padding:8px;border-radius:6px;z-index:10;max-width:220px;width:220px;">
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              ${['😊','😂','😍','😢','😎','👍','🙏','😉','🎉','😡','🤔','😴','📻','🛰️','🗺️','📡'].map(e => `
+                <span style="cursor:pointer;font-size:1.4rem;" onclick="insertMessageEmoji('${e}')">${e}</span>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+        <input id="messageInput" type="text" placeholder="Type a message..." style="flex:1;padding:8px;border:1px solid var(--border);border-radius:4px;background:#111;color:var(--text,#fff);" />
+        <button id="sendBtn" style="padding:8px 12px;border-radius:4px;background:var(--accent,#1f6feb);color:#fff;border:1px solid var(--border);cursor:pointer;">Send</button>
       </div>
     `;
     const messagesDiv = chatArea.querySelector('.chat-messages');
     if (messagesDiv) messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+    // Set up emoji button click handler
+    const emojiBtn = document.getElementById('emojiBtn');
+    if (emojiBtn) {
+      emojiBtn.onclick = () => {
+        const picker = document.getElementById('emoji-picker');
+        if (picker) picker.style.display = (picker.style.display === 'none' || picker.style.display === '') ? 'block' : 'none';
+      };
+    }
+
+    // Set up send button and Enter key handler
+    const messageInput = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    const sendMessage = () => {
+      if (!messageInput || !_state.activePeer) return;
+      const text = messageInput.value.trim();
+      if (!text) return;
+      _sendMessage(text);
+      messageInput.value = '';
+    };
+
+    if (sendBtn) sendBtn.onclick = sendMessage;
+    if (messageInput) {
+      messageInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+    }
+  }
+
+  async function _sendMessage(text) {
+    if (!_state.activePeer || !_state.caller || !_state.secret) {
+      console.error('[messages_write] Missing required data');
+      return;
+    }
+
+    try {
+      const path = `/messages/${_state.activePeer}-chat.md`;
+      const requestPayload = {
+        action: 'messages_write',
+        callsign: _state.caller,
+        path: path,
+        content: text
+      };
+
+      const requestParams = {
+        endpoint: _state.endpoint,
+        secret: _state.secret,
+        kind: 1,
+        content: JSON.stringify(requestPayload),
+        tags: [['app', 'geogram-web']]
+      };
+
+      console.log('[messages_write] Request:', {
+        peer: _state.activePeer,
+        caller: _state.caller,
+        params: requestParams
+      });
+      console.log('[messages_write] Request JSON:', JSON.stringify({
+        peer: _state.activePeer,
+        caller: _state.caller,
+        params: requestParams
+      }, null, 2));
+
+      // Use NostrTools to create and sign the event
+      const event = {
+        kind: 1,
+        created_at: Math.floor(Date.now() / 1000),
+        tags: [['app', 'geogram-web']],
+        content: JSON.stringify(requestPayload),
+        pubkey: window.NostrTools.nip19.decode(_state.caller.startsWith('npub') ? _state.caller : await _getPubkeyFromSecret()).data
+      };
+
+      const signedEvent = window.NostrTools.finalizeEvent(event, window.NostrTools.nip19.decode(_state.secret).data);
+
+      console.log('[messages_write] Signed event:', signedEvent);
+      console.log('[messages_write] Signed event JSON:', JSON.stringify(signedEvent, null, 2));
+
+      // Send to relay
+      const response = await fetch(_state.endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(signedEvent)
+      });
+
+      const json = await response.json();
+      console.log('[messages_write] Response received:', json);
+      console.log('[messages_write] Response JSON:', JSON.stringify(json, null, 2));
+
+      if (json.result === 'OK') {
+        // Reload the conversation to show the new message
+        await openConversation(_state.activePeer);
+      } else {
+        console.error('[messages_write] Failed:', json);
+        alert('Failed to send message: ' + (json.details || 'Unknown error'));
+      }
+    } catch (e) {
+      console.error('[messages_write] Error:', e);
+      console.error('[messages_write] Error stack:', e.stack);
+      alert('Error sending message: ' + e.message);
+    }
+  }
+
+  async function _getPubkeyFromSecret() {
+    const decoded = window.NostrTools.nip19.decode(_state.secret);
+    const pubkey = window.NostrTools.getPublicKey(decoded.data);
+    return window.NostrTools.nip19.npubEncode(pubkey);
   }
 
   function _renderError(msg) {
@@ -221,18 +344,35 @@ window.MessagesModule = window.MessagesModule || {};
         _renderError('Missing identity in cache (username/privkey).');
         return;
       }
-      const json = await window.MessagesLib.messages_list(_state.caller, {
+      const requestParams = {
         endpoint: _state.endpoint,
         secret: _state.secret,
         kind: 30000,
         path: '/'
+      };
+      console.log('[messages_list] Request:', {
+        caller: _state.caller,
+        params: requestParams
       });
+      console.log('[messages_list] Request JSON:', JSON.stringify({
+        caller: _state.caller,
+        params: requestParams
+      }, null, 2));
+
+      const json = await window.MessagesLib.messages_list(_state.caller, requestParams);
+
+      console.log('[messages_list] Response received:', json);
+      console.log('[messages_list] Response JSON:', JSON.stringify(json, null, 2));
+
       _state.peers = Array.isArray(json.content_list) ? json.content_list : [];
+      console.log('[messages_list] Parsed peers:', _state.peers);
+
       _renderPeerList(_state.peers);
       // Auto-open first peer for convenience
       if (_state.peers.length) openConversation(_state.peers[0]);
     } catch (e) {
-      console.error(e);
+      console.error('[messages_list] Error:', e);
+      console.error('[messages_list] Error stack:', e.stack);
       _renderPeerList([]);
       _renderError('messages_list failed: ' + e.message);
     }
@@ -248,15 +388,34 @@ window.MessagesModule = window.MessagesModule || {};
     _state.activePeer = conversationId;
     try {
       _requireDeps();
-      const json = await window.MessagesLib.messages_get(_state.caller, conversationId, {
+      const requestParams = {
         endpoint: _state.endpoint,
         secret: _state.secret,
         kind: 30000,
         path: `/messages/${conversationId}-chat.md`
+      };
+      console.log('[messages_get] Request:', {
+        caller: _state.caller,
+        conversationId: conversationId,
+        params: requestParams
       });
+      console.log('[messages_get] Request JSON:', JSON.stringify({
+        caller: _state.caller,
+        conversationId: conversationId,
+        params: requestParams
+      }, null, 2));
+
+      const json = await window.MessagesLib.messages_get(_state.caller, conversationId, requestParams);
+
+      console.log('[messages_get] Response received:', json);
+      console.log('[messages_get] Response JSON:', JSON.stringify(json, null, 2));
+      console.log('[messages_get] Content length:', (json.content || '').length);
+      console.log('[messages_get] Content preview:', (json.content || '').substring(0, 200));
+
       _renderBubblesFromMarkdown(String(json.content || ''));
     } catch (e) {
-      console.error(e);
+      console.error('[messages_get] Error:', e);
+      console.error('[messages_get] Error stack:', e.stack);
       _renderError('messages_get failed: ' + e.message);
     }
   }
@@ -267,6 +426,20 @@ window.MessagesModule = window.MessagesModule || {};
     const peers = _state.peers.filter(p => p.toLowerCase().includes(q));
     _renderPeerList(peers);
   }
+
+  // --- Emoji picker functionality ---
+  window.insertMessageEmoji = function(emoji) {
+    const input = document.querySelector('#chat-area input[type="text"]');
+    if (!input) return;
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    input.value = input.value.slice(0, start) + emoji + input.value.slice(end);
+    const newPos = start + emoji.length;
+    input.setSelectionRange(newPos, newPos);
+    input.focus();
+    const picker = document.getElementById('emoji-picker');
+    if (picker) picker.style.display = 'none';
+  };
 
   // --- Cleanup function ---
   function cleanupMessages() {
