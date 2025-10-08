@@ -7,15 +7,6 @@ window.MessagesModule = window.MessagesModule || {};
 (function() {
   'use strict';
 
-  // --- Keep your avatar placeholders (used if we later decorate the list) ---
-  const avatarColors = {
-    group1: '#c0392b',
-    group2: '#8e44ad',
-    user123: '#3498db',
-    user456: '#27ae60'
-  };
-  const avatarInitials = { group1: 'FG', group2: 'WP', user123: 'JD', user456: 'AS' };
-
   // --- State ---
   const _state = {
     endpoint: 'http://localhost:8080/nostr',
@@ -119,6 +110,38 @@ window.MessagesModule = window.MessagesModule || {};
     }
   }
 
+  // --- Helpers for avatar generation ---
+  function _hashString(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return Math.abs(hash);
+  }
+
+  function _getColorFromHash(str) {
+    const hash = _hashString(str);
+    const colors = [
+      '#c0392b', '#e74c3c', '#9b59b6', '#8e44ad', '#3498db',
+      '#2980b9', '#1abc9c', '#16a085', '#27ae60', '#2ecc71',
+      '#f39c12', '#e67e22', '#d35400', '#e91e63', '#9c27b0',
+      '#673ab7', '#3f51b5', '#2196f3', '#00bcd4', '#009688'
+    ];
+    return colors[hash % colors.length];
+  }
+
+  function _getEmojiFromHash(str) {
+    const hash = _hashString(str);
+    const emojis = [
+      '😊', '😎', '🤖', '👨‍💻', '🦊', '🐱', '🐶', '🐼',
+      '🦁', '🐯', '🦄', '🐸', '🦉', '🐙', '🦋', '🐝',
+      '🌟', '⚡', '🔥', '💎', '🎯', '🎨', '🎭', '🎪'
+    ];
+    return emojis[hash % emojis.length];
+  }
+
   // --- Renderers ---
   function _renderPeerList(peers) {
     const listEl = document.querySelector('.messages-list');
@@ -137,21 +160,16 @@ window.MessagesModule = window.MessagesModule || {};
       item.className = 'message-item';
       item.dataset.conversationId = peer;
       item.style.cssText = 'display:flex;align-items:center;padding:12px;margin-bottom:8px;cursor:pointer;';
-      // simple text avatar (fallback color)
-      const color = avatarColors[peer] || '#1f6feb';
-      const initials = (peer[0] || '?').toUpperCase();
+      // Generate color and emoji from hash
+      const color = _getColorFromHash(peer);
+      const emoji = _getEmojiFromHash(peer);
       item.innerHTML = `
-        <div class="avatar-text" style="width:48px;height:48px;border-radius:50%;margin-right:12px;display:flex;justify-content:center;align-items:center;background:${color};color:#fff;font-weight:bold;font-size:1em;">
-          ${initials}
+        <div class="avatar-text" style="width:48px;height:48px;border-radius:50%;margin-right:12px;display:flex;justify-content:center;align-items:center;background:${color};color:#fff;font-weight:bold;font-size:1.5em;">
+          ${emoji}
         </div>
         <div class="msg-details" style="flex:1;">
           <div class="top-row" style="display:flex;justify-content:space-between;align-items:center;">
             <span class="sender-name">${peer}</span>
-            <span class="message-time" style="font-size:0.8em;color:var(--muted, #888);"> </span>
-          </div>
-          <div class="bottom-row" style="display:flex;justify-content:space-between;align-items:center;">
-            <span class="message-preview" style="font-size:0.8em;color:var(--muted, #aaa);">Open to load…</span>
-            <span class="read-indicator" style="margin-left:8px;color:var(--accent);"><i class="fas fa-circle"></i></span>
           </div>
         </div>
       `;
@@ -199,7 +217,7 @@ window.MessagesModule = window.MessagesModule || {};
       <div class="chat-messages" style="overflow-y:auto;max-height:420px;padding-right:4px;">${chunks}</div>
       <div class="chat-input" style="margin-top:12px;display:flex;align-items:center;gap:4px;">
         <div style="position:relative;">
-          <button id="emojiBtn" class="action-button" title="Emoticons" style="padding:6px 8px;min-width:36px;background:#111;border:1px solid var(--border);border-radius:4px;color:var(--text);cursor:pointer;">
+          <button id="emojiBtn" class="action-button" title="Emoticons" style="padding:6px 8px;min-width:36px;">
             <i class="fa-regular fa-face-smile"></i>
           </button>
           <div id="emoji-picker"
@@ -211,8 +229,10 @@ window.MessagesModule = window.MessagesModule || {};
             </div>
           </div>
         </div>
-        <input id="messageInput" type="text" placeholder="Type a message..." style="flex:1;padding:8px;border:1px solid var(--border);border-radius:4px;background:#111;color:var(--text,#fff);" />
-        <button id="sendBtn" style="padding:8px 12px;border-radius:4px;background:var(--accent,#1f6feb);color:#fff;border:1px solid var(--border);cursor:pointer;">Send</button>
+        <input id="messageInput" type="text" placeholder="Type a message..." style="flex:1;padding:8px;border:1px solid var(--border);border-radius:4px;background:var(--card);color:var(--text,#fff);font-size:16px;" />
+        <button id="sendBtn" class="action-button" title="Send" style="padding:6px 8px;min-width:36px;">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
       </div>
     `;
     const messagesDiv = chatArea.querySelector('.chat-messages');
