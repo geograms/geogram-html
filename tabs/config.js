@@ -180,7 +180,7 @@ function render() {
     generateNewNostrAndCallsign();
   } else if (username && (!username.startsWith('X1') || username.length < 6)) {
     // keep old keys but ensure callsign matches new scheme
-    recomputeCallsignFromExistingNpub();
+    //recomputeCallsignFromExistingNpub();
   }
 }
 
