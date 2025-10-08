@@ -9,13 +9,15 @@ window.MessagesModule = window.MessagesModule || {};
 
   // --- State ---
   const _state = {
-    endpoint: 'http://localhost:8080/nostr',
+    endpoint: 'https://api.geogram.radio/nostr',
+    //endpoint: 'http://localhost:8080/nostr',
     caller: '',
     secret: '',
     peers: [],
     activePeer: null,
     refreshTimer: null,
     messageCountCache: {}, // Track message counts per conversation
+    lastMessageTimestamp: {}, // Track last message timestamp per conversation
   };
 
   // --- Cache helpers ---
@@ -208,6 +210,26 @@ window.MessagesModule = window.MessagesModule || {};
     return count;
   }
 
+  // --- Helper to get last message timestamp from markdown ---
+  function _getLastMessageTimestamp(md) {
+    if (!md) return 0;
+    const messages = _parseMarkdownChat(md, _state.caller);
+    if (messages.length === 0) return 0;
+
+    // Get the last message's meta and try to parse a timestamp from it
+    const lastMessage = messages[messages.length - 1];
+    const meta = lastMessage.meta;
+
+    // Try to extract timestamp from meta (format: "YYYY-MM-DD HH:MM:SS -- username")
+    const dateMatch = meta.match(/(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})/);
+    if (dateMatch) {
+      return new Date(dateMatch[1]).getTime();
+    }
+
+    // If no timestamp found, return 0 (will sort to bottom)
+    return 0;
+  }
+
   // --- Renderers ---
   function _renderPeerList(peers) {
     const listEl = document.querySelector('.messages-list');
@@ -221,7 +243,14 @@ window.MessagesModule = window.MessagesModule || {};
       listEl.appendChild(empty);
       return;
     }
-    peers.forEach(peer => {
+
+    // Sort peers by last message timestamp (most recent first)
+    const sortedPeers = [...peers].sort((a, b) => {
+      const timestampA = _state.lastMessageTimestamp[a] || 0;
+      const timestampB = _state.lastMessageTimestamp[b] || 0;
+      return timestampB - timestampA; // Descending order (newest first)
+    });
+    sortedPeers.forEach(peer => {
       const item = document.createElement('div');
       item.className = 'message-item';
       item.dataset.conversationId = peer;
@@ -488,11 +517,12 @@ window.MessagesModule = window.MessagesModule || {};
       if (cachedPeers && cachedPeers.length > 0) {
         _state.peers = cachedPeers;
 
-        // Initialize message count cache from cached conversations
+        // Initialize message count cache and timestamp from cached conversations
         _state.peers.forEach(peer => {
           const cachedContent = _loadFromCache('conversation', peer);
           if (cachedContent) {
             _state.messageCountCache[peer] = _countMessagesInMarkdown(cachedContent);
+            _state.lastMessageTimestamp[peer] = _getLastMessageTimestamp(cachedContent);
           }
         });
 
@@ -573,8 +603,9 @@ window.MessagesModule = window.MessagesModule || {};
       const cachedContent = _loadFromCache('conversation', conversationId);
       if (cachedContent) {
         _renderBubblesFromMarkdown(cachedContent);
-        // Mark as read by updating the message count cache
+        // Mark as read by updating the message count cache and timestamp
         _state.messageCountCache[conversationId] = _countMessagesInMarkdown(cachedContent);
+        _state.lastMessageTimestamp[conversationId] = _getLastMessageTimestamp(cachedContent);
         console.log('[messages_get] Loaded from cache for:', conversationId);
       }
 
@@ -608,10 +639,14 @@ window.MessagesModule = window.MessagesModule || {};
       // Save to cache
       _saveToCache('conversation', content, conversationId);
 
-      // Update message count and mark as read
+      // Update message count, timestamp, and mark as read
       _state.messageCountCache[conversationId] = _countMessagesInMarkdown(content);
+      _state.lastMessageTimestamp[conversationId] = _getLastMessageTimestamp(content);
 
       _renderBubblesFromMarkdown(content);
+
+      // Re-render peer list to update sort order
+      _renderPeerList(_state.peers);
     } catch (e) {
       console.error('[messages_get] Error:', e);
       console.error('[messages_get] Error stack:', e.stack);
@@ -622,6 +657,7 @@ window.MessagesModule = window.MessagesModule || {};
         _renderBubblesFromMarkdown(cachedContent);
         // Mark as read even with cached content
         _state.messageCountCache[conversationId] = _countMessagesInMarkdown(cachedContent);
+        _state.lastMessageTimestamp[conversationId] = _getLastMessageTimestamp(cachedContent);
         console.log('[messages_get] Using cached data due to error for:', conversationId);
         // Show error but don't overwrite the messages
         const chatArea = document.getElementById('chat-area');
@@ -779,15 +815,16 @@ window.MessagesModule = window.MessagesModule || {};
   async function _openConversationWithHighlight(peer, messageIndex, query) {
     _state.activePeer = peer;
 
-    // Re-render peer list to show active state
-    _renderPeerList(_state.peers);
-
     // Load the conversation from cache
     const cachedContent = _loadFromCache('conversation', peer);
     if (cachedContent) {
       _renderBubblesFromMarkdown(cachedContent, messageIndex, query);
       _state.messageCountCache[peer] = _countMessagesInMarkdown(cachedContent);
+      _state.lastMessageTimestamp[peer] = _getLastMessageTimestamp(cachedContent);
     }
+
+    // Re-render peer list to show active state and updated sort order
+    _renderPeerList(_state.peers);
   }
 
   // --- New message dialog ---
@@ -848,6 +885,9 @@ window.MessagesModule = window.MessagesModule || {};
             // Save to cache
             _saveToCache('conversation', content, peer);
 
+            // Update timestamp for sorting
+            _state.lastMessageTimestamp[peer] = _getLastMessageTimestamp(content);
+
             // If this is the active conversation, update the display
             if (_state.activePeer === peer) {
               _renderBubblesFromMarkdown(content);
@@ -901,6 +941,7 @@ window.MessagesModule = window.MessagesModule || {};
     _state.peers = [];
     _state.activePeer = null;
     _state.messageCountCache = {};
+    _state.lastMessageTimestamp = {};
 
     // Clear the chat area specifically to prevent interference with nearby.js
     const chatArea = document.getElementById('chat-area');
