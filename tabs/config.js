@@ -6,10 +6,11 @@ function render() {
         <h2>Sections</h2>
         <ul class="nav-links" style="list-style: none; padding-left: 0;">
           <li><a href="#user" class="nav-link">User</a></li>
-           <!-- 
+           <!--
           <li><a href="#locations" class="nav-link">Locations</a></li>
           -->
           <li><a href="#customization" class="nav-link">Customization</a></li>
+          <li><a href="#backup" class="nav-link">Backup & Restore</a></li>
         </ul>
         <button id="reset-settings" class="reset-button">Reset to Default</button>
       </div>
@@ -102,11 +103,51 @@ function render() {
 
             <div>
               <label for="brand-text">Header Text</label>
-              <input type="text" id="brand-text" class="styled-select" maxlength="20" 
+              <input type="text" id="brand-text" class="styled-select" maxlength="20"
                      value="GEOGRAM" style="width: 100%;">
               <small style="display: block; margin-top: 0.5em;">Custom text to display next to logo</small>
             </div>
           </div>
+
+          <div id="backup" style="margin-top: 3em;">
+            <h2>Backup & Restore</h2>
+            <div class="card">
+              <div style="display: flex; flex-direction: column; gap: 1em;">
+
+                <div>
+                  <h3 style="margin-top: 0; margin-bottom: 0.5em;">Export Backups</h3>
+                  <p style="font-size: 0.9em; color: var(--muted); margin-bottom: 1em;">
+                    Download your data as a ZIP archive. Backups include settings, messages, and contacts.
+                  </p>
+                  <div style="display: flex; flex-wrap: wrap; gap: 0.5em;">
+                    <button id="export-full" class="reset-button" style="flex: 1; min-width: 150px;">
+                      <i class="fas fa-download"></i> Export Full Backup
+                    </button>
+                    <button id="export-messages" class="reset-button" style="flex: 1; min-width: 150px;">
+                      <i class="fas fa-envelope"></i> Export Messages Only
+                    </button>
+                    <button id="export-settings" class="reset-button" style="flex: 1; min-width: 150px;">
+                      <i class="fas fa-cog"></i> Export Settings Only
+                    </button>
+                  </div>
+                </div>
+
+                <div style="border-top: 1px solid var(--border); padding-top: 1em;">
+                  <h3 style="margin-top: 0; margin-bottom: 0.5em;">Import Backup</h3>
+                  <p style="font-size: 0.9em; color: var(--muted); margin-bottom: 1em;">
+                    Restore data from a ZIP backup file. Your current data will be backed up automatically before importing.
+                  </p>
+                  <input type="file" id="import-file" accept=".zip" style="display: none;" />
+                  <button id="import-backup" class="reset-button">
+                    <i class="fas fa-upload"></i> Import Backup
+                  </button>
+                </div>
+
+                <div id="backup-status" style="margin-top: 1em; padding: 1em; border-radius: 4px; display: none;"></div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -182,6 +223,106 @@ function render() {
     // keep old keys but ensure callsign matches new scheme
     //recomputeCallsignFromExistingNpub();
   }
+
+  // Backup & Restore handlers
+  setupBackupHandlers();
+}
+
+function setupBackupHandlers() {
+  const statusDiv = document.getElementById('backup-status');
+
+  function showStatus(message, isError = false) {
+    if (statusDiv) {
+      statusDiv.style.display = 'block';
+      statusDiv.style.background = isError ? 'rgba(231, 76, 60, 0.2)' : 'rgba(46, 204, 113, 0.2)';
+      statusDiv.style.border = isError ? '1px solid #e74c3c' : '1px solid #2ecc71';
+      statusDiv.style.color = isError ? '#e74c3c' : '#2ecc71';
+      statusDiv.innerHTML = message.replace(/\n/g, '<br>');
+
+      // Auto-hide after 5 seconds
+      setTimeout(() => {
+        statusDiv.style.display = 'none';
+      }, 5000);
+    }
+  }
+
+  // Export Full Backup
+  document.getElementById('export-full').addEventListener('click', async () => {
+    showStatus('Creating backup...', false);
+    const result = await window.GeogramBackup.exportFullBackup();
+    showStatus(result.message, !result.success);
+  });
+
+  // Export Messages Only
+  document.getElementById('export-messages').addEventListener('click', async () => {
+    showStatus('Exporting messages...', false);
+    const result = await window.GeogramBackup.exportMessagesOnly();
+    showStatus(result.message, !result.success);
+  });
+
+  // Export Settings Only
+  document.getElementById('export-settings').addEventListener('click', async () => {
+    showStatus('Exporting settings...', false);
+    const result = await window.GeogramBackup.exportSettingsOnly();
+    showStatus(result.message, !result.success);
+  });
+
+  // Import Backup
+  const importFileInput = document.getElementById('import-file');
+  const importButton = document.getElementById('import-backup');
+
+  importButton.addEventListener('click', () => {
+    importFileInput.click();
+  });
+
+  importFileInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      // Analyze backup first
+      showStatus('Analyzing backup file...', false);
+      const analysis = await window.GeogramBackup.analyzeBackup(file);
+
+      if (!analysis.success) {
+        showStatus(analysis.message, true);
+        return;
+      }
+
+      // Show confirmation dialog
+      const confirmMessage =
+        `Found backup from: ${new Date(analysis.exportDate).toLocaleString()}\n` +
+        `Username: ${analysis.username}\n` +
+        `Settings: ${analysis.settingsCount} items\n` +
+        `Messages: ${analysis.messagesCount} conversations\n` +
+        `Cache: ${analysis.cacheCount} items\n\n` +
+        `Your current data will be backed up automatically before importing.\n` +
+        `Do you want to proceed with the restore?`;
+
+      if (!confirm(confirmMessage)) {
+        showStatus('Import cancelled', false);
+        importFileInput.value = '';
+        return;
+      }
+
+      // Import the backup
+      showStatus('Importing backup... This may take a moment.', false);
+      const result = await window.GeogramBackup.importBackup(file);
+
+      if (result.success) {
+        showStatus(result.message + '\n\nPage will reload in 3 seconds...', false);
+        setTimeout(() => {
+          location.reload();
+        }, 3000);
+      } else {
+        showStatus(result.message, true);
+      }
+    } catch (error) {
+      showStatus('Import failed: ' + error.message, true);
+    } finally {
+      importFileInput.value = '';
+    }
+  });
 }
 
 function applyTheme(theme) {
