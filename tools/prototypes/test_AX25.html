@@ -234,6 +234,53 @@
     // Initialize
     addLog('INFO', 'AX.25 Audio Modem initialized at ' + baudrate + ' baud');
     addLog('INFO', 'Audio context sample rate: ' + audioCtx.sampleRate + ' Hz');
+    addLog('INFO', 'VOX activation tone: 500ms at 1500 Hz');
+
+    /**
+     * Generate VOX activation tone
+     * Creates a 500ms tone at 1500 Hz to activate walkie-talkie VOX/PTT
+     */
+    function generateVoxTone(sampleRate, durationMs) {
+      var duration = durationMs / 1000; // Convert to seconds
+      var numSamples = Math.floor(sampleRate * duration);
+      var voxBuffer = audioCtx.createBuffer(1, numSamples, sampleRate);
+      var samples = voxBuffer.getChannelData(0);
+
+      var frequency = 1500; // 1500 Hz tone (middle frequency between mark/space)
+      var amplitude = 0.3; // 30% amplitude to avoid clipping
+      var phase = 0;
+      var phaseIncrement = 2 * Math.PI * frequency / sampleRate;
+
+      for (var i = 0; i < numSamples; i++) {
+        samples[i] = amplitude * Math.sin(phase);
+        phase += phaseIncrement;
+        if (phase >= 2 * Math.PI) {
+          phase -= 2 * Math.PI;
+        }
+      }
+
+      return voxBuffer;
+    }
+
+    /**
+     * Concatenate VOX tone with data audio buffer
+     */
+    function concatenateAudioBuffers(buffer1, buffer2) {
+      var numSamples = buffer1.length + buffer2.length;
+      var combinedBuffer = audioCtx.createBuffer(1, numSamples, audioCtx.sampleRate);
+      var samples = combinedBuffer.getChannelData(0);
+
+      var samples1 = buffer1.getChannelData(0);
+      var samples2 = buffer2.getChannelData(0);
+
+      // Copy first buffer (VOX tone)
+      samples.set(samples1, 0);
+
+      // Copy second buffer (data)
+      samples.set(samples2, buffer1.length);
+
+      return combinedBuffer;
+    }
 
     /**
      * Send message via speaker
@@ -252,7 +299,7 @@
         // Create encoder
         encoder = new AfskEncoder(text, audioCtx.sampleRate, baudrate);
 
-        // Generate audio buffer
+        // Generate data audio buffer
         var numSamples = encoder.numSamplesRequired;
         var dataBuffer = audioCtx.createBuffer(1, numSamples, audioCtx.sampleRate);
         var samples = dataBuffer.getChannelData(0);
@@ -268,11 +315,21 @@
           encoder.modulate(view);
         }
 
-        addLog('TX', 'Generated ' + numSamples + ' audio samples');
+        addLog('TX', 'Generated ' + numSamples + ' audio samples for data');
+
+        // Generate VOX activation tone (500ms)
+        var voxTone = generateVoxTone(audioCtx.sampleRate, 500);
+        addLog('TX', 'Added 500ms VOX activation tone');
+
+        // Concatenate VOX tone + data
+        var finalBuffer = concatenateAudioBuffers(voxTone, dataBuffer);
+        var totalSamples = finalBuffer.length;
+        addLog('TX', 'Total transmission: ' + totalSamples + ' samples (' +
+               (totalSamples / audioCtx.sampleRate).toFixed(2) + ' seconds)');
 
         // Play through speaker
         var bufferNode = audioCtx.createBufferSource();
-        bufferNode.buffer = dataBuffer;
+        bufferNode.buffer = finalBuffer;
         bufferNode.connect(audioCtx.destination);
         bufferNode.start(0);
 
@@ -283,7 +340,7 @@
         btn.disabled = true;
         btn.textContent = 'Transmitting...';
 
-        var duration = (numSamples / audioCtx.sampleRate) * 1000;
+        var duration = (totalSamples / audioCtx.sampleRate) * 1000;
         setTimeout(function() {
           btn.disabled = false;
           btn.textContent = 'Send via Speaker';
@@ -392,8 +449,12 @@
      */
     function onDecoderStatus(status, data) {
       if (status === "carrier") {
-        addLog('CD', 'Carrier detected: ' + data);
-        updateStatus('Carrier detected - receiving...');
+        // Update status display but don't add to log (too verbose)
+        if (data === true || data === 'true') {
+          updateStatus('Carrier detected - receiving...');
+        } else {
+          updateStatus('Listening for packets...');
+        }
       } else if (status === "data") {
         addLog('RX', 'Received: ' + data);
         updateStatus('Data received');
@@ -418,7 +479,7 @@
     }
 
     /**
-     * Add entry to log window
+     * Add entry to log window with automatic rotation
      */
     function addLog(type, message) {
       var log = document.getElementById('logWindow');
@@ -443,6 +504,16 @@
       entry.appendChild(msgSpan);
 
       log.appendChild(entry);
+
+      // Log rotation: keep only last 1000 entries
+      var maxLogEntries = 1000;
+      var entries = log.getElementsByClassName('log-entry');
+      if (entries.length > maxLogEntries) {
+        var entriesToRemove = entries.length - maxLogEntries;
+        for (var i = 0; i < entriesToRemove; i++) {
+          log.removeChild(entries[0]);
+        }
+      }
 
       // Auto-scroll to bottom
       log.scrollTop = log.scrollHeight;

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APRS WAV Generator v6.0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            min-height: 100vh;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #2d2d2d;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            padding: 25px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #ffffff;
+            margin-bottom: 8px;
+            font-size: 22px;
+        }
+
+        .subtitle {
+            color: #aaa;
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ccc;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #444;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-play {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            font-size: 16px;
+            padding: 14px 24px;
+        }
+
+        .btn-play:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 25px rgba(76, 175, 80, 0.5);
+        }
+
+        .btn-play:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .info-box {
+            background: #1a1a1a;
+            border-left: 4px solid #667eea;
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 5px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #aaa;
+        }
+
+        .info-box strong {
+            color: #667eea;
+        }
+
+        .info-box code {
+            background: #2d2d2d;
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: #4CAF50;
+        }
+        
+        .preset-buttons {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            padding: 5px 10px;
+            background: #444;
+            border: none;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background 0.3s;
+            color: #fff;
+        }
+
+        .preset-btn:hover {
+            background: #555;
+        }
+        
+        .output {
+            margin-top: 15px;
+            padding: 12px;
+            background: #1a1a1a;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 11px;
+            color: #4CAF50;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📻 APRS WAV Generator v6.0</h1>
+        <p class="subtitle">Generate AX.25 APRS packets as audio files (Bell 202 AFSK 1200 baud)</p>
+        
+        <div class="form-group">
+            <label>Message Type:</label>
+            <div class="preset-buttons">
+                <button class="preset-btn" onclick="loadPreset('message')">Direct Message</button>
+                <button class="preset-btn" onclick="loadPreset('position')">Position Beacon</button>
+                <button class="preset-btn" onclick="loadPreset('status')">Status Message</button>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="source">Your Callsign (Source):</label>
+            <input type="text" id="source" placeholder="e.g., CR7BBQ-5" value="CR7BBQ-5" oninput="clearOutput()">
+        </div>
+        
+        <div class="form-group">
+            <label for="destination">Destination:</label>
+            <input type="text" id="destination" placeholder="e.g., APRS or K06JZI-5" value="APRS" oninput="clearOutput()">
+        </div>
+        
+        <div class="form-group">
+            <label for="path">Digipeater Path:</label>
+            <input type="text" id="path" placeholder="e.g., WIDE1-1,WIDE2-1" value="WIDE1-1" oninput="clearOutput()">
+        </div>
+        
+        <div class="form-group">
+            <label for="message">Message/Information:</label>
+            <textarea id="message" placeholder="Enter your APRS message..." oninput="clearOutput()" onkeydown="handleMessageKeydown(event)">:K06JZI-5 :Hello!</textarea>
+        </div>
+        
+        <div class="button-group">
+            <button class="btn-play" id="playBtn" onclick="generateAndPlay()" style="grid-column: 1 / -1;">▶️ Generate & Play APRS</button>
+        </div>
+        
+        <div class="info-box">
+            <strong>Tips:</strong><br>
+            • For direct messages: Use format <code>:CALLSIGN :Message</code> (callsign must be 9 chars)<br>
+            • For position: Start with <code>!</code> or <code>=</code><br>
+            • For status: Start with <code>&gt;</code><br>
+            • Europe APRS frequency: 144.800 MHz
+        </div>
+        
+        <div id="output" class="output" style="display:none;"></div>
+    </div>
+    
+    <script>
+        // Inline the APRS generator class
+        class APRSWavGenerator {
+            constructor(sampleRate = 22050) {
+                this.sampleRate = sampleRate;
+                this.markFreq = 1200;
+                this.spaceFreq = 2200;
+                this.baudRate = 1200;
+                this.samplesPerBit = Math.floor(this.sampleRate / this.baudRate);
+            }
+
+            calculateFCS(data) {
+                let crc = 0xFFFF;
+                for (let byte of data) {
+                    crc ^= byte;
+                    for (let i = 0; i < 8; i++) {
+                        if (crc & 0x0001) {
+                            crc = (crc >> 1) ^ 0x8408;
+                        } else {
+                            crc = crc >> 1;
+                        }
+                    }
+                }
+                return (~crc) & 0xFFFF;
+            }
+
+            encodeCallsign(callsign, ssid = 0, isLast = false) {
+                const parts = callsign.toUpperCase().split('-');
+                const call = parts[0].padEnd(6, ' ');
+                const actualSsid = parts[1] ? parseInt(parts[1]) : ssid;
+                const encoded = [];
+                
+                for (let i = 0; i < 6; i++) {
+                    encoded.push(call.charCodeAt(i) << 1);
+                }
+                
+                let ssidByte = (actualSsid << 1) | 0x60;
+                if (isLast) ssidByte |= 0x01;
+                encoded.push(ssidByte);
+                
+                return encoded;
+            }
+
+            createAX25Packet(source, destination, path, message) {
+                const packet = [];
+                packet.push(...this.encodeCallsign(destination, 0, false));
+                
+                const pathArray = path ? path.split(',').filter(p => p.trim()) : [];
+                const sourceIsLast = pathArray.length === 0;
+                packet.push(...this.encodeCallsign(source, 0, sourceIsLast));
+                
+                for (let i = 0; i < pathArray.length; i++) {
+                    const isLast = i === pathArray.length - 1;
+                    packet.push(...this.encodeCallsign(pathArray[i].trim(), 0, isLast));
+                }
+                
+                packet.push(0x03);
+                packet.push(0xF0);
+                
+                for (let i = 0; i < message.length; i++) {
+                    packet.push(message.charCodeAt(i));
+                }
+                
+                return packet;
+            }
+
+            bitStuff(bits) {
+                const stuffed = [];
+                let consecutiveOnes = 0;
+                
+                for (let bit of bits) {
+                    stuffed.push(bit);
+                    if (bit === 1) {
+                        consecutiveOnes++;
+                        if (consecutiveOnes === 5) {
+                            stuffed.push(0);
+                            consecutiveOnes = 0;
+                        }
+                    } else {
+                        consecutiveOnes = 0;
+                    }
+                }
+                return stuffed;
+            }
+
+            bytesToBits(bytes) {
+                const bits = [];
+                for (let byte of bytes) {
+                    for (let i = 0; i < 8; i++) {
+                        bits.push((byte >> i) & 1);
+                    }
+                }
+                return bits;
+            }
+
+            nrziEncode(bits) {
+                const encoded = [];
+                let currentLevel = 1;
+                
+                for (let bit of bits) {
+                    if (bit === 0) {
+                        currentLevel = 1 - currentLevel;
+                    }
+                    encoded.push(currentLevel);
+                }
+                return encoded;
+            }
+
+            generateAFSK(nrziBits, addVoxBeep = true) {
+                const samples = [];
+                let phase = 0;
+
+                // Add VOX activation with SYNTHESIZED VOICE-LIKE SOUND
+                // VOX circuits are optimized for human speech (300-3000 Hz range)
+                if (addVoxBeep) {
+                    const voiceDuration = 1.0; // 1 second of voice-like sound
+                    const voiceSamples = Math.floor(this.sampleRate * voiceDuration);
+
+                    // Simulate human voice by mixing multiple frequencies in speech range
+                    // Human voice fundamental: 85-180 Hz (male) or 165-255 Hz (female)
+                    // We'll use harmonics to create a voice-like timbre
+
+                    let voicePhase1 = 0; // Fundamental frequency
+                    let voicePhase2 = 0; // 2nd harmonic
+                    let voicePhase3 = 0; // 3rd harmonic
+                    let voicePhase4 = 0; // Formant-like frequency
+
+                    const fundamental = 120; // 120 Hz fundamental (male voice range)
+                    const harmonic2 = 240;   // 2nd harmonic
+                    const harmonic3 = 360;   // 3rd harmonic
+                    const formant = 800;     // Formant frequency (vowel-like)
+
+                    for (let i = 0; i < voiceSamples; i++) {
+                        // Create time-varying amplitude to simulate speech rhythm
+                        const t = i / this.sampleRate;
+                        const envelope = 0.5 + 0.5 * Math.sin(2 * Math.PI * 3 * t); // 3 Hz modulation
+
+                        // Mix harmonics like a human voice
+                        const voice1 = Math.sin(voicePhase1) * 0.4;  // Fundamental (40%)
+                        const voice2 = Math.sin(voicePhase2) * 0.25; // 2nd harmonic (25%)
+                        const voice3 = Math.sin(voicePhase3) * 0.15; // 3rd harmonic (15%)
+                        const voice4 = Math.sin(voicePhase4) * 0.2;  // Formant (20%)
+
+                        // Add slight noise for breathiness
+                        const breathNoise = (Math.random() * 2 - 1) * 0.05;
+
+                        // Combine all components with envelope
+                        const sample = (voice1 + voice2 + voice3 + voice4 + breathNoise) * envelope * 0.95;
+                        samples.push(sample);
+
+                        // Update phases
+                        voicePhase1 += (2 * Math.PI * fundamental) / this.sampleRate;
+                        voicePhase2 += (2 * Math.PI * harmonic2) / this.sampleRate;
+                        voicePhase3 += (2 * Math.PI * harmonic3) / this.sampleRate;
+                        voicePhase4 += (2 * Math.PI * formant) / this.sampleRate;
+                    }
+
+                    // Reset phase for data transmission
+                    phase = 0;
+                }
+                
+                for (let bit of nrziBits) {
+                    const freq = bit === 1 ? this.markFreq : this.spaceFreq;
+                    for (let i = 0; i < this.samplesPerBit; i++) {
+                        const sample = Math.sin(phase);
+                        samples.push(sample);
+                        phase += (2 * Math.PI * freq) / this.sampleRate;
+                    }
+                }
+                return samples;
+            }
+
+            createWavHeader(dataLength) {
+                const buffer = new ArrayBuffer(44);
+                const view = new DataView(buffer);
+                
+                this.writeString(view, 0, 'RIFF');
+                view.setUint32(4, 36 + dataLength, true);
+                this.writeString(view, 8, 'WAVE');
+                this.writeString(view, 12, 'fmt ');
+                view.setUint32(16, 16, true);
+                view.setUint16(20, 1, true);
+                view.setUint16(22, 1, true);
+                view.setUint32(24, this.sampleRate, true);
+                view.setUint32(28, this.sampleRate * 2, true);
+                view.setUint16(32, 2, true);
+                view.setUint16(34, 16, true);
+                this.writeString(view, 36, 'data');
+                view.setUint32(40, dataLength, true);
+                
+                return buffer;
+            }
+
+            writeString(view, offset, string) {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            }
+
+            generateWav(source, destination, path, message) {
+                const preambleFlags = Array(30).fill(0x7E);
+                const packet = this.createAX25Packet(source, destination, path, message);
+                const fcs = this.calculateFCS(packet);
+                packet.push(fcs & 0xFF);
+                packet.push((fcs >> 8) & 0xFF);
+                const postambleFlag = [0x7E];
+                
+                const preambleBits = this.bytesToBits(preambleFlags);
+                const packetBits = this.bytesToBits(packet);
+                const postambleBits = this.bytesToBits(postambleFlag);
+                const stuffedPacketBits = this.bitStuff(packetBits);
+                const allBits = [...preambleBits, ...stuffedPacketBits, ...postambleBits];
+                const nrziBits = this.nrziEncode(allBits);
+                const samples = this.generateAFSK(nrziBits);
+                
+                const pcmData = new Int16Array(samples.length);
+                for (let i = 0; i < samples.length; i++) {
+                    pcmData[i] = Math.round(samples[i] * 32767 * 0.8);
+                }
+                
+                const dataLength = pcmData.length * 2;
+                const header = this.createWavHeader(dataLength);
+                const wavFile = new Uint8Array(44 + dataLength);
+                wavFile.set(new Uint8Array(header), 0);
+                wavFile.set(new Uint8Array(pcmData.buffer), 44);
+                
+                return wavFile;
+            }
+        }
+        
+        // Global variables
+        let currentAudioBlob = null;
+        let currentAudio = null;
+        let currentAudioBuffer = null;
+        let audioContext = null;
+        const generator = new APRSWavGenerator();
+        
+        function loadPreset(type) {
+            const source = document.getElementById('source');
+            const destination = document.getElementById('destination');
+            const path = document.getElementById('path');
+            const message = document.getElementById('message');
+            
+            // Clear output when preset is loaded
+            clearOutput();
+            
+            switch(type) {
+                case 'message':
+                    destination.value = 'K06JZI-5';
+                    path.value = 'WIDE1-1';
+                    message.value = ':K06JZI-5 :Hello from the UV-K5!';
+                    break;
+                case 'position':
+                    destination.value = 'APRS';
+                    path.value = 'WIDE1-1,WIDE2-1';
+                    message.value = '!4912.45N/00831.50E-Mobile Station';
+                    break;
+                case 'status':
+                    destination.value = 'APRS';
+                    path.value = 'WIDE1-1';
+                    message.value = '>Testing APRS from JavaScript!';
+                    break;
+            }
+        }
+        
+        function generateAndPlay() {
+            const source = document.getElementById('source').value.trim();
+            const destination = document.getElementById('destination').value.trim();
+            const path = document.getElementById('path').value.trim();
+            const message = document.getElementById('message').value;
+            
+            if (!source || !destination || !message) {
+                alert('Please fill in all required fields!');
+                return;
+            }
+            
+            try {
+                const output = document.getElementById('output');
+                output.innerHTML = '🎵 Generating APRS packet...<br>';
+                output.style.display = 'block';
+                
+                const wavData = generator.generateWav(source, destination, path, message);
+                
+                output.innerHTML += `✅ WAV file generated!<br>`;
+                output.innerHTML += `📊 Size: ${(wavData.length / 1024).toFixed(2)} KB<br>`;
+
+                // Create blob
+                currentAudioBlob = new Blob([wavData], { type: 'audio/wav' });
+
+                // Initialize audio context if needed
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                // Play using Web Audio API
+                output.innerHTML += '<br>▶️ Decoding audio...<br>';
+                
+                // Decode the WAV file
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    audioContext.decodeAudioData(e.target.result, 
+                        function(buffer) {
+                            currentAudioBuffer = buffer;
+                            output.innerHTML += '✅ Audio ready!<br>';
+                            
+                            // Play immediately
+                            playAudioBuffer();
+                            
+                            // Add a replay button
+                            output.innerHTML += '<br><button onclick="playAudioBuffer()" style="padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; margin-top: 10px;">🔄 Play Again</button><br>';
+                        },
+                        function(error) {
+                            console.error('Decode error:', error);
+                            output.innerHTML += `❌ Audio decode error: ${error.message}<br>`;
+                            output.innerHTML += '💡 Try downloading the file instead.<br>';
+                        }
+                    );
+                };
+                
+                reader.onerror = function(error) {
+                    console.error('FileReader error:', error);
+                    output.innerHTML += '❌ Error reading audio data<br>';
+                };
+                
+                reader.readAsArrayBuffer(currentAudioBlob);
+                
+            } catch (error) {
+                const output = document.getElementById('output');
+                output.innerHTML += `❌ Error: ${error.message}<br>`;
+                alert('Error generating WAV: ' + error.message);
+                console.error(error);
+            }
+        }
+        
+        function clearOutput() {
+            const output = document.getElementById('output');
+            output.style.display = 'none';
+            output.innerHTML = '';
+        }
+
+        function handleMessageKeydown(event) {
+            // Check if Enter key was pressed (keyCode 13 or key === 'Enter')
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                event.preventDefault(); // Prevent newline in textarea
+                generateAndPlay(); // Send the message
+            }
+        }
+        
+        function playAudioBuffer() {
+            if (!currentAudioBuffer || !audioContext) {
+                console.error('No audio buffer available');
+                return;
+            }
+
+            const output = document.getElementById('output');
+
+            // DUAL PLAYBACK METHOD: Play the same audio twice with slight delay
+            // This mimics your manual action of pressing play twice quickly
+
+            // First playback - VOX activation
+            const source1 = audioContext.createBufferSource();
+            source1.buffer = currentAudioBuffer;
+            source1.connect(audioContext.destination);
+
+            // Second playback - starts slightly after (simulating your second button press)
+            // The delay should be less than 1 second (you said "under a second")
+            const source2 = audioContext.createBufferSource();
+            source2.buffer = currentAudioBuffer;
+            source2.connect(audioContext.destination);
+
+            // Start first immediately
+            source1.start(0);
+
+            // Start second after 0.8 seconds (800ms - adjustable)
+            const delay = 0.8; // 800ms delay before second playback
+            source2.start(audioContext.currentTime + delay);
+
+            output.innerHTML += `🔊 Playing dual-stream (VOX activation method)...<br>`;
+            output.innerHTML += `⏱️ Second stream starts after ${delay * 1000}ms<br>`;
+            console.log('Playing dual audio streams for VOX activation');
+
+            source2.onended = function() {
+                output.innerHTML += '✅ Playback complete!<br>';
+                console.log('Both audio streams finished');
+            };
+        }
+    </script>
+</body>
+</html>
