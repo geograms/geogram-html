@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AX.25 Audio Modem Test</title>
+
+  <!-- Modem.js library files -->
+  <script src="modem.js/afsk-filters.js"></script>
+  <script src="modem.js/afsk-encoder.js"></script>
+  <script src="modem.js/afsk-decoder.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #ddd;
+    }
+
+    h1 {
+      color: #4a9eff;
+      border-bottom: 2px solid #333;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+
+    .instructions {
+      background: #2a2a2a;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #4a9eff;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .section {
+      margin: 20px 0;
+      padding: 15px;
+      background: #2a2a2a;
+      border-radius: 8px;
+    }
+
+    .section h3 {
+      margin-top: 0;
+      color: #4a9eff;
+      font-size: 16px;
+    }
+
+    #textInput {
+      width: 100%;
+      min-height: 120px;
+      padding: 10px;
+      font-size: 14px;
+      background: #1a1a1a;
+      color: #ddd;
+      border: 1px solid #444;
+      border-radius: 4px;
+      resize: vertical;
+      font-family: 'Courier New', monospace;
+      box-sizing: border-box;
+    }
+
+    .button-group {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #4a9eff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #3a8eef;
+    }
+
+    button:active {
+      background: #2a7edf;
+    }
+
+    button:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+
+    button.listening {
+      background: #e74c3c;
+    }
+
+    button.listening:hover {
+      background: #d73c2c;
+    }
+
+    .status {
+      margin-top: 10px;
+      padding: 8px;
+      background: #1a1a1a;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #66ccff;
+    }
+
+    #logWindow {
+      height: 400px;
+      overflow-y: auto;
+      background: #000;
+      padding: 10px;
+      border: 1px solid #333;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .log-entry {
+      margin-bottom: 5px;
+      padding: 2px 0;
+      word-wrap: break-word;
+    }
+
+    .log-tx { color: #ff6666; }
+    .log-rx { color: #66ff66; }
+    .log-cd { color: #ffff66; }
+    .log-info { color: #66ccff; }
+    .log-error { color: #ff3333; font-weight: bold; }
+
+    .timestamp {
+      color: #888;
+      margin-right: 5px;
+    }
+
+    .type {
+      font-weight: bold;
+      margin-right: 5px;
+    }
+
+    #logWindow::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    #logWindow::-webkit-scrollbar-track {
+      background: #1a1a1a;
+    }
+
+    #logWindow::-webkit-scrollbar-thumb {
+      background: #444;
+      border-radius: 5px;
+    }
+
+    #logWindow::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔊 AX.25 Audio Modem Test</h1>
+
+  <div class="instructions">
+    <strong>Instructions:</strong> Type or generate text below, then click "Send via Speaker" to transmit as AX.25 audio packet.
+    Click "Start Listening" to receive packets via microphone. Use two devices or loopback for testing.
+  </div>
+
+  <div class="section">
+    <h3>📤 Transmit</h3>
+    <textarea id="textInput" placeholder="Type your message here...">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</textarea>
+
+    <div class="button-group">
+      <button id="sendBtn" onclick="sendMessage()">
+        Send via Speaker
+      </button>
+      <button id="generateBtn" onclick="generateLoremIpsum()">
+        Random Lorem Ipsum
+      </button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>📥 Receive</h3>
+    <div class="button-group">
+      <button id="listenBtn" onclick="toggleListening()">
+        Start Listening
+      </button>
+    </div>
+    <div id="statusDiv" class="status">
+      Status: Idle
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>📋 Log</h3>
+    <div id="logWindow"></div>
+  </div>
+
+  <script>
+    // Global variables
+    var audioCtx = new AudioContext();
+    var encoder, decoder;
+    var afskNode, audioSource, micStream;
+    var listening = false;
+    var baudrate = 1200; // Standard packet radio baud rate
+
+    // Lorem Ipsum text samples
+    var loremTexts = [
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+
+      "Haxx0r ipsum vi eaten by a grue echo finally race condition public mailbomb mainframe memory leak protocol int gcc I'm compiling float. Snarf cat machine code fopen ddos case daemon stack trace strlen system class buffer ssh headers.",
+
+      "Bacon ipsum dolor sit amet duis mollit pork belly turkey exercitation. Nulla doner nostrud flank quis ground round. Turducken est dolore mollit, ex sint drumstick aliquip tail sed id proident consequat prosciutto.",
+
+      "Zombie ipsum reversus ab viral inferno, nam rick grimes malum cerebro. De carne lumbering animata corpora quaeritis. Summus brains sit, morbo vel maleficia? De apocalypsi gorger omero undead survivor dictum mauris.",
+
+      "The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs. How vexingly quick daft zebras jump! Sphinx of black quartz, judge my vow.",
+
+      "Hodor, hodor, hodor. Hodor hodor... Hodor hodor hodor, hodor, hodor hodor. Hodor hodor - hodor hodor hodor hodor hodor? Hodor hodor HODOR! Hodor HODOR hodor, hodor hodor, hodor.",
+
+      "Cat ipsum dolor sit amet, hunt anything that moves or hopped up on goofballs hide when guests come over. Intrigued by the shower, or stare at ceiling climb leg for stretch and use lap as chair.",
+
+      "Pirate ipsum: Sail ho scuppers Jolly Roger line skysail Smartly chantey parrel doubloon boatswain jack hail-shot. Tackle run a shot across the bow weigh anchor Jolly Roger scuttle case shot capstan.",
+    ];
+
+    // Initialize
+    addLog('INFO', 'AX.25 Audio Modem initialized at ' + baudrate + ' baud');
+    addLog('INFO', 'Audio context sample rate: ' + audioCtx.sampleRate + ' Hz');
+
+    /**
+     * Send message via speaker
+     */
+    function sendMessage() {
+      var text = document.getElementById('textInput').value;
+
+      if (!text || !text.trim()) {
+        addLog('ERROR', 'No text to transmit');
+        return;
+      }
+
+      try {
+        addLog('TX', 'Preparing to transmit: ' + truncateText(text, 60));
+
+        // Create encoder
+        encoder = new AfskEncoder(text, audioCtx.sampleRate, baudrate);
+
+        // Generate audio buffer
+        var numSamples = encoder.numSamplesRequired;
+        var dataBuffer = audioCtx.createBuffer(1, numSamples, audioCtx.sampleRate);
+        var samples = dataBuffer.getChannelData(0);
+
+        // Modulate in chunks
+        var chunkSize = 4096;
+        var numChunks = Math.ceil(numSamples / chunkSize);
+
+        for (var c = 0; c < numChunks; c++) {
+          var begin = c * chunkSize;
+          var end = begin + chunkSize;
+          var view = samples.subarray(begin, end);
+          encoder.modulate(view);
+        }
+
+        addLog('TX', 'Generated ' + numSamples + ' audio samples');
+
+        // Play through speaker
+        var bufferNode = audioCtx.createBufferSource();
+        bufferNode.buffer = dataBuffer;
+        bufferNode.connect(audioCtx.destination);
+        bufferNode.start(0);
+
+        addLog('TX', 'Transmitted ' + text.length + ' bytes via speaker');
+
+        // Blink send button
+        var btn = document.getElementById('sendBtn');
+        btn.disabled = true;
+        btn.textContent = 'Transmitting...';
+
+        var duration = (numSamples / audioCtx.sampleRate) * 1000;
+        setTimeout(function() {
+          btn.disabled = false;
+          btn.textContent = 'Send via Speaker';
+        }, duration);
+
+      } catch (error) {
+        addLog('ERROR', 'Transmission failed: ' + error.message);
+        console.error('Transmission error:', error);
+      }
+    }
+
+    /**
+     * Toggle microphone listening
+     */
+    function toggleListening() {
+      if (!listening) {
+        startListening();
+      } else {
+        stopListening();
+      }
+    }
+
+    /**
+     * Start listening via microphone
+     */
+    function startListening() {
+      addLog('INFO', 'Requesting microphone access...');
+
+      navigator.mediaDevices.getUserMedia({audio: true})
+        .then(function(stream) {
+          micStream = stream;
+          audioSource = audioCtx.createMediaStreamSource(stream);
+
+          // Create script processor for audio processing
+          afskNode = audioCtx.createScriptProcessor(8192);
+          audioSource.connect(afskNode);
+          afskNode.connect(audioCtx.destination);
+
+          // Process audio data
+          afskNode.addEventListener("audioprocess", processAudio);
+
+          listening = true;
+          updateListenButton();
+          updateStatus('Listening for packets...');
+          addLog('INFO', 'Started listening via microphone');
+          addLog('INFO', 'Decoder initialized at ' + baudrate + ' baud');
+
+        })
+        .catch(function(err) {
+          addLog('ERROR', 'Microphone access denied: ' + err.message);
+          updateStatus('Error: Microphone access denied');
+        });
+    }
+
+    /**
+     * Stop listening
+     */
+    function stopListening() {
+      if (afskNode) {
+        afskNode.removeEventListener("audioprocess", processAudio);
+        afskNode.disconnect();
+        afskNode = null;
+      }
+
+      if (audioSource) {
+        audioSource.disconnect();
+        audioSource = null;
+      }
+
+      if (micStream) {
+        micStream.getTracks().forEach(track => track.stop());
+        micStream = null;
+      }
+
+      decoder = null;
+      listening = false;
+      updateListenButton();
+      updateStatus('Stopped listening');
+      addLog('INFO', 'Stopped listening');
+    }
+
+    /**
+     * Process incoming audio from microphone
+     */
+    function processAudio(event) {
+      var buffer = event.inputBuffer;
+      var samplesIn = buffer.getChannelData(0);
+
+      // Initialize decoder on first audio data
+      if (!decoder) {
+        var sampleRate = buffer.sampleRate;
+        decoder = new AfskDecoder(sampleRate, baudrate, onDecoderStatus);
+        addLog('INFO', 'Decoder input sample rate: ' + sampleRate + ' Hz');
+      }
+
+      // Demodulate audio samples
+      try {
+        decoder.demodulate(samplesIn);
+      } catch (error) {
+        console.error('Demodulation error:', error);
+      }
+    }
+
+    /**
+     * Handle decoder status and data
+     */
+    function onDecoderStatus(status, data) {
+      if (status === "carrier") {
+        addLog('CD', 'Carrier detected: ' + data);
+        updateStatus('Carrier detected - receiving...');
+      } else if (status === "data") {
+        addLog('RX', 'Received: ' + data);
+        updateStatus('Data received');
+
+        // Reset status after a short delay
+        setTimeout(function() {
+          if (listening) {
+            updateStatus('Listening for packets...');
+          }
+        }, 2000);
+      }
+    }
+
+    /**
+     * Generate random Lorem Ipsum text
+     */
+    function generateLoremIpsum() {
+      var randomIndex = Math.floor(Math.random() * loremTexts.length);
+      var text = loremTexts[randomIndex];
+      document.getElementById('textInput').value = text;
+      addLog('INFO', 'Generated random Lorem Ipsum text');
+    }
+
+    /**
+     * Add entry to log window
+     */
+    function addLog(type, message) {
+      var log = document.getElementById('logWindow');
+      var timestamp = new Date().toLocaleTimeString();
+
+      var entry = document.createElement('div');
+      entry.className = 'log-entry log-' + type.toLowerCase();
+
+      var timeSpan = document.createElement('span');
+      timeSpan.className = 'timestamp';
+      timeSpan.textContent = '[' + timestamp + ']';
+
+      var typeSpan = document.createElement('span');
+      typeSpan.className = 'type';
+      typeSpan.textContent = '[' + type + ']';
+
+      var msgSpan = document.createElement('span');
+      msgSpan.textContent = ' ' + message;
+
+      entry.appendChild(timeSpan);
+      entry.appendChild(typeSpan);
+      entry.appendChild(msgSpan);
+
+      log.appendChild(entry);
+
+      // Auto-scroll to bottom
+      log.scrollTop = log.scrollHeight;
+    }
+
+    /**
+     * Update status display
+     */
+    function updateStatus(message) {
+      document.getElementById('statusDiv').textContent = 'Status: ' + message;
+    }
+
+    /**
+     * Update listen button appearance
+     */
+    function updateListenButton() {
+      var btn = document.getElementById('listenBtn');
+      if (listening) {
+        btn.textContent = 'Stop Listening';
+        btn.className = 'listening';
+      } else {
+        btn.textContent = 'Start Listening';
+        btn.className = '';
+      }
+    }
+
+    /**
+     * Truncate text for display
+     */
+    function truncateText(text, maxLength) {
+      if (text.length <= maxLength) return text;
+      return text.substring(0, maxLength) + '...';
+    }
+
+    // Handle page unload - cleanup
+    window.addEventListener('beforeunload', function() {
+      if (listening) {
+        stopListening();
+      }
+    });
+  </script>
+</body>
+</html>
