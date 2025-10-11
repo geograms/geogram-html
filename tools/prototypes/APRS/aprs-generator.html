@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APRS WAV Generator v6.0</title>
+    <title>APRS Chat Messenger v9.0</title>
     <style>
         * {
             margin: 0;
@@ -43,74 +43,143 @@
         }
         
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+        }
+
+        .form-group.compact {
+            margin-bottom: 8px;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             color: #ccc;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
         }
 
-        input, select, textarea {
+        input, select {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             border: 2px solid #444;
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 13px;
             font-family: inherit;
             transition: border-color 0.3s;
             background: #1a1a1a;
             color: #fff;
         }
 
-        input:focus, select:focus, textarea:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: #667eea;
         }
 
-        textarea {
-            resize: vertical;
-            min-height: 60px;
-        }
-        
-        .button-group {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-            margin-top: 20px;
+        .chat-container {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 12px;
+            height: 200px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            border: 2px solid #444;
         }
 
-        button {
-            padding: 12px 20px;
+        .chat-message {
+            margin-bottom: 8px;
+            padding: 8px;
+            background: #2d2d2d;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #fff;
+        }
+
+        .chat-message.sent {
+            background: #1e4620;
+            border-left: 3px solid #4CAF50;
+        }
+
+        .chat-message.system {
+            background: #1a1a2e;
+            border-left: 3px solid #667eea;
+            color: #aaa;
+            font-size: 12px;
+        }
+
+        .chat-message .timestamp {
+            color: #888;
+            font-size: 11px;
+            margin-bottom: 4px;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #444;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #1a1a1a;
+            color: #fff;
+            resize: none;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .send-button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
             border: none;
             border-radius: 6px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        .btn-play {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-            font-size: 16px;
-            padding: 14px 24px;
-        }
-
-        .btn-play:hover {
+        .send-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 25px rgba(76, 175, 80, 0.5);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
         }
 
-        .btn-play:disabled {
+        .send-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none;
+        }
+        
+        .config-toggle {
+            background: #444;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background 0.3s;
+        }
+
+        .config-toggle:hover {
+            background: #555;
+        }
+
+        .config-section {
+            display: none;
+            margin-bottom: 12px;
+        }
+
+        .config-section.visible {
+            display: block;
         }
         
         .info-box {
@@ -157,17 +226,6 @@
             background: #555;
         }
         
-        .output {
-            margin-top: 15px;
-            padding: 12px;
-            background: #1a1a1a;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 11px;
-            color: #4CAF50;
-            max-height: 120px;
-            overflow-y: auto;
-        }
         
         @media (max-width: 600px) {
             .container {
@@ -182,51 +240,56 @@
 </head>
 <body>
     <div class="container">
-        <h1>📻 APRS WAV Generator v6.0</h1>
-        <p class="subtitle">Generate AX.25 APRS packets as audio files (Bell 202 AFSK 1200 baud)</p>
-        
-        <div class="form-group">
-            <label>Message Type:</label>
-            <div class="preset-buttons">
-                <button class="preset-btn" onclick="loadPreset('message')">Direct Message</button>
-                <button class="preset-btn" onclick="loadPreset('position')">Position Beacon</button>
-                <button class="preset-btn" onclick="loadPreset('status')">Status Message</button>
+        <h1>📻 APRS Chat Messenger v9.0</h1>
+        <p class="subtitle">Real-time APRS messaging via Bell 202 AFSK 1200 baud</p>
+
+        <button class="config-toggle" onclick="toggleConfig()">⚙️ Settings</button>
+
+        <div id="configSection" class="config-section">
+            <div class="form-group compact">
+                <label for="source">Your Callsign:</label>
+                <input type="text" id="source" placeholder="e.g., CR7BBQ-5" value="CR7BBQ-5">
+            </div>
+
+            <div class="form-group compact">
+                <label for="destination">Destination:</label>
+                <input type="text" id="destination" placeholder="e.g., APRS or K06JZI-5" value="APRS">
+            </div>
+
+            <div class="form-group compact">
+                <label for="path">Digipeater Path:</label>
+                <input type="text" id="path" placeholder="e.g., WIDE1-1,WIDE2-1" value="WIDE1-1">
+            </div>
+
+            <div class="form-group compact">
+                <label>Message Type:</label>
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setMessageType('message')">Direct Message</button>
+                    <button class="preset-btn" onclick="setMessageType('status')">Status</button>
+                    <button class="preset-btn" onclick="setMessageType('position')">Position</button>
+                </div>
             </div>
         </div>
-        
-        <div class="form-group">
-            <label for="source">Your Callsign (Source):</label>
-            <input type="text" id="source" placeholder="e.g., CR7BBQ-5" value="CR7BBQ-5" oninput="clearOutput()">
+
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-message system">
+                <div class="timestamp">System</div>
+                APRS Chat ready. Type a message and press Enter or click Send.
+            </div>
         </div>
-        
-        <div class="form-group">
-            <label for="destination">Destination:</label>
-            <input type="text" id="destination" placeholder="e.g., APRS or K06JZI-5" value="APRS" oninput="clearOutput()">
+
+        <div class="chat-input-container">
+            <input type="text"
+                   id="chatInput"
+                   class="chat-input"
+                   placeholder="Type your message..."
+                   onkeydown="handleChatKeydown(event)">
+            <button class="send-button" onclick="sendMessage()">Send</button>
         </div>
-        
-        <div class="form-group">
-            <label for="path">Digipeater Path:</label>
-            <input type="text" id="path" placeholder="e.g., WIDE1-1,WIDE2-1" value="WIDE1-1" oninput="clearOutput()">
-        </div>
-        
-        <div class="form-group">
-            <label for="message">Message/Information:</label>
-            <textarea id="message" placeholder="Enter your APRS message..." oninput="clearOutput()" onkeydown="handleMessageKeydown(event)">:K06JZI-5 :Hello!</textarea>
-        </div>
-        
-        <div class="button-group">
-            <button class="btn-play" id="playBtn" onclick="generateAndPlay()" style="grid-column: 1 / -1;">▶️ Generate & Play APRS</button>
-        </div>
-        
+
         <div class="info-box">
-            <strong>Tips:</strong><br>
-            • For direct messages: Use format <code>:CALLSIGN :Message</code> (callsign must be 9 chars)<br>
-            • For position: Start with <code>!</code> or <code>=</code><br>
-            • For status: Start with <code>&gt;</code><br>
-            • Europe APRS frequency: 144.800 MHz
+            <strong>Tips:</strong> Messages are sent immediately as APRS packets. Format: plain text for status, <code>:CALL-SSID :msg</code> for direct messages.
         </div>
-        
-        <div id="output" class="output" style="display:none;"></div>
     </div>
     
     <script>
@@ -465,55 +528,111 @@
         let currentAudioBuffer = null;
         let audioContext = null;
         const generator = new APRSWavGenerator();
+        let messageType = 'status'; // default message type
+        let isSending = false; // track if currently sending
+        let messageQueue = []; // queue for pending messages
+        let queueProcessing = false; // track if queue is being processed
         
-        function loadPreset(type) {
-            const source = document.getElementById('source');
-            const destination = document.getElementById('destination');
-            const path = document.getElementById('path');
-            const message = document.getElementById('message');
-            
-            // Clear output when preset is loaded
-            clearOutput();
-            
-            switch(type) {
-                case 'message':
-                    destination.value = 'K06JZI-5';
-                    path.value = 'WIDE1-1';
-                    message.value = ':K06JZI-5 :Hello from the UV-K5!';
-                    break;
-                case 'position':
-                    destination.value = 'APRS';
-                    path.value = 'WIDE1-1,WIDE2-1';
-                    message.value = '!4912.45N/00831.50E-Mobile Station';
-                    break;
-                case 'status':
-                    destination.value = 'APRS';
-                    path.value = 'WIDE1-1';
-                    message.value = '>Testing APRS from JavaScript!';
-                    break;
-            }
+        function toggleConfig() {
+            const configSection = document.getElementById('configSection');
+            configSection.classList.toggle('visible');
+        }
+
+        function setMessageType(type) {
+            messageType = type;
+            addSystemMessage(`Message type set to: ${type}`);
+        }
+
+        function addChatMessage(message, type = 'sent') {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${type}`;
+
+            const timestamp = new Date().toLocaleTimeString();
+            messageDiv.innerHTML = `
+                <div class="timestamp">${timestamp}</div>
+                ${message}
+            `;
+
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function addSystemMessage(message) {
+            addChatMessage(message, 'system');
         }
         
-        function generateAndPlay() {
+        function sendMessage() {
+            const chatInput = document.getElementById('chatInput');
+            const userMessage = chatInput.value.trim();
+
+            if (!userMessage) {
+                return;
+            }
+
             const source = document.getElementById('source').value.trim();
             const destination = document.getElementById('destination').value.trim();
             const path = document.getElementById('path').value.trim();
-            const message = document.getElementById('message').value;
-            
-            if (!source || !destination || !message) {
-                alert('Please fill in all required fields!');
+
+            if (!source || !destination) {
+                addSystemMessage('❌ Please configure your callsign and destination in Settings');
                 return;
             }
-            
+
+            // Format message based on type
+            let aprsMessage = userMessage;
+            if (messageType === 'status') {
+                aprsMessage = '>' + userMessage;
+            } else if (messageType === 'position') {
+                if (!userMessage.startsWith('!') && !userMessage.startsWith('=')) {
+                    aprsMessage = '!' + userMessage;
+                }
+            }
+            // For 'message' type, user should format it themselves with :CALLSIGN :msg
+
+            // Add message to queue
+            messageQueue.push({
+                aprsMessage: aprsMessage,
+                source: source,
+                destination: destination,
+                path: path
+            });
+
+            // Display in chat
+            addChatMessage(aprsMessage);
+
+            // Show queue status if more than 1 message
+            if (messageQueue.length > 1) {
+                addSystemMessage(`📤 Message queued (${messageQueue.length} pending)`);
+            }
+
+            // Clear input
+            chatInput.value = '';
+
+            // Start processing queue if not already processing
+            if (!queueProcessing) {
+                processMessageQueue();
+            }
+        }
+
+        function processMessageQueue() {
+            if (messageQueue.length === 0) {
+                queueProcessing = false;
+                return;
+            }
+
+            queueProcessing = true;
+            const messageData = messageQueue.shift(); // Get next message from queue
+
+            // Generate and send APRS
+            isSending = true;
             try {
-                const output = document.getElementById('output');
-                output.innerHTML = '🎵 Generating APRS packet...<br>';
-                output.style.display = 'block';
-                
-                const wavData = generator.generateWav(source, destination, path, message);
-                
-                output.innerHTML += `✅ WAV file generated!<br>`;
-                output.innerHTML += `📊 Size: ${(wavData.length / 1024).toFixed(2)} KB<br>`;
+                const wavData = generator.generateWav(
+                    messageData.source,
+                    messageData.destination,
+                    messageData.path,
+                    messageData.aprsMessage
+                );
 
                 // Create blob
                 currentAudioBlob = new Blob([wavData], { type: 'audio/wav' });
@@ -522,58 +641,53 @@
                 if (!audioContext) {
                     audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 }
-                
-                // Play using Web Audio API
-                output.innerHTML += '<br>▶️ Decoding audio...<br>';
-                
-                // Decode the WAV file
+
+                // Decode and play the WAV file
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    audioContext.decodeAudioData(e.target.result, 
+                    audioContext.decodeAudioData(e.target.result,
                         function(buffer) {
                             currentAudioBuffer = buffer;
-                            output.innerHTML += '✅ Audio ready!<br>';
-                            
-                            // Play immediately
                             playAudioBuffer();
-                            
-                            // Add a replay button
-                            output.innerHTML += '<br><button onclick="playAudioBuffer()" style="padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; margin-top: 10px;">🔄 Play Again</button><br>';
+                            isSending = false;
+
+                            // Process next message in queue after current one finishes
+                            // We need to wait for the audio to complete before processing next
                         },
                         function(error) {
                             console.error('Decode error:', error);
-                            output.innerHTML += `❌ Audio decode error: ${error.message}<br>`;
-                            output.innerHTML += '💡 Try downloading the file instead.<br>';
+                            addSystemMessage(`❌ Audio decode error: ${error.message}`);
+                            isSending = false;
+                            // Continue with next message even if this one failed
+                            setTimeout(() => processMessageQueue(), 500);
                         }
                     );
                 };
-                
+
                 reader.onerror = function(error) {
                     console.error('FileReader error:', error);
-                    output.innerHTML += '❌ Error reading audio data<br>';
+                    addSystemMessage('❌ Error reading audio data');
+                    isSending = false;
+                    // Continue with next message even if this one failed
+                    setTimeout(() => processMessageQueue(), 500);
                 };
-                
+
                 reader.readAsArrayBuffer(currentAudioBlob);
-                
+
             } catch (error) {
-                const output = document.getElementById('output');
-                output.innerHTML += `❌ Error: ${error.message}<br>`;
-                alert('Error generating WAV: ' + error.message);
+                addSystemMessage(`❌ Error: ${error.message}`);
                 console.error(error);
+                isSending = false;
+                // Continue with next message even if this one failed
+                setTimeout(() => processMessageQueue(), 500);
             }
         }
         
-        function clearOutput() {
-            const output = document.getElementById('output');
-            output.style.display = 'none';
-            output.innerHTML = '';
-        }
-
-        function handleMessageKeydown(event) {
+        function handleChatKeydown(event) {
             // Check if Enter key was pressed (keyCode 13 or key === 'Enter')
             if (event.key === 'Enter' || event.keyCode === 13) {
-                event.preventDefault(); // Prevent newline in textarea
-                generateAndPlay(); // Send the message
+                event.preventDefault();
+                sendMessage();
             }
         }
         
@@ -583,7 +697,12 @@
                 return;
             }
 
-            const output = document.getElementById('output');
+            // ============================================================
+            // EXPERIMENTATION PARAMETER:
+            // ============================================================
+            const DUAL_PLAY_DELAY = 0.8; // Delay before second playback (seconds)
+                                         // Adjust if needed: 0.7, 0.8, 0.9, 1.0
+            // ============================================================
 
             // DUAL PLAYBACK METHOD: Play the same audio twice with slight delay
             // This mimics your manual action of pressing play twice quickly
@@ -594,7 +713,6 @@
             source1.connect(audioContext.destination);
 
             // Second playback - starts slightly after (simulating your second button press)
-            // The delay should be less than 1 second (you said "under a second")
             const source2 = audioContext.createBufferSource();
             source2.buffer = currentAudioBuffer;
             source2.connect(audioContext.destination);
@@ -602,17 +720,19 @@
             // Start first immediately
             source1.start(0);
 
-            // Start second after 0.8 seconds (800ms - adjustable)
-            const delay = 0.8; // 800ms delay before second playback
-            source2.start(audioContext.currentTime + delay);
+            // Start second after the specified delay
+            source2.start(audioContext.currentTime + DUAL_PLAY_DELAY);
 
-            output.innerHTML += `🔊 Playing dual-stream (VOX activation method)...<br>`;
-            output.innerHTML += `⏱️ Second stream starts after ${delay * 1000}ms<br>`;
             console.log('Playing dual audio streams for VOX activation');
 
+            // When playback completes, process next message in queue
             source2.onended = function() {
-                output.innerHTML += '✅ Playback complete!<br>';
                 console.log('Both audio streams finished');
+
+                // Wait a short delay before processing next message (allow VOX to reset)
+                setTimeout(() => {
+                    processMessageQueue();
+                }, 500); // 500ms delay between messages
             };
         }
     </script>
