@@ -18,6 +18,7 @@ window.MessagesModule = window.MessagesModule || {};
     refreshTimer: null,
     messageCountCache: {}, // Track message counts per conversation
     lastMessageTimestamp: {}, // Track last message timestamp per conversation
+    targetGroup: null, // Target group from URL hash (e.g., X2DEVS from #messages@X2DEVS)
   };
 
   // --- Cache helpers ---
@@ -153,7 +154,25 @@ window.MessagesModule = window.MessagesModule || {};
     // Bootstrap: deps + identity + fetch
     try {
       _requireDeps();
+
+      // Check if URL specifies a group (e.g., #messages@X2DEVS)
+      const groupFromHash = _parseHashForGroup();
+
+      // Ensure user has credentials before proceeding
+      if (!_ensureUserCredentials()) {
+        _renderError('Identity setup required. Please refresh and try again.');
+        return;
+      }
+
       _initIdentityFromCache();
+
+      // Load conversations and handle group navigation
+      if (groupFromHash) {
+        console.log('[messages] URL specifies group:', groupFromHash);
+        // Store the target group to open after conversations load
+        _state.targetGroup = groupFromHash;
+      }
+
       _loadConversations();
     } catch (e) {
       _renderError(e.message);
@@ -560,8 +579,25 @@ window.MessagesModule = window.MessagesModule || {};
       _saveToCache('peers', _state.peers);
 
       _renderPeerList(_state.peers);
-      // Auto-open first peer if not already open
-      if (_state.peers.length && !_state.activePeer) {
+
+      // Handle target group from URL or auto-open first peer
+      if (_state.targetGroup) {
+        // Check if target group exists in peers
+        if (_state.peers.includes(_state.targetGroup)) {
+          console.log('[messages] Opening target group from URL:', _state.targetGroup);
+          openConversation(_state.targetGroup);
+        } else {
+          // Group doesn't exist yet, create it
+          console.log('[messages] Target group not found, creating:', _state.targetGroup);
+          _state.peers.unshift(_state.targetGroup);
+          _saveToCache('peers', _state.peers);
+          _state.messageCountCache[_state.targetGroup] = 0;
+          _renderPeerList(_state.peers);
+          openConversation(_state.targetGroup);
+        }
+        _state.targetGroup = null; // Clear after handling
+      } else if (_state.peers.length && !_state.activePeer) {
+        // No target group, just auto-open first peer
         openConversation(_state.peers[0]);
       }
 
@@ -593,6 +629,12 @@ window.MessagesModule = window.MessagesModule || {};
 
   async function openConversation(conversationId) {
     _state.activePeer = conversationId;
+
+    // Update URL hash to reflect current conversation for easy sharing
+    const newHash = `#messages@${conversationId}`;
+    if (window.location.hash !== newHash) {
+      window.location.hash = newHash;
+    }
 
     // Re-render peer list to show active state
     _renderPeerList(_state.peers);
@@ -958,6 +1000,36 @@ window.MessagesModule = window.MessagesModule || {};
     console.log('[messages] Cleaned up');
   }
 
+  // --- Helper to parse URL hash for direct group navigation ---
+  function _parseHashForGroup() {
+    // Parse URL hash like #messages@X2DEVS
+    const hash = window.location.hash;
+    const match = hash.match(/#messages@([A-Za-z0-9_-]+)/);
+    return match ? match[1] : null;
+  }
+
+  function _ensureUserCredentials() {
+    // Check if user has valid credentials
+    const { npub, nsec, callsign } = window.getChatIdentityFromCache() || {};
+
+    if (!callsign || !nsec) {
+      // No credentials found - automatically generate identity
+      console.log('[messages] No credentials found, auto-generating identity...');
+
+      // Use the same function as config.js for automatic identity generation
+      if (typeof window.generateNewNostrAndCallsign === 'function') {
+        window.generateNewNostrAndCallsign();
+        console.log('[messages] Auto-generated new identity');
+        return true;
+      } else {
+        console.error('[messages] generateNewNostrAndCallsign() not available');
+        return false;
+      }
+    }
+
+    return true; // Credentials already exist
+  }
+
   // --- Public API ---
   window.loadMessages = function() {
     if (typeof window.loadTab === 'function') {
@@ -979,7 +1051,7 @@ window.MessagesModule = window.MessagesModule || {};
   // Store functions in module namespace for access
   window.MessagesModule.render = render;
   window.MessagesModule.openConversation = openConversation;
-  
+
   // CRITICAL: Also expose render globally so main.js can find it
   window.render = render;
 
