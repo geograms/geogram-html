@@ -164,7 +164,7 @@ translations.en = {
   'status.devices_connected': 'devices connected',
   'status.open': 'Open',
   'status.missing': 'Missing',
-  'status.local': 'Works offline',
+  'status.local': 'Implemented',
   'status.syncs': 'Syncs via',
   'status.internet': 'Syncs via internet',
   'status.ble': 'Syncs via Bluetooth',
