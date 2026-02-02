@@ -29,7 +29,19 @@
         </button>
         <div class="lang-dropdown">
           <a href="#" onclick="setLanguage('en'); return false;">English</a>
+          <a href="#" onclick="setLanguage('de'); return false;">Deutsch</a>
+          <a href="#" onclick="setLanguage('es'); return false;">Español</a>
           <a href="#" onclick="setLanguage('pt'); return false;">Português</a>
+          <a href="#" onclick="setLanguage('fr'); return false;">Français</a>
+          <a href="#" onclick="setLanguage('it'); return false;">Italiano</a>
+          <a href="#" onclick="setLanguage('nl'); return false;">Nederlands</a>
+          <a href="#" onclick="setLanguage('sv'); return false;">Svenska</a>
+          <a href="#" onclick="setLanguage('he'); return false;">עברית</a>
+          <a href="#" onclick="setLanguage('ar'); return false;">العربية</a>
+          <a href="#" onclick="setLanguage('tr'); return false;">Türkçe</a>
+          <a href="#" onclick="setLanguage('zh'); return false;">中文</a>
+          <a href="#" onclick="setLanguage('ko'); return false;">한국어</a>
+          <a href="#" onclick="setLanguage('ja'); return false;">日本語</a>
         </div>
       </div>
       <button class="mobile-menu-btn" onclick="toggleMenu()">&#9776;</button>
@@ -575,315 +587,8 @@
     </div>
   </footer>
 
+  <script src="resources/translations.js"></script>
   <script>
-    // Translations
-    const translations = {
-      en: {
-        // Navigation
-        'nav.features': 'Features',
-        'nav.apps': 'Apps',
-        'nav.platforms': 'Platforms',
-        'nav.download': 'Download',
-        // Hero
-        'hero.title': 'Communication that <span class="highlight">never depends</span> on the cloud',
-        'hero.subtitle': 'When the internet goes down, most apps stop working. Geogram keeps going. Direct device-to-device communication without servers, accounts, or infrastructure you don\'t control.',
-        'hero.download': 'Download',
-        'hero.github': 'View on GitHub',
-        // Feature: Off-Grid
-        'feature.offgrid.tag': 'Off-Grid First',
-        'feature.offgrid.title': 'Works without internet, servers, or accounts',
-        'feature.offgrid.desc': 'Geogram connects people directly - phone to phone, laptop to laptop - without requiring infrastructure you don\'t control. Messages hop between devices over whatever path works: WiFi when available, Bluetooth when it\'s not, internet when you want global reach.',
-        'feature.offgrid.list1': 'No cloud dependency - everything runs locally',
-        'feature.offgrid.list2': 'Cryptographic NOSTR signatures verify sender identity',
-        'feature.offgrid.list3': 'Multiple transport layers adapt to conditions',
-        'feature.offgrid.list4': 'Store-and-forward for intermittent connectivity',
-        // Feature: Docs
-        'feature.docs.tag': 'Offline Documents',
-        'feature.docs.title': 'Google Docs replacement that works offline',
-        'feature.docs.desc': 'Edit spreadsheets, documents, presentations, and forms entirely offline. Real-time collaboration syncs automatically when connectivity is available. All your data stays on your devices - no cloud storage, no subscriptions, no data harvesting.',
-        'feature.docs.list1': 'Spreadsheets with cells, formulas, and multiple sheets',
-        'feature.docs.list2': 'Rich text documents with headings, lists, tables, images',
-        'feature.docs.list3': 'Presentations with slides, themes, and transitions',
-        'feature.docs.list4': 'Forms with field definitions and signed responses',
-        'feature.docs.list5': 'Sync-based collaboration using NOSTR signatures',
-        // Feature: Blog
-        'feature.blog.tag': 'Mobile Publishing',
-        'feature.blog.title': 'Write and share blogs directly from your phone',
-        'feature.blog.desc': 'Publish blog posts from your phone to your local community or the world. No hosting required, no monthly fees. Your posts sync to nearby devices and become accessible through any connected relay.',
-        'feature.blog.list1': 'Full markdown support with images and attachments',
-        'feature.blog.list2': 'Draft and publish workflow',
-        'feature.blog.list3': 'Comments and likes with NOSTR-verified authenticity',
-        'feature.blog.list4': 'Location tagging displays posts on the map',
-        'feature.blog.list5': 'Web access via relay HTTP API for browser readers',
-        'feature.blog.list6': 'Sneakernet distribution for offline communities',
-        // Feature: Station
-        'feature.station.tag': 'Station Server',
-        'feature.station.title': 'Your device becomes community infrastructure',
-        'feature.station.desc': 'Your phone can be a server. Your laptop can be a server. That old Raspberry Pi collecting dust can be a server. Geogram runs station software on any device, turning personal hardware into community infrastructure. Nothing lives on someone else\'s cloud.',
-        'feature.station.list1': 'Serve content to browsers over WiFi or internet',
-        'feature.station.list2': 'Sync with phones over Bluetooth as people walk by',
-        'feature.station.list3': 'No monthly fees, no account required',
-        'feature.station.list4': 'You own your community\'s infrastructure',
-        // Feature: ESP32
-        'feature.esp32.tag': 'DIY Hardware',
-        'feature.esp32.title': 'Build your own station for $10-20',
-        'feature.esp32.desc': 'For dedicated station hardware, Geogram provides firmware for ESP32 microcontrollers. Buy the components yourself and build a station that runs continuously on minimal power, serving as an always-on infrastructure node for your community network.',
-        'feature.esp32.list1': 'ESP32-C3-mini, ESP32-S3 ePaper, and generic ESP32 supported',
-        'feature.esp32.list2': 'WiFi bridging - connect BLE mesh to WiFi/Internet',
-        'feature.esp32.list3': 'Web-based configuration portal at first boot',
-        'feature.esp32.list4': 'Offline map tile caching on SD card',
-        'feature.esp32.list5': 'OTA updates from GitHub releases',
-        // Feature: Flasher
-        'feature.flasher.tag': 'Mobile Flasher',
-        'feature.flasher.title': 'Flash ESP32 devices directly from your phone',
-        'feature.flasher.desc': 'No computer needed. Connect your ESP32 or Quansheng radio to your Android phone and flash firmware directly. Built-in USB drivers, automatic device detection, and real-time progress tracking.',
-        'feature.flasher.list1': 'Flash ESP32, ESP32-C3, ESP32-S2, ESP32-S3 from Android',
-        'feature.flasher.list2': 'Program Quansheng UV-K5 radios',
-        'feature.flasher.list3': 'USB auto-detection with VID/PID recognition',
-        'feature.flasher.list4': 'No external drivers or tools required',
-        'feature.flasher.list5': 'Device library with photos, datasheets, purchase links',
-        // Feature: Maps
-        'feature.maps.tag': 'Offline Maps',
-        'feature.maps.title': 'Worldwide maps without internet',
-        'feature.maps.desc': 'Geogram includes worldwide satellite imagery and street maps that work without internet. Pan and zoom anywhere on the planet using cached tiles stored locally on your device or synced from a nearby station.',
-        'feature.maps.list1': 'Satellite imagery and street maps worldwide',
-        'feature.maps.list2': 'Stations cache regional tiles for local access',
-        'feature.maps.list3': 'No Google, Mapbox, or API keys required',
-        'feature.maps.list4': 'Events, places, and alerts displayed on map',
-        // Apps section
-        'apps.title': 'Apps for community coordination',
-        'apps.subtitle': 'A suite of apps designed for information sharing and coordination. Each stores data in human-readable formats that sync between devices through any available transport.',
-        'apps.chat.title': 'Chat',
-        'apps.chat.desc': 'Real-time messaging with room-based channels and direct messages. Supports file attachments, voice messages, location sharing, and polls. Works across all connection types.',
-        'apps.blog.title': 'Blog',
-        'apps.blog.desc': 'Long-form publishing with markdown content, drafts, tags, and comments. Create local journalism and community newsletters that work entirely offline.',
-        'apps.work.title': 'Work',
-        'apps.work.desc': 'Offline Google Docs alternative. Spreadsheets, documents, presentations, and forms with real-time collaboration when connected.',
-        'apps.events.title': 'Events',
-        'apps.events.desc': 'Community calendars with event details, locations, media galleries, and participant tracking. Perfect for organizing gatherings and mutual aid distributions.',
-        'apps.places.title': 'Places',
-        'apps.places.desc': 'Geographic points of interest with descriptions and photos. Document water sources, shelter locations, supply caches, or hazards without commercial mapping services.',
-        'apps.alerts.title': 'Alerts',
-        'apps.alerts.desc': 'Geographic alert system with severity classification and community verification. Track hazards from open through resolution with photographic proof.',
-        'apps.inventory.title': 'Inventory',
-        'apps.inventory.desc': 'Asset tracking with 200+ item types for off-grid contexts. Track borrowing, usage, expiration dates. Organize up to 5 levels deep with group sharing.',
-        'apps.wallet.title': 'Wallet',
-        'apps.wallet.desc': 'Track debts and IOUs with cryptographic receipts. Multi-currency support including time. Optional witness signatures for agreements.',
-        'apps.transfer.title': 'Transfer',
-        'apps.transfer.desc': 'Unified download and upload management. Resume capability for interrupted transfers and patient mode that waits up to 30 days for offline peers.',
-        'apps.bot.title': 'Bot',
-        'apps.bot.desc': 'Offline AI assistant using local GGUF models. Provides Q&A, content moderation, semantic search, and voice transcription through Whisper.',
-        'apps.reader.title': 'Reader',
-        'apps.reader.desc': 'Offline content library. RSS feeds, manga with CBZ support, ebooks (EPUB, PDF, TXT). All content cached locally with progress tracking.',
-        'apps.flasher.title': 'Flasher',
-        'apps.flasher.desc': 'Flash ESP32 and Quansheng radios directly from your phone. No computer or external tools needed.',
-        'apps.games.title': 'Games',
-        'apps.games.desc': 'Offline P2P games: Poker, Blackjack, Rommé, Math Challenge. Play via Bluetooth with nearby devices. NOSTR-signed results prevent cheating.',
-        'apps.forum.title': 'Forum',
-        'apps.forum.desc': 'Threaded discussions organized by sections and topics. Persistent, searchable archives of community knowledge with quoting and attachments.',
-        'apps.market.title': 'Market',
-        'apps.market.desc': 'Decentralized commerce with shops, inventory, orders, and verified reviews. Peer-to-peer transactions without payment processors.',
-        'apps.postcards.title': 'Postcards',
-        'apps.postcards.desc': 'Sneakernet message delivery through physical carrier chains. Messages travel via carriers who stamp them with cryptographic proof.',
-        // Under the hood
-        'hood.title': 'Under the hood',
-        'hood.subtitle': 'Everything runs locally. No cloud APIs, no external services, no "phone home" behavior.',
-        'hood.geo.title': 'IP Geolocation',
-        'hood.geo.desc': 'Offline location lookup using DB-IP MMDB database. No external queries.',
-        'hood.ai.title': 'Local AI/ML',
-        'hood.ai.desc': 'ONNX Runtime, TensorFlow Lite, and LLaVA models for on-device inference.',
-        'hood.media.title': 'Media Player',
-        'hood.media.desc': 'libmpv for video and audio playback. Music generation works offline too.',
-        'hood.webrtc.title': 'WebRTC',
-        'hood.webrtc.desc': 'Peer-to-peer connections without relay servers. Direct device-to-device.',
-        'hood.whisper.title': 'Whisper',
-        'hood.whisper.desc': 'Offline speech recognition from tiny to large-v2 models. Voice input anywhere.',
-        'hood.nostr.title': 'NOSTR Signatures',
-        'hood.nostr.desc': 'Cryptographic identity verification across all apps. Tamper-proof content.',
-        // Platforms
-        'platforms.title': 'Runs everywhere',
-        'platforms.subtitle': 'A single codebase for all major platforms. Same data formats, seamless syncing between devices.',
-        'platforms.stable': 'Stable',
-        'platforms.coming': 'Coming soon',
-        // Downloads
-        'downloads.title': 'Download Geogram',
-        'downloads.subtitle': 'Get the latest release for your platform. All downloads are verified and signed.',
-        'downloads.android.desc': 'Full-featured mobile app with BLE mesh, offline maps, and all apps included.',
-        'downloads.linux-desktop.title': 'Linux Desktop',
-        'downloads.linux-desktop.desc': 'Full GUI application for desktop workstations with all features.',
-        'downloads.linux-server.title': 'Linux Server',
-        'downloads.linux-server.desc': 'CLI version for servers and headless relay nodes.',
-        'downloads.esp32.desc': 'Firmware for DIY stations. Flash from Android app or web flasher.',
-        'downloads.fallback': 'Can\'t find what you need? <a href="https://github.com/geograms/geogram/releases">View all releases on GitHub</a>',
-        // CTA
-        'cta.title': 'Start communicating off-grid',
-        'cta.subtitle': 'A larger download that works anywhere, requires no accounts, makes no network requests you didn\'t initiate, and can\'t be degraded by a company changing their API terms.',
-        'cta.download': 'Download Now',
-        'cta.source': 'View Source',
-        // Footer
-        'footer.brand': 'Built for communities that need to communicate when things get difficult: remote areas, disaster response, places where the network is censored or unreliable.',
-        'footer.product': 'Product',
-        'footer.resources': 'Resources',
-        'footer.community': 'Community',
-        'footer.documentation': 'Documentation',
-        'footer.releases': 'Releases',
-        'footer.issues': 'Issues',
-        'footer.discussions': 'Discussions'
-      },
-      pt: {
-        // Navegação
-        'nav.features': 'Funcionalidades',
-        'nav.apps': 'Aplicações',
-        'nav.platforms': 'Plataformas',
-        'nav.download': 'Descarregar',
-        // Hero
-        'hero.title': 'Comunicação <span class="highlight">100% autónoma</span>',
-        'hero.subtitle': 'O Geogram funciona sempre — com ou sem internet. Liga dispositivos diretamente entre si, dá-te controlo total sobre a tua infraestrutura e garante que as tuas mensagens chegam ao destino.',
-        'hero.download': 'Descarregar',
-        'hero.github': 'Ver no GitHub',
-        // Funcionalidade: Off-Grid
-        'feature.offgrid.tag': 'Primeiro Offline',
-        'feature.offgrid.title': 'Funciona sem internet, servidores ou contas',
-        'feature.offgrid.desc': 'O Geogram liga pessoas diretamente — telemóvel com telemóvel, portátil com portátil — sem precisar de infraestruturas fora do teu controlo. As mensagens saltam de dispositivo em dispositivo pelo caminho que funcionar: WiFi quando há, Bluetooth quando não há, internet quando queres alcance global.',
-        'feature.offgrid.list1': 'Zero dependência da cloud — tudo corre no teu dispositivo',
-        'feature.offgrid.list2': 'Assinaturas NOSTR garantem quem enviou cada mensagem',
-        'feature.offgrid.list3': 'Adapta-se automaticamente às condições de rede',
-        'feature.offgrid.list4': 'Guarda e reenvia quando a ligação é intermitente',
-        // Funcionalidade: Docs
-        'feature.docs.tag': 'Documentos Offline',
-        'feature.docs.title': 'Um Google Docs que funciona sem internet',
-        'feature.docs.desc': 'Edita folhas de cálculo, documentos, apresentações e formulários completamente offline. A colaboração em tempo real sincroniza automaticamente quando voltas a ter rede. Os teus dados ficam nos teus dispositivos — sem cloud, sem subscrições, sem venderem os teus dados.',
-        'feature.docs.list1': 'Folhas de cálculo com células, fórmulas e várias folhas',
-        'feature.docs.list2': 'Documentos com formatação rica: títulos, listas, tabelas, imagens',
-        'feature.docs.list3': 'Apresentações com slides, temas e transições',
-        'feature.docs.list4': 'Formulários com campos personalizados e respostas assinadas',
-        'feature.docs.list5': 'Colaboração por sincronização com assinaturas NOSTR',
-        // Funcionalidade: Blog
-        'feature.blog.tag': 'Publicação Móvel',
-        'feature.blog.title': 'Escreve e partilha diretamente do telemóvel',
-        'feature.blog.desc': 'Publica artigos do telemóvel para a tua comunidade ou para o mundo inteiro. Sem precisar de alojamento, sem mensalidades. Os teus textos sincronizam com dispositivos próximos e ficam acessíveis através de qualquer relay ligado à rede.',
-        'feature.blog.list1': 'Markdown completo com imagens e ficheiros anexos',
-        'feature.blog.list2': 'Rascunhos e publicação quando estiveres pronto',
-        'feature.blog.list3': 'Comentários e gostos verificados por NOSTR',
-        'feature.blog.list4': 'Geolocalização mostra os artigos no mapa',
-        'feature.blog.list5': 'Acesso via browser através da API HTTP dos relays',
-        'feature.blog.list6': 'Distribuição física para comunidades sem rede',
-        // Funcionalidade: Station
-        'feature.station.tag': 'Servidor Local',
-        'feature.station.title': 'O teu dispositivo torna-se infraestrutura comunitária',
-        'feature.station.desc': 'O teu telemóvel pode ser um servidor. O teu portátil também. Até aquele Raspberry Pi esquecido na gaveta. O Geogram transforma qualquer dispositivo numa estação que serve a comunidade. Nada fica na cloud de terceiros.',
-        'feature.station.list1': 'Serve conteúdo a browsers por WiFi ou internet',
-        'feature.station.list2': 'Sincroniza com telemóveis via Bluetooth à passagem',
-        'feature.station.list3': 'Sem mensalidades, sem precisar de conta',
-        'feature.station.list4': 'A infraestrutura da tua comunidade é tua',
-        // Funcionalidade: ESP32
-        'feature.esp32.tag': 'Hardware DIY',
-        'feature.esp32.title': 'Monta a tua estação por 10-20€',
-        'feature.esp32.desc': 'Para hardware dedicado, o Geogram tem firmware para microcontroladores ESP32. Compras os componentes e montas uma estação que funciona 24/7 com consumo mínimo — um nó sempre ligado para a rede da tua comunidade.',
-        'feature.esp32.list1': 'Suporta ESP32-C3-mini, ESP32-S3 ePaper e ESP32 genérico',
-        'feature.esp32.list2': 'Bridge WiFi — liga a mesh Bluetooth à internet',
-        'feature.esp32.list3': 'Portal web de configuração no primeiro arranque',
-        'feature.esp32.list4': 'Cache de mapas offline em cartão SD',
-        'feature.esp32.list5': 'Actualizações automáticas via GitHub',
-        // Funcionalidade: Flasher
-        'feature.flasher.tag': 'Programador Móvel',
-        'feature.flasher.title': 'Programa ESP32 diretamente do telemóvel',
-        'feature.flasher.desc': 'Sem precisar de computador. Liga o ESP32 ou rádio Quansheng ao telemóvel Android e grava o firmware. Drivers USB integrados, detecção automática e progresso em tempo real.',
-        'feature.flasher.list1': 'Grava ESP32, ESP32-C3, ESP32-S2 e ESP32-S3 via Android',
-        'feature.flasher.list2': 'Programa rádios Quansheng UV-K5',
-        'feature.flasher.list3': 'Detecção automática por USB VID/PID',
-        'feature.flasher.list4': 'Não precisa de drivers nem ferramentas externas',
-        'feature.flasher.list5': 'Biblioteca de dispositivos com fotos e links de compra',
-        // Funcionalidade: Maps
-        'feature.maps.tag': 'Mapas Offline',
-        'feature.maps.title': 'Mapas do mundo inteiro sem internet',
-        'feature.maps.desc': 'O Geogram inclui imagens de satélite e mapas de ruas que funcionam offline. Navega e amplia qualquer ponto do planeta usando tiles guardados no dispositivo ou sincronizados de uma estação próxima.',
-        'feature.maps.list1': 'Satélite e mapas de ruas de todo o mundo',
-        'feature.maps.list2': 'Estações guardam tiles regionais para acesso local',
-        'feature.maps.list3': 'Sem Google, Mapbox ou chaves de API',
-        'feature.maps.list4': 'Eventos, locais e alertas visíveis no mapa',
-        // Secção Apps
-        'apps.title': 'Apps para organizar comunidades',
-        'apps.subtitle': 'Um conjunto de aplicações pensadas para partilha de informação e coordenação. Todas guardam dados em formatos legíveis que sincronizam entre dispositivos por qualquer via disponível.',
-        'apps.chat.title': 'Chat',
-        'apps.chat.desc': 'Mensagens em tempo real com canais e conversas privadas. Anexa ficheiros, envia áudio, partilha localização e cria sondagens. Funciona com qualquer tipo de ligação.',
-        'apps.blog.title': 'Blog',
-        'apps.blog.desc': 'Publicação de textos longos com markdown, rascunhos, etiquetas e comentários. Cria jornalismo local e newsletters que funcionam totalmente offline.',
-        'apps.work.title': 'Trabalho',
-        'apps.work.desc': 'Alternativa offline ao Google Docs. Folhas de cálculo, documentos, apresentações e formulários com colaboração em tempo real quando há rede.',
-        'apps.events.title': 'Eventos',
-        'apps.events.desc': 'Calendários comunitários com detalhes, localizações, galerias de fotos e lista de participantes. Ideal para organizar encontros e distribuições solidárias.',
-        'apps.places.title': 'Locais',
-        'apps.places.desc': 'Pontos de interesse com descrições e fotos. Documenta fontes de água, abrigos, depósitos de mantimentos ou perigos — sem depender de serviços comerciais.',
-        'apps.alerts.title': 'Alertas',
-        'apps.alerts.desc': 'Sistema de alertas geográficos com níveis de gravidade e verificação comunitária. Acompanha perigos desde a abertura até à resolução, com provas fotográficas.',
-        'apps.inventory.title': 'Inventário',
-        'apps.inventory.desc': 'Gestão de bens com mais de 200 tipos de itens para contextos off-grid. Controla empréstimos, utilização e validades. Organiza até 5 níveis com partilha de grupo.',
-        'apps.wallet.title': 'Carteira',
-        'apps.wallet.desc': 'Regista dívidas e créditos com recibos criptográficos. Suporta várias moedas, incluindo tempo. Opção de assinaturas de testemunhas para acordos.',
-        'apps.transfer.title': 'Transferências',
-        'apps.transfer.desc': 'Gestão unificada de downloads e uploads. Retoma transferências interrompidas e modo paciente que espera até 30 dias por dispositivos offline.',
-        'apps.bot.title': 'Bot',
-        'apps.bot.desc': 'Assistente de IA offline com modelos GGUF locais. Responde a perguntas, modera conteúdo, pesquisa semanticamente e transcreve voz com Whisper.',
-        'apps.reader.title': 'Leitor',
-        'apps.reader.desc': 'Biblioteca de conteúdos offline. Feeds RSS, manga em CBZ, ebooks (EPUB, PDF, TXT). Tudo guardado localmente com registo de progresso.',
-        'apps.flasher.title': 'Programador',
-        'apps.flasher.desc': 'Grava firmware em ESP32 e rádios Quansheng diretamente do telemóvel. Sem computador nem ferramentas externas.',
-        'apps.games.title': 'Jogos',
-        'apps.games.desc': 'Jogos P2P offline: Poker, Blackjack, Rummy, Desafio Matemático. Joga via Bluetooth com quem estiver perto. Resultados assinados impedem batota.',
-        'apps.forum.title': 'Fórum',
-        'apps.forum.desc': 'Discussões organizadas por secções e tópicos. Arquivos pesquisáveis de conhecimento comunitário com citações e anexos.',
-        'apps.market.title': 'Mercado',
-        'apps.market.desc': 'Comércio descentralizado com lojas, stock, encomendas e avaliações verificadas. Transacções directas sem intermediários de pagamento.',
-        'apps.postcards.title': 'Postais',
-        'apps.postcards.desc': 'Entrega de mensagens por portadores físicos. As mensagens viajam de mão em mão, cada portador carimba-as com prova criptográfica.',
-        // Por baixo do capô
-        'hood.title': 'Por baixo do capô',
-        'hood.subtitle': 'Tudo corre localmente. Sem APIs na cloud, sem serviços externos, sem telefonemas para casa.',
-        'hood.geo.title': 'Geolocalização IP',
-        'hood.geo.desc': 'Localização offline com base de dados DB-IP MMDB. Sem consultas externas.',
-        'hood.ai.title': 'IA/ML Local',
-        'hood.ai.desc': 'ONNX Runtime, TensorFlow Lite e modelos LLaVA para inferência no dispositivo.',
-        'hood.media.title': 'Leitor Multimédia',
-        'hood.media.desc': 'libmpv para vídeo e áudio. Geração de música também funciona offline.',
-        'hood.webrtc.title': 'WebRTC',
-        'hood.webrtc.desc': 'Ligações ponto-a-ponto sem servidores relay. Directo entre dispositivos.',
-        'hood.whisper.title': 'Whisper',
-        'hood.whisper.desc': 'Reconhecimento de voz offline, desde modelos tiny até large-v2. Dita em qualquer lado.',
-        'hood.nostr.title': 'Assinaturas NOSTR',
-        'hood.nostr.desc': 'Verificação criptográfica de identidade em todas as apps. Conteúdo à prova de manipulação.',
-        // Plataformas
-        'platforms.title': 'Corre em todo o lado',
-        'platforms.subtitle': 'Uma única base de código para todas as plataformas. Mesmos formatos, sincronização perfeita entre dispositivos.',
-        'platforms.stable': 'Estável',
-        'platforms.coming': 'Em breve',
-        // Downloads
-        'downloads.title': 'Descarregar Geogram',
-        'downloads.subtitle': 'Obtém a versão mais recente para a tua plataforma. Todos os ficheiros são verificados e assinados.',
-        'downloads.android.desc': 'App completa com mesh Bluetooth, mapas offline e todas as aplicações incluídas.',
-        'downloads.linux-desktop.title': 'Linux Desktop',
-        'downloads.linux-desktop.desc': 'Aplicação GUI completa para estações de trabalho desktop.',
-        'downloads.linux-server.title': 'Linux Server',
-        'downloads.linux-server.desc': 'Versão CLI para servidores e nós relay sem interface gráfica.',
-        'downloads.esp32.desc': 'Firmware para estações DIY. Grava pela app Android ou pelo programador web.',
-        'downloads.fallback': 'Não encontras o que procuras? <a href="https://github.com/geograms/geogram/releases">Ver todas as versões no GitHub</a>',
-        // CTA
-        'cta.title': 'Começa a comunicar sem depender de ninguém',
-        'cta.subtitle': 'Um download maior, mas que funciona em qualquer lado. Sem contas, sem pedidos de rede que não iniciaste, sem risco de uma empresa mudar os termos e estragar tudo.',
-        'cta.download': 'Descarregar Agora',
-        'cta.source': 'Ver Código-fonte',
-        // Footer
-        'footer.brand': 'Feito para comunidades que precisam de comunicar quando as coisas se complicam: zonas remotas, resposta a catástrofes, locais com rede censurada ou instável.',
-        'footer.product': 'Produto',
-        'footer.resources': 'Recursos',
-        'footer.community': 'Comunidade',
-        'footer.documentation': 'Documentação',
-        'footer.releases': 'Versões',
-        'footer.issues': 'Problemas',
-        'footer.discussions': 'Discussões'
-      }
-    };
-
     let currentLang = 'en';
 
     function applyTranslations(lang) {
@@ -911,28 +616,14 @@
     }
 
     function setLanguage(lang) {
-      applyTranslations(lang);
+      loadLanguage(lang, function() {
+        applyTranslations(lang);
+      });
       toggleLangMenu();
     }
 
     function toggleLangMenu() {
       document.querySelector('.lang-dropdown').classList.toggle('active');
-    }
-
-    function detectLanguage() {
-      // Check saved preference first
-      const saved = localStorage.getItem('geogram-lang');
-      if (saved && translations[saved]) {
-        return saved;
-      }
-
-      // Check browser language
-      const browserLang = navigator.language || navigator.userLanguage;
-      if (browserLang && browserLang.toLowerCase().startsWith('pt')) {
-        return 'pt';
-      }
-
-      return 'en';
     }
 
     // Close language menu when clicking outside
@@ -944,6 +635,42 @@
 
     function toggleMenu() {
       document.querySelector('.nav-links').classList.toggle('active');
+    }
+
+    // Filter language dropdown to show only detected language + English
+    function filterLanguageDropdown() {
+      const browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+      let detectedLang = null;
+
+      // Detect browser language (same logic as translations.js but without saved preference)
+      if (browserLang.startsWith('de')) detectedLang = 'de';
+      else if (browserLang.startsWith('pt')) detectedLang = 'pt';
+      else if (browserLang.startsWith('es')) detectedLang = 'es';
+      else if (browserLang.startsWith('fr')) detectedLang = 'fr';
+      else if (browserLang.startsWith('it')) detectedLang = 'it';
+      else if (browserLang.startsWith('nl')) detectedLang = 'nl';
+      else if (browserLang.startsWith('sv')) detectedLang = 'sv';
+      else if (browserLang.startsWith('he') || browserLang.startsWith('iw')) detectedLang = 'he';
+      else if (browserLang.startsWith('ar')) detectedLang = 'ar';
+      else if (browserLang.startsWith('tr')) detectedLang = 'tr';
+      else if (browserLang.startsWith('zh')) detectedLang = 'zh';
+      else if (browserLang.startsWith('ko')) detectedLang = 'ko';
+      else if (browserLang.startsWith('ja')) detectedLang = 'ja';
+
+      // If detected language is English or no match, show all options
+      if (!detectedLang) return;
+
+      // Hide all options except English and the detected language
+      document.querySelectorAll('.lang-dropdown a').forEach(link => {
+        const onclick = link.getAttribute('onclick') || '';
+        const langMatch = onclick.match(/setLanguage\('(\w+)'\)/);
+        if (langMatch) {
+          const linkLang = langMatch[1];
+          if (linkLang !== 'en' && linkLang !== detectedLang) {
+            link.style.display = 'none';
+          }
+        }
+      });
     }
 
     // Fetch latest GitHub release and update download links
@@ -1004,9 +731,14 @@
 
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', () => {
-      // Detect and apply language
+      // Filter language dropdown based on browser language
+      filterLanguageDropdown();
+
+      // Detect and load language
       const lang = detectLanguage();
-      applyTranslations(lang);
+      loadLanguage(lang, function() {
+        applyTranslations(lang);
+      });
 
       // Fetch GitHub releases
       fetchLatestRelease();
