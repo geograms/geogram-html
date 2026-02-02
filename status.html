@@ -283,6 +283,30 @@
       font-size: 0.75rem;
       color: var(--text-muted);
     }
+
+    /* Anchor links on section titles */
+    .section-title {
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title .anchor-link {
+      position: absolute;
+      left: -1.5rem;
+      color: var(--text-muted);
+      opacity: 0;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+      font-weight: normal;
+    }
+
+    .section-title:hover .anchor-link {
+      opacity: 1;
+    }
+
+    .section-title .anchor-link:hover {
+      color: var(--primary);
+    }
   </style>
 </head>
 <body>
@@ -332,9 +356,9 @@
   </section>
 
   <!-- Internet Stations Section -->
-  <section class="status-section">
+  <section class="status-section" id="stations">
     <div class="container">
-      <h2 data-i18n="status.stations">Internet Stations</h2>
+      <h2 class="section-title"><a href="#stations" class="anchor-link">#</a><span data-i18n="status.stations">Internet Stations</span></h2>
       <div class="stations-grid" id="stations-grid">
         <!-- Stations will be loaded dynamically -->
       </div>
@@ -342,9 +366,9 @@
   </section>
 
   <!-- Apps Status Section -->
-  <section class="status-section">
+  <section class="status-section" id="apps">
     <div class="container">
-      <h2 data-i18n="status.apps">Apps Status</h2>
+      <h2 class="section-title"><a href="#apps" class="anchor-link">#</a><span data-i18n="status.apps">Apps Status</span></h2>
       <p style="margin-bottom: 2rem; color: var(--text-muted); max-width: 800px;">
         Each app is under intensive development. Not all features for each app are yet implemented, and feedback from users is important. The table below helps to understand what is already implemented in broad terms and what isn't. Please let us know if you find any bugs or have any feedback at: <a href="https://github.com/geograms/geogram/issues" target="_blank" style="color: var(--primary); text-decoration: underline;">https://github.com/geograms/geogram/issues</a>
       </p>
@@ -357,9 +381,9 @@
   </section>
 
   <!-- Focus Area Section -->
-  <section class="status-section">
+  <section class="status-section" id="focus">
     <div class="container">
-      <h2>Focus Area</h2>
+      <h2 class="section-title"><a href="#focus" class="anchor-link">#</a>Focus Area</h2>
       <p style="color: var(--text-muted); margin-bottom: 1rem;"><em>Development priorities through March 2026</em></p>
 
       <div style="max-width: 800px; color: var(--text-secondary); line-height: 1.7;">
