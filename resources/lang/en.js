@@ -169,7 +169,7 @@ translations.en = {
   'status.internet': 'Syncs via internet',
   'status.ble': 'Syncs via Bluetooth',
   'status.feedback': 'Can receive feedback',
-  'status.subscribe': 'Subscribe to updates',
+  'status.subscribe': 'Reachable from Internet',
   'status.feature': 'Feature',
   'status.description': 'Description',
   'status.docs': 'Docs'
