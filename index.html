@@ -1,129 +1,1038 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>geogram</title>
-  <link rel="stylesheet" href="lib/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    html, body {
-      background: #000 !important;
-    }
-    /* Loading indicator */
-    #loading {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #000 !important;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
-    .spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geogram - Off-Grid Communication</title>
+  <meta name="description" content="When the internet goes down, Geogram keeps going. Direct device-to-device communication without servers, accounts, or infrastructure you don't control.">
+  <link rel="stylesheet" href="resources/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- Loading screen -->
-  <div id="loading">
-    <div class="spinner"></div>
-  </div>
-
-  <canvas id="wave-bg"></canvas>
-
-  <div class="header-wrapper">
-    <div class="logo-block">
-      <a href="#" id="home-link">
-        <span class="radio-brand">GEOGRAM</span>
-      </a>
-    </div>
-    <div class="topbar">
-      <div class="tabs-container">
-        <div class="tabs" id="desktopTabs"></div>
-        <button class="burger-menu" id="burgerBtn" aria-label="Menu">
-          <i class="fas fa-bars"></i>
+  <!-- Navigation -->
+  <nav>
+    <div class="container">
+      <a href="#" class="logo">Geogram</a>
+      <ul class="nav-links">
+        <li><a href="#features" data-i18n="nav.features">Features</a></li>
+        <li><a href="#apps" data-i18n="nav.apps">Apps</a></li>
+        <li><a href="#platforms" data-i18n="nav.platforms">Platforms</a></li>
+        <li><a href="#downloads" class="nav-cta" data-i18n="nav.download">Download</a></li>
+      </ul>
+      <div class="lang-selector">
+        <button class="lang-btn" onclick="toggleLangMenu()">
+          <span class="lang-current">EN</span>
+          <span class="lang-arrow">&#9662;</span>
         </button>
-        <div class="mobile-tabs" id="mobileTabs"></div>
+        <div class="lang-dropdown">
+          <a href="#" onclick="setLanguage('en'); return false;">English</a>
+          <a href="#" onclick="setLanguage('pt'); return false;">Português</a>
+        </div>
+      </div>
+      <button class="mobile-menu-btn" onclick="toggleMenu()">&#9776;</button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <h1 data-i18n="hero.title" data-i18n-html="true">Communication that <span class="highlight">never depends</span> on the cloud</h1>
+          <p class="subtitle" data-i18n="hero.subtitle">When the internet goes down, most apps stop working. Geogram keeps going. Direct device-to-device communication without servers, accounts, or infrastructure you don't control.</p>
+          <div class="btn-group">
+            <a href="#downloads" class="btn btn-primary" data-i18n="hero.download">Download</a>
+            <a href="https://github.com/geograms/geogram" class="btn btn-secondary" data-i18n="hero.github">View on GitHub</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <img src="resources/images/hero-communication.png" alt="Off-grid satellite communication" style="width: 100%; max-width: 450px; border-radius: 16px;">
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div id="content" class="main-layout">
-    <div class="left-column">
-      <h2></h2>
-      <p></p>
+  <!-- Feature: Off-Grid -->
+  <section id="features" class="feature-section">
+    <div class="container">
+      <div class="feature-grid">
+        <div class="feature-content">
+          <span class="feature-tag" data-i18n="feature.offgrid.tag">Off-Grid First</span>
+          <h2 data-i18n="feature.offgrid.title">Works without internet, servers, or accounts</h2>
+          <p data-i18n="feature.offgrid.desc">Geogram connects people directly - phone to phone, laptop to laptop - without requiring infrastructure you don't control. Messages hop between devices over whatever path works: WiFi when available, Bluetooth when it's not, internet when you want global reach.</p>
+          <ul class="feature-list">
+            <li data-i18n="feature.offgrid.list1">No cloud dependency - everything runs locally</li>
+            <li data-i18n="feature.offgrid.list2">Cryptographic NOSTR signatures verify sender identity</li>
+            <li data-i18n="feature.offgrid.list3">Multiple transport layers adapt to conditions</li>
+            <li data-i18n="feature.offgrid.list4">Store-and-forward for intermittent connectivity</li>
+          </ul>
+        </div>
+        <div class="feature-visual">
+          <img src="resources/images/feature-network.webp" alt="Peer-to-peer network" class="feature-image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
+        </div>
+      </div>
     </div>
-    <div class="right-column">
-      <p></p>
+  </section>
+
+  <!-- Feature: Offline Docs -->
+  <section class="feature-section">
+    <div class="container">
+      <div class="feature-grid reverse">
+        <div class="feature-content">
+          <span class="feature-tag" data-i18n="feature.docs.tag">Offline Documents</span>
+          <h2 data-i18n="feature.docs.title">Google Docs replacement that works offline</h2>
+          <p data-i18n="feature.docs.desc">Edit spreadsheets, documents, presentations, and forms entirely offline. Real-time collaboration syncs automatically when connectivity is available. All your data stays on your devices - no cloud storage, no subscriptions, no data harvesting.</p>
+          <ul class="feature-list">
+            <li data-i18n="feature.docs.list1">Spreadsheets with cells, formulas, and multiple sheets</li>
+            <li data-i18n="feature.docs.list2">Rich text documents with headings, lists, tables, images</li>
+            <li data-i18n="feature.docs.list3">Presentations with slides, themes, and transitions</li>
+            <li data-i18n="feature.docs.list4">Forms with field definitions and signed responses</li>
+            <li data-i18n="feature.docs.list5">Sync-based collaboration using NOSTR signatures</li>
+          </ul>
+        </div>
+        <div class="feature-visual">
+          <img src="resources/images/feature-offline-docs.png" alt="Offline document editing" class="feature-image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
+  <!-- Feature: Blog -->
+  <section class="feature-section">
+    <div class="container">
+      <div class="feature-grid">
+        <div class="feature-content">
+          <span class="feature-tag" data-i18n="feature.blog.tag">Mobile Publishing</span>
+          <h2 data-i18n="feature.blog.title">Write and share blogs directly from your phone</h2>
+          <p data-i18n="feature.blog.desc">Publish blog posts from your phone to your local community or the world. No hosting required, no monthly fees. Your posts sync to nearby devices and become accessible through any connected relay.</p>
+          <ul class="feature-list">
+            <li data-i18n="feature.blog.list1">Full markdown support with images and attachments</li>
+            <li data-i18n="feature.blog.list2">Draft and publish workflow</li>
+            <li data-i18n="feature.blog.list3">Comments and likes with NOSTR-verified authenticity</li>
+            <li data-i18n="feature.blog.list4">Location tagging displays posts on the map</li>
+            <li data-i18n="feature.blog.list5">Web access via relay HTTP API for browser readers</li>
+            <li data-i18n="feature.blog.list6">Sneakernet distribution for offline communities</li>
+          </ul>
+        </div>
+        <div class="feature-visual">
+          <img src="resources/images/feature-blog.png" alt="Mobile blog publishing" class="feature-image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-  <script src="lib/internal.config.js"></script>
-  <script src="lib/nostr.bundle.js"></script>
-  <script src="lib/api_nostr.js"></script>
-  <script src="lib/messages-lib.js"></script>
-  <script src="lib/backup.js"></script>
-  <script src="lib/activity/chat.js"></script>
-  <!-- <script src="lib/ping.js"></script> 
-  <script src="lib/recordings.js"></script> -->
-  <script src="lib/activity/nearby.js"></script>
-  <script src="lib/activity/map_load_igates.js"></script>
-  <!-- <script src="lib/sms.js"></script>
-  <script src="lib/morsecode.js"></script>
-  <script src="lib/programming.js"></script>
-  <script src="lib/navigation.js"></script>-->
+  <!-- Feature: Station -->
+  <section class="feature-section">
+    <div class="container">
+      <div class="feature-grid reverse">
+        <div class="feature-content">
+          <span class="feature-tag" data-i18n="feature.station.tag">Station Server</span>
+          <h2 data-i18n="feature.station.title">Your device becomes community infrastructure</h2>
+          <p data-i18n="feature.station.desc">Your phone can be a server. Your laptop can be a server. That old Raspberry Pi collecting dust can be a server. Geogram runs station software on any device, turning personal hardware into community infrastructure. Nothing lives on someone else's cloud.</p>
+          <ul class="feature-list">
+            <li data-i18n="feature.station.list1">Serve content to browsers over WiFi or internet</li>
+            <li data-i18n="feature.station.list2">Sync with phones over Bluetooth as people walk by</li>
+            <li data-i18n="feature.station.list3">No monthly fees, no account required</li>
+            <li data-i18n="feature.station.list4">You own your community's infrastructure</li>
+          </ul>
+        </div>
+        <div class="feature-visual">
+          <img src="resources/images/feature-data-sync.png" alt="Data synchronization" class="feature-image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <!--
-    The Messages page is now loaded on demand via the `loadTab()`
-    helper defined in `main.js` (see `additionalPages`).  It is no
-    longer necessary to preload the Messages script here.
-  -->
+  <!-- Feature: ESP32 -->
+  <section class="feature-section">
+    <div class="container">
+      <div class="feature-grid">
+        <div class="feature-content">
+          <span class="feature-tag" data-i18n="feature.esp32.tag">DIY Hardware</span>
+          <h2 data-i18n="feature.esp32.title">Build your own station for $10-20</h2>
+          <p data-i18n="feature.esp32.desc">For dedicated station hardware, Geogram provides firmware for ESP32 microcontrollers. Buy the components yourself and build a station that runs continuously on minimal power, serving as an always-on infrastructure node for your community network.</p>
+          <ul class="feature-list">
+            <li data-i18n="feature.esp32.list1">ESP32-C3-mini, ESP32-S3 ePaper, and generic ESP32 supported</li>
+            <li data-i18n="feature.esp32.list2">WiFi bridging - connect BLE mesh to WiFi/Internet</li>
+            <li data-i18n="feature.esp32.list3">Web-based configuration portal at first boot</li>
+            <li data-i18n="feature.esp32.list4">Offline map tile caching on SD card</li>
+            <li data-i18n="feature.esp32.list5">OTA updates from GitHub releases</li>
+          </ul>
+        </div>
+        <div class="feature-visual">
+          <svg viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 80%; height: auto;">
+            <!-- ESP32 board -->
+            <rect x="40" y="35" width="120" height="80" rx="4" stroke="#f5a623" stroke-width="2" fill="none"/>
+            <!-- Chip -->
+            <rect x="70" y="55" width="40" height="40" rx="2" fill="rgba(245,166,35,0.3)" stroke="#f5a623" stroke-width="1"/>
+            <!-- Pins -->
+            <line x1="50" y1="35" x2="50" y2="25" stroke="#f5a623" stroke-width="2"/>
+            <line x1="70" y1="35" x2="70" y2="25" stroke="#f5a623" stroke-width="2"/>
+            <line x1="90" y1="35" x2="90" y2="25" stroke="#f5a623" stroke-width="2"/>
+            <line x1="110" y1="35" x2="110" y2="25" stroke="#f5a623" stroke-width="2"/>
+            <line x1="130" y1="35" x2="130" y2="25" stroke="#f5a623" stroke-width="2"/>
+            <line x1="150" y1="35" x2="150" y2="25" stroke="#f5a623" stroke-width="2"/>
+            <line x1="50" y1="115" x2="50" y2="125" stroke="#f5a623" stroke-width="2"/>
+            <line x1="70" y1="115" x2="70" y2="125" stroke="#f5a623" stroke-width="2"/>
+            <line x1="90" y1="115" x2="90" y2="125" stroke="#f5a623" stroke-width="2"/>
+            <line x1="110" y1="115" x2="110" y2="125" stroke="#f5a623" stroke-width="2"/>
+            <line x1="130" y1="115" x2="130" y2="125" stroke="#f5a623" stroke-width="2"/>
+            <line x1="150" y1="115" x2="150" y2="125" stroke="#f5a623" stroke-width="2"/>
+            <!-- Antenna connector -->
+            <circle cx="140" cy="65" r="8" stroke="#f5a623" stroke-width="1.5" fill="none"/>
+            <!-- LED indicators -->
+            <circle cx="55" cy="50" r="3" fill="#f5a623"/>
+            <circle cx="65" cy="50" r="3" fill="#f5a623" opacity="0.5"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <script src="lib/main.js"></script>
+  <!-- Feature: Flash from Phone -->
+  <section class="feature-section">
+    <div class="container">
+      <div class="feature-grid reverse">
+        <div class="feature-content">
+          <span class="feature-tag" data-i18n="feature.flasher.tag">Mobile Flasher</span>
+          <h2 data-i18n="feature.flasher.title">Flash ESP32 devices directly from your phone</h2>
+          <p data-i18n="feature.flasher.desc">No computer needed. Connect your ESP32 or Quansheng radio to your Android phone and flash firmware directly. Built-in USB drivers, automatic device detection, and real-time progress tracking.</p>
+          <ul class="feature-list">
+            <li data-i18n="feature.flasher.list1">Flash ESP32, ESP32-C3, ESP32-S2, ESP32-S3 from Android</li>
+            <li data-i18n="feature.flasher.list2">Program Quansheng UV-K5 radios</li>
+            <li data-i18n="feature.flasher.list3">USB auto-detection with VID/PID recognition</li>
+            <li data-i18n="feature.flasher.list4">No external drivers or tools required</li>
+            <li data-i18n="feature.flasher.list5">Device library with photos, datasheets, purchase links</li>
+          </ul>
+        </div>
+        <div class="feature-visual">
+          <img src="resources/images/feature-esp32.png" alt="Device flashing" class="feature-image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature: Maps -->
+  <section class="feature-section">
+    <div class="container">
+      <div class="feature-grid">
+        <div class="feature-content">
+          <span class="feature-tag" data-i18n="feature.maps.tag">Offline Maps</span>
+          <h2 data-i18n="feature.maps.title">Worldwide maps without internet</h2>
+          <p data-i18n="feature.maps.desc">Geogram includes worldwide satellite imagery and street maps that work without internet. Pan and zoom anywhere on the planet using cached tiles stored locally on your device or synced from a nearby station.</p>
+          <ul class="feature-list">
+            <li data-i18n="feature.maps.list1">Satellite imagery and street maps worldwide</li>
+            <li data-i18n="feature.maps.list2">Stations cache regional tiles for local access</li>
+            <li data-i18n="feature.maps.list3">No Google, Mapbox, or API keys required</li>
+            <li data-i18n="feature.maps.list4">Events, places, and alerts displayed on map</li>
+          </ul>
+        </div>
+        <div class="feature-visual">
+          <svg viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 80%; height: auto;">
+            <!-- Map frame -->
+            <rect x="20" y="15" width="160" height="120" rx="4" stroke="#f5a623" stroke-width="2" fill="none"/>
+            <!-- Grid lines -->
+            <line x1="20" y1="55" x2="180" y2="55" stroke="rgba(245,166,35,0.2)" stroke-width="1"/>
+            <line x1="20" y1="95" x2="180" y2="95" stroke="rgba(245,166,35,0.2)" stroke-width="1"/>
+            <line x1="73" y1="15" x2="73" y2="135" stroke="rgba(245,166,35,0.2)" stroke-width="1"/>
+            <line x1="127" y1="15" x2="127" y2="135" stroke="rgba(245,166,35,0.2)" stroke-width="1"/>
+            <!-- Map markers -->
+            <circle cx="60" cy="45" r="6" fill="#f5a623"/>
+            <circle cx="100" cy="75" r="8" fill="#f5a623"/>
+            <circle cx="145" cy="60" r="5" fill="#f5a623" opacity="0.7"/>
+            <circle cx="85" cy="110" r="5" fill="#f5a623" opacity="0.7"/>
+            <circle cx="150" cy="105" r="6" fill="#f5a623" opacity="0.8"/>
+            <!-- Connection lines between markers -->
+            <line x1="60" y1="45" x2="100" y2="75" stroke="rgba(245,166,35,0.4)" stroke-width="1" stroke-dasharray="3"/>
+            <line x1="100" y1="75" x2="145" y2="60" stroke="rgba(245,166,35,0.4)" stroke-width="1" stroke-dasharray="3"/>
+            <line x1="100" y1="75" x2="85" y2="110" stroke="rgba(245,166,35,0.4)" stroke-width="1" stroke-dasharray="3"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Apps Section -->
+  <section id="apps" class="apps-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 data-i18n="apps.title">Apps for community coordination</h2>
+        <p data-i18n="apps.subtitle">A suite of apps designed for information sharing and coordination. Each stores data in human-readable formats that sync between devices through any available transport.</p>
+      </div>
+      <div class="apps-grid">
+        <div class="app-card">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </div>
+          <h3 data-i18n="apps.chat.title">Chat</h3>
+          <p data-i18n="apps.chat.desc">Real-time messaging with room-based channels and direct messages. Supports file attachments, voice messages, location sharing, and polls. Works across all connection types.</p>
+        </div>
+        <div class="app-card">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
+          <h3 data-i18n="apps.blog.title">Blog</h3>
+          <p data-i18n="apps.blog.desc">Long-form publishing with markdown content, drafts, tags, and comments. Create local journalism and community newsletters that work entirely offline.</p>
+        </div>
+        <div class="app-card">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          </div>
+          <h3 data-i18n="apps.work.title">Work</h3>
+          <p data-i18n="apps.work.desc">Offline Google Docs alternative. Spreadsheets, documents, presentations, and forms with real-time collaboration when connected.</p>
+        </div>
+        <div class="app-card">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
+          </div>
+          <h3 data-i18n="apps.events.title">Events</h3>
+          <p data-i18n="apps.events.desc">Community calendars with event details, locations, media galleries, and participant tracking. Perfect for organizing gatherings and mutual aid distributions.</p>
+        </div>
+        <div class="app-card">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <h3 data-i18n="apps.places.title">Places</h3>
+          <p data-i18n="apps.places.desc">Geographic points of interest with descriptions and photos. Document water sources, shelter locations, supply caches, or hazards without commercial mapping services.</p>
+        </div>
+        <div class="app-card">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <h3 data-i18n="apps.alerts.title">Alerts</h3>
+          <p data-i18n="apps.alerts.desc">Geographic alert system with severity classification and community verification. Track hazards from open through resolution with photographic proof.</p>
+        </div>
+        <div class="app-card">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          </div>
+          <h3 data-i18n="apps.inventory.title">Inventory</h3>
+          <p data-i18n="apps.inventory.desc">Asset tracking with 200+ item types for off-grid contexts. Track borrowing, usage, expiration dates. Organize up to 5 levels deep with group sharing.</p>
+        </div>
+        <div class="app-card">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/><path d="M6 10h.01"/><path d="M18 10h.01"/><path d="M6 14h.01"/><path d="M18 14h.01"/></svg>
+          </div>
+          <h3 data-i18n="apps.wallet.title">Wallet</h3>
+          <p data-i18n="apps.wallet.desc">Track debts and IOUs with cryptographic receipts. Multi-currency support including time. Optional witness signatures for agreements.</p>
+        </div>
+        <div class="app-card">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          </div>
+          <h3 data-i18n="apps.transfer.title">Transfer</h3>
+          <p data-i18n="apps.transfer.desc">Unified download and upload management. Resume capability for interrupted transfers and patient mode that waits up to 30 days for offline peers.</p>
+        </div>
+        <div class="app-card">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.5"/><circle cx="15" cy="10" r="1.5"/><path d="M8 16s1.5 2 4 2 4-2 4-2"/></svg>
+          </div>
+          <h3 data-i18n="apps.bot.title">Bot</h3>
+          <p data-i18n="apps.bot.desc">Offline AI assistant using local GGUF models. Provides Q&A, content moderation, semantic search, and voice transcription through Whisper.</p>
+        </div>
+        <div class="app-card">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          </div>
+          <h3 data-i18n="apps.reader.title">Reader</h3>
+          <p data-i18n="apps.reader.desc">Offline content library. RSS feeds, manga with CBZ support, ebooks (EPUB, PDF, TXT). All content cached locally with progress tracking.</p>
+        </div>
+        <div class="app-card">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <h3 data-i18n="apps.flasher.title">Flasher</h3>
+          <p data-i18n="apps.flasher.desc">Flash ESP32 and Quansheng radios directly from your phone. No computer or external tools needed.</p>
+        </div>
+        <div class="app-card">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h.01"/><path d="M10 12h.01"/><circle cx="17" cy="12" r="2"/><line x1="2" y1="10" x2="6" y2="10"/><line x1="2" y1="14" x2="6" y2="14"/></svg>
+          </div>
+          <h3 data-i18n="apps.games.title">Games</h3>
+          <p data-i18n="apps.games.desc">Offline P2P games: Poker, Blackjack, Romm&eacute;, Math Challenge. Play via Bluetooth with nearby devices. NOSTR-signed results prevent cheating.</p>
+        </div>
+        <div class="app-card upcoming">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8"/><path d="M8 13h6"/></svg>
+          </div>
+          <h3 data-i18n="apps.forum.title">Forum</h3>
+          <p data-i18n="apps.forum.desc">Threaded discussions organized by sections and topics. Persistent, searchable archives of community knowledge with quoting and attachments.</p>
+        </div>
+        <div class="app-card upcoming">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          </div>
+          <h3 data-i18n="apps.market.title">Market</h3>
+          <p data-i18n="apps.market.desc">Decentralized commerce with shops, inventory, orders, and verified reviews. Peer-to-peer transactions without payment processors.</p>
+        </div>
+        <div class="app-card upcoming">
+          <div class="app-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg>
+          </div>
+          <h3 data-i18n="apps.postcards.title">Postcards</h3>
+          <p data-i18n="apps.postcards.desc">Sneakernet message delivery through physical carrier chains. Messages travel via carriers who stamp them with cryptographic proof.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Under the Hood -->
+  <section class="feature-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 data-i18n="hood.title">Under the hood</h2>
+        <p data-i18n="hood.subtitle">Everything runs locally. No cloud APIs, no external services, no "phone home" behavior.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-block">
+          <div class="feature-block-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <h3 data-i18n="hood.geo.title">IP Geolocation</h3>
+          <p data-i18n="hood.geo.desc">Offline location lookup using DB-IP MMDB database. No external queries.</p>
+        </div>
+        <div class="feature-block">
+          <div class="feature-block-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="2" x2="9" y2="4"/><line x1="15" y1="2" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="22"/><line x1="15" y1="20" x2="15" y2="22"/><line x1="2" y1="9" x2="4" y2="9"/><line x1="2" y1="15" x2="4" y2="15"/><line x1="20" y1="9" x2="22" y2="9"/><line x1="20" y1="15" x2="22" y2="15"/></svg>
+          </div>
+          <h3 data-i18n="hood.ai.title">Local AI/ML</h3>
+          <p data-i18n="hood.ai.desc">ONNX Runtime, TensorFlow Lite, and LLaVA models for on-device inference.</p>
+        </div>
+        <div class="feature-block">
+          <div class="feature-block-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+          <h3 data-i18n="hood.media.title">Media Player</h3>
+          <p data-i18n="hood.media.desc">libmpv for video and audio playback. Music generation works offline too.</p>
+        </div>
+        <div class="feature-block">
+          <div class="feature-block-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><line x1="8.7" y1="10.7" x2="15.3" y2="7.3"/><line x1="8.7" y1="13.3" x2="15.3" y2="16.7"/></svg>
+          </div>
+          <h3 data-i18n="hood.webrtc.title">WebRTC</h3>
+          <p data-i18n="hood.webrtc.desc">Peer-to-peer connections without relay servers. Direct device-to-device.</p>
+        </div>
+        <div class="feature-block">
+          <div class="feature-block-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </div>
+          <h3 data-i18n="hood.whisper.title">Whisper</h3>
+          <p data-i18n="hood.whisper.desc">Offline speech recognition from tiny to large-v2 models. Voice input anywhere.</p>
+        </div>
+        <div class="feature-block">
+          <div class="feature-block-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
+          </div>
+          <h3 data-i18n="hood.nostr.title">NOSTR Signatures</h3>
+          <p data-i18n="hood.nostr.desc">Cryptographic identity verification across all apps. Tamper-proof content.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platforms Section -->
+  <section id="platforms" class="platforms-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 data-i18n="platforms.title">Runs everywhere</h2>
+        <p data-i18n="platforms.subtitle">A single codebase for all major platforms. Same data formats, seamless syncing between devices.</p>
+      </div>
+      <div class="platforms-grid">
+        <div class="platform-card">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          </div>
+          <h4>Android</h4>
+          <span class="status stable" data-i18n="platforms.stable">Stable</span>
+        </div>
+        <div class="platform-card">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          </div>
+          <h4>Linux</h4>
+          <span class="status stable" data-i18n="platforms.stable">Stable</span>
+        </div>
+        <div class="platform-card">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="2" x2="9" y2="4"/><line x1="15" y1="2" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="22"/><line x1="15" y1="20" x2="15" y2="22"/><line x1="2" y1="9" x2="4" y2="9"/><line x1="2" y1="15" x2="4" y2="15"/><line x1="20" y1="9" x2="22" y2="9"/><line x1="20" y1="15" x2="22" y2="15"/></svg>
+          </div>
+          <h4>ESP32</h4>
+          <span class="status stable" data-i18n="platforms.stable">Stable</span>
+        </div>
+        <div class="platform-card">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+          </div>
+          <h4>Windows</h4>
+          <span class="status" data-i18n="platforms.coming">Coming soon</span>
+        </div>
+        <div class="platform-card">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="2" y1="20" x2="22" y2="20"/><line x1="12" y1="17" x2="12" y2="20"/></svg>
+          </div>
+          <h4>macOS</h4>
+          <span class="status" data-i18n="platforms.coming">Coming soon</span>
+        </div>
+        <div class="platform-card">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          </div>
+          <h4>iOS</h4>
+          <span class="status" data-i18n="platforms.coming">Coming soon</span>
+        </div>
+        <div class="platform-card">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <h4>Web</h4>
+          <span class="status" data-i18n="platforms.coming">Coming soon</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Downloads Section -->
+  <section id="downloads" class="downloads-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 data-i18n="downloads.title">Download Geogram</h2>
+        <p data-i18n="downloads.subtitle">Get the latest release for your platform. All downloads are verified and signed.</p>
+      </div>
+      <div class="downloads-grid">
+        <!-- Android -->
+        <div class="download-card">
+          <div class="download-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          </div>
+          <h3>Android</h3>
+          <p data-i18n="downloads.android.desc">Full-featured mobile app with BLE mesh, offline maps, and all apps included.</p>
+          <a href="https://github.com/geograms/geogram/releases" class="btn btn-primary download-btn" data-platform="android">
+            <span class="download-btn-text">Loading...</span>
+          </a>
+          <div class="download-meta" data-platform="android">
+            <span class="download-version"></span>
+            <span class="download-size"></span>
+          </div>
+        </div>
+        <!-- Linux -->
+        <div class="download-card">
+          <div class="download-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          </div>
+          <h3>Linux</h3>
+          <p data-i18n="downloads.linux.desc">Desktop station software. Run as a relay node or personal workstation.</p>
+          <a href="https://github.com/geograms/geogram/releases" class="btn btn-primary download-btn" data-platform="linux">
+            <span class="download-btn-text">Loading...</span>
+          </a>
+          <div class="download-meta" data-platform="linux">
+            <span class="download-version"></span>
+            <span class="download-size"></span>
+          </div>
+        </div>
+        <!-- ESP32 -->
+        <div class="download-card">
+          <div class="download-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="2" x2="9" y2="4"/><line x1="15" y1="2" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="22"/><line x1="15" y1="20" x2="15" y2="22"/><line x1="2" y1="9" x2="4" y2="9"/><line x1="2" y1="15" x2="4" y2="15"/><line x1="20" y1="9" x2="22" y2="9"/><line x1="20" y1="15" x2="22" y2="15"/></svg>
+          </div>
+          <h3>ESP32</h3>
+          <p data-i18n="downloads.esp32.desc">Firmware for DIY stations. Flash from Android app or web flasher.</p>
+          <a href="https://github.com/geograms/geogram/releases" class="btn btn-primary download-btn" data-platform="esp32">
+            <span class="download-btn-text">Loading...</span>
+          </a>
+          <div class="download-meta" data-platform="esp32">
+            <span class="download-version"></span>
+            <span class="download-size"></span>
+          </div>
+        </div>
+      </div>
+      <div class="downloads-fallback">
+        <p data-i18n="downloads.fallback" data-i18n-html="true">Can't find what you need? <a href="https://github.com/geograms/geogram/releases">View all releases on GitHub</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <h2 data-i18n="cta.title">Start communicating off-grid</h2>
+      <p data-i18n="cta.subtitle">A larger download that works anywhere, requires no accounts, makes no network requests you didn't initiate, and can't be degraded by a company changing their API terms.</p>
+      <div class="btn-group" style="justify-content: center;">
+        <a href="#downloads" class="btn btn-primary" data-i18n="cta.download">Download Now</a>
+        <a href="https://github.com/geograms/geogram" class="btn btn-secondary" data-i18n="cta.source">View Source</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo">Geogram</a>
+          <p data-i18n="footer.brand">Built for communities that need to communicate when things get difficult: remote areas, disaster response, places where the network is censored or unreliable.</p>
+        </div>
+        <div class="footer-links">
+          <h4 data-i18n="footer.product">Product</h4>
+          <ul>
+            <li><a href="#features" data-i18n="nav.features">Features</a></li>
+            <li><a href="#apps" data-i18n="nav.apps">Apps</a></li>
+            <li><a href="#platforms" data-i18n="nav.platforms">Platforms</a></li>
+            <li><a href="https://github.com/geograms/geogram/releases" data-i18n="nav.download">Download</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4 data-i18n="footer.resources">Resources</h4>
+          <ul>
+            <li><a href="https://github.com/geograms/geogram">GitHub</a></li>
+            <li><a href="https://github.com/geograms/geogram/blob/main/docs/technical.md" data-i18n="footer.documentation">Documentation</a></li>
+            <li><a href="https://github.com/geograms/geogram/releases" data-i18n="footer.releases">Releases</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4 data-i18n="footer.community">Community</h4>
+          <ul>
+            <li><a href="https://github.com/geograms/geogram/issues" data-i18n="footer.issues">Issues</a></li>
+            <li><a href="https://github.com/geograms/geogram/discussions" data-i18n="footer.discussions">Discussions</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>Apache-2.0 License</span>
+        <a href="https://github.com/geograms">geograms</a>
+      </div>
+    </div>
+  </footer>
 
   <script>
-    // Set and apply the default theme for new visitors
-    (function initializeTheme() {
-      const defaultTheme = 'red'; // Default theme: Red Alert
-      const savedTheme = localStorage.getItem('theme') || defaultTheme;
-
-      // Apply the theme
-      applyTheme(savedTheme);
-
-      // Save the default theme if it's a new visitor
-      if (!localStorage.getItem('theme')) {
-        localStorage.setItem('theme', defaultTheme);
+    // Translations
+    const translations = {
+      en: {
+        // Navigation
+        'nav.features': 'Features',
+        'nav.apps': 'Apps',
+        'nav.platforms': 'Platforms',
+        'nav.download': 'Download',
+        // Hero
+        'hero.title': 'Communication that <span class="highlight">never depends</span> on the cloud',
+        'hero.subtitle': 'When the internet goes down, most apps stop working. Geogram keeps going. Direct device-to-device communication without servers, accounts, or infrastructure you don\'t control.',
+        'hero.download': 'Download',
+        'hero.github': 'View on GitHub',
+        // Feature: Off-Grid
+        'feature.offgrid.tag': 'Off-Grid First',
+        'feature.offgrid.title': 'Works without internet, servers, or accounts',
+        'feature.offgrid.desc': 'Geogram connects people directly - phone to phone, laptop to laptop - without requiring infrastructure you don\'t control. Messages hop between devices over whatever path works: WiFi when available, Bluetooth when it\'s not, internet when you want global reach.',
+        'feature.offgrid.list1': 'No cloud dependency - everything runs locally',
+        'feature.offgrid.list2': 'Cryptographic NOSTR signatures verify sender identity',
+        'feature.offgrid.list3': 'Multiple transport layers adapt to conditions',
+        'feature.offgrid.list4': 'Store-and-forward for intermittent connectivity',
+        // Feature: Docs
+        'feature.docs.tag': 'Offline Documents',
+        'feature.docs.title': 'Google Docs replacement that works offline',
+        'feature.docs.desc': 'Edit spreadsheets, documents, presentations, and forms entirely offline. Real-time collaboration syncs automatically when connectivity is available. All your data stays on your devices - no cloud storage, no subscriptions, no data harvesting.',
+        'feature.docs.list1': 'Spreadsheets with cells, formulas, and multiple sheets',
+        'feature.docs.list2': 'Rich text documents with headings, lists, tables, images',
+        'feature.docs.list3': 'Presentations with slides, themes, and transitions',
+        'feature.docs.list4': 'Forms with field definitions and signed responses',
+        'feature.docs.list5': 'Sync-based collaboration using NOSTR signatures',
+        // Feature: Blog
+        'feature.blog.tag': 'Mobile Publishing',
+        'feature.blog.title': 'Write and share blogs directly from your phone',
+        'feature.blog.desc': 'Publish blog posts from your phone to your local community or the world. No hosting required, no monthly fees. Your posts sync to nearby devices and become accessible through any connected relay.',
+        'feature.blog.list1': 'Full markdown support with images and attachments',
+        'feature.blog.list2': 'Draft and publish workflow',
+        'feature.blog.list3': 'Comments and likes with NOSTR-verified authenticity',
+        'feature.blog.list4': 'Location tagging displays posts on the map',
+        'feature.blog.list5': 'Web access via relay HTTP API for browser readers',
+        'feature.blog.list6': 'Sneakernet distribution for offline communities',
+        // Feature: Station
+        'feature.station.tag': 'Station Server',
+        'feature.station.title': 'Your device becomes community infrastructure',
+        'feature.station.desc': 'Your phone can be a server. Your laptop can be a server. That old Raspberry Pi collecting dust can be a server. Geogram runs station software on any device, turning personal hardware into community infrastructure. Nothing lives on someone else\'s cloud.',
+        'feature.station.list1': 'Serve content to browsers over WiFi or internet',
+        'feature.station.list2': 'Sync with phones over Bluetooth as people walk by',
+        'feature.station.list3': 'No monthly fees, no account required',
+        'feature.station.list4': 'You own your community\'s infrastructure',
+        // Feature: ESP32
+        'feature.esp32.tag': 'DIY Hardware',
+        'feature.esp32.title': 'Build your own station for $10-20',
+        'feature.esp32.desc': 'For dedicated station hardware, Geogram provides firmware for ESP32 microcontrollers. Buy the components yourself and build a station that runs continuously on minimal power, serving as an always-on infrastructure node for your community network.',
+        'feature.esp32.list1': 'ESP32-C3-mini, ESP32-S3 ePaper, and generic ESP32 supported',
+        'feature.esp32.list2': 'WiFi bridging - connect BLE mesh to WiFi/Internet',
+        'feature.esp32.list3': 'Web-based configuration portal at first boot',
+        'feature.esp32.list4': 'Offline map tile caching on SD card',
+        'feature.esp32.list5': 'OTA updates from GitHub releases',
+        // Feature: Flasher
+        'feature.flasher.tag': 'Mobile Flasher',
+        'feature.flasher.title': 'Flash ESP32 devices directly from your phone',
+        'feature.flasher.desc': 'No computer needed. Connect your ESP32 or Quansheng radio to your Android phone and flash firmware directly. Built-in USB drivers, automatic device detection, and real-time progress tracking.',
+        'feature.flasher.list1': 'Flash ESP32, ESP32-C3, ESP32-S2, ESP32-S3 from Android',
+        'feature.flasher.list2': 'Program Quansheng UV-K5 radios',
+        'feature.flasher.list3': 'USB auto-detection with VID/PID recognition',
+        'feature.flasher.list4': 'No external drivers or tools required',
+        'feature.flasher.list5': 'Device library with photos, datasheets, purchase links',
+        // Feature: Maps
+        'feature.maps.tag': 'Offline Maps',
+        'feature.maps.title': 'Worldwide maps without internet',
+        'feature.maps.desc': 'Geogram includes worldwide satellite imagery and street maps that work without internet. Pan and zoom anywhere on the planet using cached tiles stored locally on your device or synced from a nearby station.',
+        'feature.maps.list1': 'Satellite imagery and street maps worldwide',
+        'feature.maps.list2': 'Stations cache regional tiles for local access',
+        'feature.maps.list3': 'No Google, Mapbox, or API keys required',
+        'feature.maps.list4': 'Events, places, and alerts displayed on map',
+        // Apps section
+        'apps.title': 'Apps for community coordination',
+        'apps.subtitle': 'A suite of apps designed for information sharing and coordination. Each stores data in human-readable formats that sync between devices through any available transport.',
+        'apps.chat.title': 'Chat',
+        'apps.chat.desc': 'Real-time messaging with room-based channels and direct messages. Supports file attachments, voice messages, location sharing, and polls. Works across all connection types.',
+        'apps.blog.title': 'Blog',
+        'apps.blog.desc': 'Long-form publishing with markdown content, drafts, tags, and comments. Create local journalism and community newsletters that work entirely offline.',
+        'apps.work.title': 'Work',
+        'apps.work.desc': 'Offline Google Docs alternative. Spreadsheets, documents, presentations, and forms with real-time collaboration when connected.',
+        'apps.events.title': 'Events',
+        'apps.events.desc': 'Community calendars with event details, locations, media galleries, and participant tracking. Perfect for organizing gatherings and mutual aid distributions.',
+        'apps.places.title': 'Places',
+        'apps.places.desc': 'Geographic points of interest with descriptions and photos. Document water sources, shelter locations, supply caches, or hazards without commercial mapping services.',
+        'apps.alerts.title': 'Alerts',
+        'apps.alerts.desc': 'Geographic alert system with severity classification and community verification. Track hazards from open through resolution with photographic proof.',
+        'apps.inventory.title': 'Inventory',
+        'apps.inventory.desc': 'Asset tracking with 200+ item types for off-grid contexts. Track borrowing, usage, expiration dates. Organize up to 5 levels deep with group sharing.',
+        'apps.wallet.title': 'Wallet',
+        'apps.wallet.desc': 'Track debts and IOUs with cryptographic receipts. Multi-currency support including time. Optional witness signatures for agreements.',
+        'apps.transfer.title': 'Transfer',
+        'apps.transfer.desc': 'Unified download and upload management. Resume capability for interrupted transfers and patient mode that waits up to 30 days for offline peers.',
+        'apps.bot.title': 'Bot',
+        'apps.bot.desc': 'Offline AI assistant using local GGUF models. Provides Q&A, content moderation, semantic search, and voice transcription through Whisper.',
+        'apps.reader.title': 'Reader',
+        'apps.reader.desc': 'Offline content library. RSS feeds, manga with CBZ support, ebooks (EPUB, PDF, TXT). All content cached locally with progress tracking.',
+        'apps.flasher.title': 'Flasher',
+        'apps.flasher.desc': 'Flash ESP32 and Quansheng radios directly from your phone. No computer or external tools needed.',
+        'apps.games.title': 'Games',
+        'apps.games.desc': 'Offline P2P games: Poker, Blackjack, Rommé, Math Challenge. Play via Bluetooth with nearby devices. NOSTR-signed results prevent cheating.',
+        'apps.forum.title': 'Forum',
+        'apps.forum.desc': 'Threaded discussions organized by sections and topics. Persistent, searchable archives of community knowledge with quoting and attachments.',
+        'apps.market.title': 'Market',
+        'apps.market.desc': 'Decentralized commerce with shops, inventory, orders, and verified reviews. Peer-to-peer transactions without payment processors.',
+        'apps.postcards.title': 'Postcards',
+        'apps.postcards.desc': 'Sneakernet message delivery through physical carrier chains. Messages travel via carriers who stamp them with cryptographic proof.',
+        // Under the hood
+        'hood.title': 'Under the hood',
+        'hood.subtitle': 'Everything runs locally. No cloud APIs, no external services, no "phone home" behavior.',
+        'hood.geo.title': 'IP Geolocation',
+        'hood.geo.desc': 'Offline location lookup using DB-IP MMDB database. No external queries.',
+        'hood.ai.title': 'Local AI/ML',
+        'hood.ai.desc': 'ONNX Runtime, TensorFlow Lite, and LLaVA models for on-device inference.',
+        'hood.media.title': 'Media Player',
+        'hood.media.desc': 'libmpv for video and audio playback. Music generation works offline too.',
+        'hood.webrtc.title': 'WebRTC',
+        'hood.webrtc.desc': 'Peer-to-peer connections without relay servers. Direct device-to-device.',
+        'hood.whisper.title': 'Whisper',
+        'hood.whisper.desc': 'Offline speech recognition from tiny to large-v2 models. Voice input anywhere.',
+        'hood.nostr.title': 'NOSTR Signatures',
+        'hood.nostr.desc': 'Cryptographic identity verification across all apps. Tamper-proof content.',
+        // Platforms
+        'platforms.title': 'Runs everywhere',
+        'platforms.subtitle': 'A single codebase for all major platforms. Same data formats, seamless syncing between devices.',
+        'platforms.stable': 'Stable',
+        'platforms.coming': 'Coming soon',
+        // Downloads
+        'downloads.title': 'Download Geogram',
+        'downloads.subtitle': 'Get the latest release for your platform. All downloads are verified and signed.',
+        'downloads.android.desc': 'Full-featured mobile app with BLE mesh, offline maps, and all apps included.',
+        'downloads.linux.desc': 'Desktop station software. Run as a relay node or personal workstation.',
+        'downloads.esp32.desc': 'Firmware for DIY stations. Flash from Android app or web flasher.',
+        'downloads.fallback': 'Can\'t find what you need? <a href="https://github.com/geograms/geogram/releases">View all releases on GitHub</a>',
+        // CTA
+        'cta.title': 'Start communicating off-grid',
+        'cta.subtitle': 'A larger download that works anywhere, requires no accounts, makes no network requests you didn\'t initiate, and can\'t be degraded by a company changing their API terms.',
+        'cta.download': 'Download Now',
+        'cta.source': 'View Source',
+        // Footer
+        'footer.brand': 'Built for communities that need to communicate when things get difficult: remote areas, disaster response, places where the network is censored or unreliable.',
+        'footer.product': 'Product',
+        'footer.resources': 'Resources',
+        'footer.community': 'Community',
+        'footer.documentation': 'Documentation',
+        'footer.releases': 'Releases',
+        'footer.issues': 'Issues',
+        'footer.discussions': 'Discussions'
+      },
+      pt: {
+        // Navegação
+        'nav.features': 'Funcionalidades',
+        'nav.apps': 'Aplicações',
+        'nav.platforms': 'Plataformas',
+        'nav.download': 'Descarregar',
+        // Hero
+        'hero.title': 'Comunicação <span class="highlight">100% autónoma</span>',
+        'hero.subtitle': 'O Geogram funciona sempre — com ou sem internet. Liga dispositivos diretamente entre si, dá-te controlo total sobre a tua infraestrutura e garante que as tuas mensagens chegam ao destino.',
+        'hero.download': 'Descarregar',
+        'hero.github': 'Ver no GitHub',
+        // Funcionalidade: Off-Grid
+        'feature.offgrid.tag': 'Primeiro Offline',
+        'feature.offgrid.title': 'Funciona sem internet, servidores ou contas',
+        'feature.offgrid.desc': 'O Geogram liga pessoas diretamente — telemóvel com telemóvel, portátil com portátil — sem precisar de infraestruturas fora do teu controlo. As mensagens saltam de dispositivo em dispositivo pelo caminho que funcionar: WiFi quando há, Bluetooth quando não há, internet quando queres alcance global.',
+        'feature.offgrid.list1': 'Zero dependência da cloud — tudo corre no teu dispositivo',
+        'feature.offgrid.list2': 'Assinaturas NOSTR garantem quem enviou cada mensagem',
+        'feature.offgrid.list3': 'Adapta-se automaticamente às condições de rede',
+        'feature.offgrid.list4': 'Guarda e reenvia quando a ligação é intermitente',
+        // Funcionalidade: Docs
+        'feature.docs.tag': 'Documentos Offline',
+        'feature.docs.title': 'Um Google Docs que funciona sem internet',
+        'feature.docs.desc': 'Edita folhas de cálculo, documentos, apresentações e formulários completamente offline. A colaboração em tempo real sincroniza automaticamente quando voltas a ter rede. Os teus dados ficam nos teus dispositivos — sem cloud, sem subscrições, sem venderem os teus dados.',
+        'feature.docs.list1': 'Folhas de cálculo com células, fórmulas e várias folhas',
+        'feature.docs.list2': 'Documentos com formatação rica: títulos, listas, tabelas, imagens',
+        'feature.docs.list3': 'Apresentações com slides, temas e transições',
+        'feature.docs.list4': 'Formulários com campos personalizados e respostas assinadas',
+        'feature.docs.list5': 'Colaboração por sincronização com assinaturas NOSTR',
+        // Funcionalidade: Blog
+        'feature.blog.tag': 'Publicação Móvel',
+        'feature.blog.title': 'Escreve e partilha diretamente do telemóvel',
+        'feature.blog.desc': 'Publica artigos do telemóvel para a tua comunidade ou para o mundo inteiro. Sem precisar de alojamento, sem mensalidades. Os teus textos sincronizam com dispositivos próximos e ficam acessíveis através de qualquer relay ligado à rede.',
+        'feature.blog.list1': 'Markdown completo com imagens e ficheiros anexos',
+        'feature.blog.list2': 'Rascunhos e publicação quando estiveres pronto',
+        'feature.blog.list3': 'Comentários e gostos verificados por NOSTR',
+        'feature.blog.list4': 'Geolocalização mostra os artigos no mapa',
+        'feature.blog.list5': 'Acesso via browser através da API HTTP dos relays',
+        'feature.blog.list6': 'Distribuição física para comunidades sem rede',
+        // Funcionalidade: Station
+        'feature.station.tag': 'Servidor Local',
+        'feature.station.title': 'O teu dispositivo torna-se infraestrutura comunitária',
+        'feature.station.desc': 'O teu telemóvel pode ser um servidor. O teu portátil também. Até aquele Raspberry Pi esquecido na gaveta. O Geogram transforma qualquer dispositivo numa estação que serve a comunidade. Nada fica na cloud de terceiros.',
+        'feature.station.list1': 'Serve conteúdo a browsers por WiFi ou internet',
+        'feature.station.list2': 'Sincroniza com telemóveis via Bluetooth à passagem',
+        'feature.station.list3': 'Sem mensalidades, sem precisar de conta',
+        'feature.station.list4': 'A infraestrutura da tua comunidade é tua',
+        // Funcionalidade: ESP32
+        'feature.esp32.tag': 'Hardware DIY',
+        'feature.esp32.title': 'Monta a tua estação por 10-20€',
+        'feature.esp32.desc': 'Para hardware dedicado, o Geogram tem firmware para microcontroladores ESP32. Compras os componentes e montas uma estação que funciona 24/7 com consumo mínimo — um nó sempre ligado para a rede da tua comunidade.',
+        'feature.esp32.list1': 'Suporta ESP32-C3-mini, ESP32-S3 ePaper e ESP32 genérico',
+        'feature.esp32.list2': 'Bridge WiFi — liga a mesh Bluetooth à internet',
+        'feature.esp32.list3': 'Portal web de configuração no primeiro arranque',
+        'feature.esp32.list4': 'Cache de mapas offline em cartão SD',
+        'feature.esp32.list5': 'Actualizações automáticas via GitHub',
+        // Funcionalidade: Flasher
+        'feature.flasher.tag': 'Programador Móvel',
+        'feature.flasher.title': 'Programa ESP32 diretamente do telemóvel',
+        'feature.flasher.desc': 'Sem precisar de computador. Liga o ESP32 ou rádio Quansheng ao telemóvel Android e grava o firmware. Drivers USB integrados, detecção automática e progresso em tempo real.',
+        'feature.flasher.list1': 'Grava ESP32, ESP32-C3, ESP32-S2 e ESP32-S3 via Android',
+        'feature.flasher.list2': 'Programa rádios Quansheng UV-K5',
+        'feature.flasher.list3': 'Detecção automática por USB VID/PID',
+        'feature.flasher.list4': 'Não precisa de drivers nem ferramentas externas',
+        'feature.flasher.list5': 'Biblioteca de dispositivos com fotos e links de compra',
+        // Funcionalidade: Maps
+        'feature.maps.tag': 'Mapas Offline',
+        'feature.maps.title': 'Mapas do mundo inteiro sem internet',
+        'feature.maps.desc': 'O Geogram inclui imagens de satélite e mapas de ruas que funcionam offline. Navega e amplia qualquer ponto do planeta usando tiles guardados no dispositivo ou sincronizados de uma estação próxima.',
+        'feature.maps.list1': 'Satélite e mapas de ruas de todo o mundo',
+        'feature.maps.list2': 'Estações guardam tiles regionais para acesso local',
+        'feature.maps.list3': 'Sem Google, Mapbox ou chaves de API',
+        'feature.maps.list4': 'Eventos, locais e alertas visíveis no mapa',
+        // Secção Apps
+        'apps.title': 'Apps para organizar comunidades',
+        'apps.subtitle': 'Um conjunto de aplicações pensadas para partilha de informação e coordenação. Todas guardam dados em formatos legíveis que sincronizam entre dispositivos por qualquer via disponível.',
+        'apps.chat.title': 'Chat',
+        'apps.chat.desc': 'Mensagens em tempo real com canais e conversas privadas. Anexa ficheiros, envia áudio, partilha localização e cria sondagens. Funciona com qualquer tipo de ligação.',
+        'apps.blog.title': 'Blog',
+        'apps.blog.desc': 'Publicação de textos longos com markdown, rascunhos, etiquetas e comentários. Cria jornalismo local e newsletters que funcionam totalmente offline.',
+        'apps.work.title': 'Trabalho',
+        'apps.work.desc': 'Alternativa offline ao Google Docs. Folhas de cálculo, documentos, apresentações e formulários com colaboração em tempo real quando há rede.',
+        'apps.events.title': 'Eventos',
+        'apps.events.desc': 'Calendários comunitários com detalhes, localizações, galerias de fotos e lista de participantes. Ideal para organizar encontros e distribuições solidárias.',
+        'apps.places.title': 'Locais',
+        'apps.places.desc': 'Pontos de interesse com descrições e fotos. Documenta fontes de água, abrigos, depósitos de mantimentos ou perigos — sem depender de serviços comerciais.',
+        'apps.alerts.title': 'Alertas',
+        'apps.alerts.desc': 'Sistema de alertas geográficos com níveis de gravidade e verificação comunitária. Acompanha perigos desde a abertura até à resolução, com provas fotográficas.',
+        'apps.inventory.title': 'Inventário',
+        'apps.inventory.desc': 'Gestão de bens com mais de 200 tipos de itens para contextos off-grid. Controla empréstimos, utilização e validades. Organiza até 5 níveis com partilha de grupo.',
+        'apps.wallet.title': 'Carteira',
+        'apps.wallet.desc': 'Regista dívidas e créditos com recibos criptográficos. Suporta várias moedas, incluindo tempo. Opção de assinaturas de testemunhas para acordos.',
+        'apps.transfer.title': 'Transferências',
+        'apps.transfer.desc': 'Gestão unificada de downloads e uploads. Retoma transferências interrompidas e modo paciente que espera até 30 dias por dispositivos offline.',
+        'apps.bot.title': 'Bot',
+        'apps.bot.desc': 'Assistente de IA offline com modelos GGUF locais. Responde a perguntas, modera conteúdo, pesquisa semanticamente e transcreve voz com Whisper.',
+        'apps.reader.title': 'Leitor',
+        'apps.reader.desc': 'Biblioteca de conteúdos offline. Feeds RSS, manga em CBZ, ebooks (EPUB, PDF, TXT). Tudo guardado localmente com registo de progresso.',
+        'apps.flasher.title': 'Programador',
+        'apps.flasher.desc': 'Grava firmware em ESP32 e rádios Quansheng diretamente do telemóvel. Sem computador nem ferramentas externas.',
+        'apps.games.title': 'Jogos',
+        'apps.games.desc': 'Jogos P2P offline: Poker, Blackjack, Rummy, Desafio Matemático. Joga via Bluetooth com quem estiver perto. Resultados assinados impedem batota.',
+        'apps.forum.title': 'Fórum',
+        'apps.forum.desc': 'Discussões organizadas por secções e tópicos. Arquivos pesquisáveis de conhecimento comunitário com citações e anexos.',
+        'apps.market.title': 'Mercado',
+        'apps.market.desc': 'Comércio descentralizado com lojas, stock, encomendas e avaliações verificadas. Transacções directas sem intermediários de pagamento.',
+        'apps.postcards.title': 'Postais',
+        'apps.postcards.desc': 'Entrega de mensagens por portadores físicos. As mensagens viajam de mão em mão, cada portador carimba-as com prova criptográfica.',
+        // Por baixo do capô
+        'hood.title': 'Por baixo do capô',
+        'hood.subtitle': 'Tudo corre localmente. Sem APIs na cloud, sem serviços externos, sem telefonemas para casa.',
+        'hood.geo.title': 'Geolocalização IP',
+        'hood.geo.desc': 'Localização offline com base de dados DB-IP MMDB. Sem consultas externas.',
+        'hood.ai.title': 'IA/ML Local',
+        'hood.ai.desc': 'ONNX Runtime, TensorFlow Lite e modelos LLaVA para inferência no dispositivo.',
+        'hood.media.title': 'Leitor Multimédia',
+        'hood.media.desc': 'libmpv para vídeo e áudio. Geração de música também funciona offline.',
+        'hood.webrtc.title': 'WebRTC',
+        'hood.webrtc.desc': 'Ligações ponto-a-ponto sem servidores relay. Directo entre dispositivos.',
+        'hood.whisper.title': 'Whisper',
+        'hood.whisper.desc': 'Reconhecimento de voz offline, desde modelos tiny até large-v2. Dita em qualquer lado.',
+        'hood.nostr.title': 'Assinaturas NOSTR',
+        'hood.nostr.desc': 'Verificação criptográfica de identidade em todas as apps. Conteúdo à prova de manipulação.',
+        // Plataformas
+        'platforms.title': 'Corre em todo o lado',
+        'platforms.subtitle': 'Uma única base de código para todas as plataformas. Mesmos formatos, sincronização perfeita entre dispositivos.',
+        'platforms.stable': 'Estável',
+        'platforms.coming': 'Em breve',
+        // Downloads
+        'downloads.title': 'Descarregar Geogram',
+        'downloads.subtitle': 'Obtém a versão mais recente para a tua plataforma. Todos os ficheiros são verificados e assinados.',
+        'downloads.android.desc': 'App completa com mesh Bluetooth, mapas offline e todas as aplicações incluídas.',
+        'downloads.linux.desc': 'Software de estação para desktop. Funciona como relay ou estação de trabalho pessoal.',
+        'downloads.esp32.desc': 'Firmware para estações DIY. Grava pela app Android ou pelo programador web.',
+        'downloads.fallback': 'Não encontras o que procuras? <a href="https://github.com/geograms/geogram/releases">Ver todas as versões no GitHub</a>',
+        // CTA
+        'cta.title': 'Começa a comunicar sem depender de ninguém',
+        'cta.subtitle': 'Um download maior, mas que funciona em qualquer lado. Sem contas, sem pedidos de rede que não iniciaste, sem risco de uma empresa mudar os termos e estragar tudo.',
+        'cta.download': 'Descarregar Agora',
+        'cta.source': 'Ver Código-fonte',
+        // Footer
+        'footer.brand': 'Feito para comunidades que precisam de comunicar quando as coisas se complicam: zonas remotas, resposta a catástrofes, locais com rede censurada ou instável.',
+        'footer.product': 'Produto',
+        'footer.resources': 'Recursos',
+        'footer.community': 'Comunidade',
+        'footer.documentation': 'Documentação',
+        'footer.releases': 'Versões',
+        'footer.issues': 'Problemas',
+        'footer.discussions': 'Discussões'
       }
-    })();
+    };
 
-    // Function to apply the theme
-    function applyTheme(theme) {
-      document.body.setAttribute('data-theme', theme);
+    let currentLang = 'en';
+
+    function applyTranslations(lang) {
+      currentLang = lang;
+      const t = translations[lang];
+      if (!t) return;
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) {
+          if (el.getAttribute('data-i18n-html') === 'true') {
+            el.innerHTML = t[key];
+          } else {
+            el.textContent = t[key];
+          }
+        }
+      });
+
+      // Update language selector display
+      document.querySelector('.lang-current').textContent = lang.toUpperCase();
+      document.documentElement.lang = lang;
+
+      // Save preference
+      localStorage.setItem('geogram-lang', lang);
     }
 
-    // Hide loading screen when everything is loaded
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        document.getElementById('loading').style.opacity = '0';
-        setTimeout(function() {
-          document.getElementById('loading').style.display = 'none';
-        }, 300);
-      }, 500);
+    function setLanguage(lang) {
+      applyTranslations(lang);
+      toggleLangMenu();
+    }
+
+    function toggleLangMenu() {
+      document.querySelector('.lang-dropdown').classList.toggle('active');
+    }
+
+    function detectLanguage() {
+      // Check saved preference first
+      const saved = localStorage.getItem('geogram-lang');
+      if (saved && translations[saved]) {
+        return saved;
+      }
+
+      // Check browser language
+      const browserLang = navigator.language || navigator.userLanguage;
+      if (browserLang && browserLang.toLowerCase().startsWith('pt')) {
+        return 'pt';
+      }
+
+      return 'en';
+    }
+
+    // Close language menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.lang-selector')) {
+        document.querySelector('.lang-dropdown')?.classList.remove('active');
+      }
+    });
+
+    function toggleMenu() {
+      document.querySelector('.nav-links').classList.toggle('active');
+    }
+
+    // Fetch latest GitHub release and update download links
+    async function fetchLatestRelease() {
+      try {
+        const response = await fetch('https://api.github.com/repos/geograms/geogram/releases/latest');
+        if (!response.ok) throw new Error('Failed to fetch release');
+        const release = await response.json();
+
+        const version = release.tag_name;
+        const assets = release.assets || [];
+
+        // Find assets for each platform
+        const platformAssets = {
+          android: assets.find(a => a.name.endsWith('.apk')),
+          linux: assets.find(a => a.name.includes('linux') && a.name.endsWith('.tar.gz')),
+          esp32: assets.find(a => a.name.includes('esp32') && a.name.endsWith('.bin'))
+        };
+
+        // Update each platform's download card
+        Object.entries(platformAssets).forEach(([platform, asset]) => {
+          const btn = document.querySelector(`.download-btn[data-platform="${platform}"]`);
+          const meta = document.querySelector(`.download-meta[data-platform="${platform}"]`);
+          const btnText = btn?.querySelector('.download-btn-text');
+
+          if (asset && btn && meta) {
+            // Update button link and text
+            btn.href = asset.browser_download_url;
+
+            // Extract file extension for button text
+            const fileName = asset.name;
+            const ext = fileName.includes('.tar.gz') ? 'tar.gz' : fileName.split('.').pop();
+            if (btnText) btnText.textContent = `Download ${ext.toUpperCase()}`;
+
+            // Update version and size
+            const versionEl = meta.querySelector('.download-version');
+            const sizeEl = meta.querySelector('.download-size');
+
+            if (versionEl) versionEl.textContent = version;
+            if (sizeEl) {
+              const sizeMB = (asset.size / (1024 * 1024)).toFixed(1);
+              sizeEl.textContent = `${sizeMB} MB`;
+            }
+          } else if (btn && btnText) {
+            // No asset found for this platform - link to releases page
+            btnText.textContent = 'View Releases';
+          }
+        });
+      } catch (error) {
+        console.error('Error fetching release:', error);
+        // Show fallback
+        document.querySelectorAll('.download-btn-text').forEach(el => {
+          el.textContent = 'View Releases';
+        });
+      }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      // Detect and apply language
+      const lang = detectLanguage();
+      applyTranslations(lang);
+
+      // Fetch GitHub releases
+      fetchLatestRelease();
     });
   </script>
 </body>
