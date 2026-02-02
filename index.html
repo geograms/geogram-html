@@ -471,17 +471,32 @@
             <span class="download-size"></span>
           </div>
         </div>
-        <!-- Linux -->
+        <!-- Linux Desktop -->
+        <div class="download-card">
+          <div class="download-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h3 data-i18n="downloads.linux-desktop.title">Linux Desktop</h3>
+          <p data-i18n="downloads.linux-desktop.desc">Full GUI application for desktop workstations with all features.</p>
+          <a href="https://github.com/geograms/geogram/releases" class="btn btn-primary download-btn" data-platform="linux-desktop">
+            <span class="download-btn-text">Loading...</span>
+          </a>
+          <div class="download-meta" data-platform="linux-desktop">
+            <span class="download-version"></span>
+            <span class="download-size"></span>
+          </div>
+        </div>
+        <!-- Linux Server -->
         <div class="download-card">
           <div class="download-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
           </div>
-          <h3>Linux</h3>
-          <p data-i18n="downloads.linux.desc">Desktop station software. Run as a relay node or personal workstation.</p>
-          <a href="https://github.com/geograms/geogram/releases" class="btn btn-primary download-btn" data-platform="linux">
+          <h3 data-i18n="downloads.linux-server.title">Linux Server</h3>
+          <p data-i18n="downloads.linux-server.desc">CLI version for servers and headless relay nodes.</p>
+          <a href="https://github.com/geograms/geogram/releases" class="btn btn-primary download-btn" data-platform="linux-server">
             <span class="download-btn-text">Loading...</span>
           </a>
-          <div class="download-meta" data-platform="linux">
+          <div class="download-meta" data-platform="linux-server">
             <span class="download-version"></span>
             <span class="download-size"></span>
           </div>
@@ -694,7 +709,10 @@
         'downloads.title': 'Download Geogram',
         'downloads.subtitle': 'Get the latest release for your platform. All downloads are verified and signed.',
         'downloads.android.desc': 'Full-featured mobile app with BLE mesh, offline maps, and all apps included.',
-        'downloads.linux.desc': 'Desktop station software. Run as a relay node or personal workstation.',
+        'downloads.linux-desktop.title': 'Linux Desktop',
+        'downloads.linux-desktop.desc': 'Full GUI application for desktop workstations with all features.',
+        'downloads.linux-server.title': 'Linux Server',
+        'downloads.linux-server.desc': 'CLI version for servers and headless relay nodes.',
         'downloads.esp32.desc': 'Firmware for DIY stations. Flash from Android app or web flasher.',
         'downloads.fallback': 'Can\'t find what you need? <a href="https://github.com/geograms/geogram/releases">View all releases on GitHub</a>',
         // CTA
@@ -843,7 +861,10 @@
         'downloads.title': 'Descarregar Geogram',
         'downloads.subtitle': 'Obtém a versão mais recente para a tua plataforma. Todos os ficheiros são verificados e assinados.',
         'downloads.android.desc': 'App completa com mesh Bluetooth, mapas offline e todas as aplicações incluídas.',
-        'downloads.linux.desc': 'Software de estação para desktop. Funciona como relay ou estação de trabalho pessoal.',
+        'downloads.linux-desktop.title': 'Linux Desktop',
+        'downloads.linux-desktop.desc': 'Aplicação GUI completa para estações de trabalho desktop.',
+        'downloads.linux-server.title': 'Linux Server',
+        'downloads.linux-server.desc': 'Versão CLI para servidores e nós relay sem interface gráfica.',
         'downloads.esp32.desc': 'Firmware para estações DIY. Grava pela app Android ou pelo programador web.',
         'downloads.fallback': 'Não encontras o que procuras? <a href="https://github.com/geograms/geogram/releases">Ver todas as versões no GitHub</a>',
         // CTA
@@ -938,7 +959,8 @@
         // Find assets for each platform
         const platformAssets = {
           android: assets.find(a => a.name.endsWith('.apk')),
-          linux: assets.find(a => a.name.includes('linux') && a.name.endsWith('.tar.gz')),
+          'linux-desktop': assets.find(a => a.name.includes('linux') && a.name.endsWith('.tar.gz') && !a.name.includes('cli') && !a.name.includes('server')),
+          'linux-server': assets.find(a => a.name.includes('linux') && a.name.endsWith('.tar.gz') && (a.name.includes('cli') || a.name.includes('server'))),
           esp32: assets.find(a => a.name.includes('esp32') && a.name.endsWith('.bin'))
         };
 
