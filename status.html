@@ -279,6 +279,11 @@
       max-width: 300px;
       line-height: 1.4;
     }
+
+    .sync-methods {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
   </style>
 </head>
 <body>
@@ -613,8 +618,7 @@
       // Feature keys and their translation keys
       const features = [
         { key: 'worksLocally', label: 'status.local' },
-        { key: 'reachableInternet', label: 'status.internet' },
-        { key: 'reachableBLE', label: 'status.ble' },
+        { key: 'syncsVia', label: 'status.syncs', isCombinedSync: true },
         { key: 'feedback', label: 'status.feedback', isCombinedFeedback: true },
         { key: 'subscribe', label: 'status.subscribe', isFeedback: true }
       ];
@@ -685,7 +689,18 @@
         }
         features.forEach(feature => {
           let value;
-          if (feature.isCombinedFeedback) {
+          if (feature.isCombinedSync) {
+            // Combine Internet and BLE sync into one column
+            const methods = [];
+            if (app.reachableInternet) methods.push('Internet');
+            if (app.reachableBLE) methods.push('BLE');
+            if (methods.length > 0) {
+              bodyRows += `<td><span class="sync-methods">${methods.join(', ')}</span></td>`;
+            } else {
+              bodyRows += '<td><span class="feature-no">—</span></td>';
+            }
+            return;
+          } else if (feature.isCombinedFeedback) {
             value = app.feedback.like || app.feedback.rate || app.feedback.comment;
           } else if (feature.isFeedback) {
             value = app.feedback[feature.key];

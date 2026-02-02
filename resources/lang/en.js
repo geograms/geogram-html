@@ -165,6 +165,7 @@ translations.en = {
   'status.open': 'Open',
   'status.missing': 'Missing',
   'status.local': 'Works offline',
+  'status.syncs': 'Syncs via',
   'status.internet': 'Syncs via internet',
   'status.ble': 'Syncs via Bluetooth',
   'status.feedback': 'Can receive feedback',
