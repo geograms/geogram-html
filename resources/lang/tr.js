@@ -5,6 +5,7 @@ translations.tr = {
   'nav.apps': 'Uygulamalar',
   'nav.platforms': 'Platformlar',
   'nav.download': 'İndir',
+  'nav.status': 'Durum',
   // Hero
   'hero.title': '<span class="highlight">%100 bağımsız</span> iletişim',
   'hero.subtitle': 'İnternet kesildiğinde çoğu uygulama çalışmayı durdurur. Geogram devam eder. Sunucular, hesaplar veya kontrol etmediğiniz altyapı olmadan cihazlar arası doğrudan iletişim.',
@@ -149,5 +150,26 @@ translations.tr = {
   'footer.documentation': 'Dokümantasyon',
   'footer.releases': 'Sürümler',
   'footer.issues': 'Sorunlar',
-  'footer.discussions': 'Tartışmalar'
+  'footer.discussions': 'Tartışmalar',
+  // Durum sayfası
+  'status.title': 'Sistem Durumu',
+  'status.subtitle': 'Geogram ağındaki istasyon sunucularının ve uygulama özelliklerinin durumunu kontrol edin.',
+  'status.stations': 'İnternet İstasyonları',
+  'status.apps': 'Uygulama Durumu',
+  'status.add_station': 'İstasyonunuzu Ekleyin',
+  'status.submit_pr': 'PR Gönderin',
+  'status.checking': 'Kontrol ediliyor...',
+  'status.online': 'Çevrimiçi',
+  'status.offline': 'Çevrimdışı',
+  'status.devices_connected': 'cihaz bağlı',
+  'status.open': 'Aç',
+  'status.missing': 'Eksik',
+  'status.local': 'Çevrimdışı çalışır',
+  'status.internet': 'İnternet ile senkronize',
+  'status.ble': 'Bluetooth ile senkronize',
+  'status.feedback': 'Geri bildirim alabilir',
+  'status.subscribe': 'Güncellemelere abone ol',
+  'status.feature': 'Özellik',
+  'status.description': 'Açıklama',
+  'status.docs': 'Docs'
 };

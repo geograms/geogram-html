@@ -5,6 +5,7 @@ translations.ja = {
   'nav.apps': 'アプリ',
   'nav.platforms': 'プラットフォーム',
   'nav.download': 'ダウンロード',
+  'nav.status': 'ステータス',
   // Hero
   'hero.title': '<span class="highlight">100%自律的な</span>コミュニケーション',
   'hero.subtitle': 'インターネットがダウンすると、ほとんどのアプリは動作を停止します。Geogramは継続します。サーバー、アカウント、制御できないインフラストラクチャなしで、デバイス間で直接通信。',
@@ -149,5 +150,26 @@ translations.ja = {
   'footer.documentation': 'ドキュメント',
   'footer.releases': 'リリース',
   'footer.issues': '問題',
-  'footer.discussions': 'ディスカッション'
+  'footer.discussions': 'ディスカッション',
+  // ステータスページ
+  'status.title': 'システムステータス',
+  'status.subtitle': 'Geogramネットワークのステーションサーバーとアプリ機能のステータスを確認してください。',
+  'status.stations': 'インターネットステーション',
+  'status.apps': 'アプリステータス',
+  'status.add_station': 'ステーションを追加',
+  'status.submit_pr': 'PRを送信',
+  'status.checking': '確認中...',
+  'status.online': 'オンライン',
+  'status.offline': 'オフライン',
+  'status.devices_connected': 'デバイス接続中',
+  'status.open': '開く',
+  'status.missing': '不足',
+  'status.local': 'オフラインで動作',
+  'status.internet': 'インターネット経由で同期',
+  'status.ble': 'Bluetooth経由で同期',
+  'status.feedback': 'フィードバック受信可',
+  'status.subscribe': '更新を購読',
+  'status.feature': '機能',
+  'status.description': '説明',
+  'status.docs': 'ドキュメント'
 };

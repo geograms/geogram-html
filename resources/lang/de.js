@@ -5,6 +5,7 @@ translations.de = {
   'nav.apps': 'Apps',
   'nav.platforms': 'Plattformen',
   'nav.download': 'Herunterladen',
+  'nav.status': 'Status',
   // Hero
   'hero.title': 'Kommunikation <span class="highlight">100% autonom</span>',
   'hero.subtitle': 'Wenn das Internet ausfällt, funktionieren die meisten Apps nicht mehr. Geogram läuft weiter. Direkte Kommunikation zwischen Geräten ohne Server, Konten oder Infrastruktur, die du nicht kontrollierst.',
@@ -149,5 +150,26 @@ translations.de = {
   'footer.documentation': 'Dokumentation',
   'footer.releases': 'Releases',
   'footer.issues': 'Probleme',
-  'footer.discussions': 'Diskussionen'
+  'footer.discussions': 'Diskussionen',
+  // Statusseite
+  'status.title': 'Systemstatus',
+  'status.subtitle': 'Überprüfe den Status der Stationsserver und App-Funktionen im Geogram-Netzwerk.',
+  'status.stations': 'Internet-Stationen',
+  'status.apps': 'App-Status',
+  'status.add_station': 'Station Hinzufügen',
+  'status.submit_pr': 'PR Einreichen',
+  'status.checking': 'Prüfe...',
+  'status.online': 'Online',
+  'status.offline': 'Offline',
+  'status.devices_connected': 'Geräte verbunden',
+  'status.open': 'Öffnen',
+  'status.missing': 'Fehlt',
+  'status.local': 'Funktioniert offline',
+  'status.internet': 'Synchronisiert über Internet',
+  'status.ble': 'Synchronisiert über Bluetooth',
+  'status.feedback': 'Kann Feedback erhalten',
+  'status.subscribe': 'Updates abonnieren',
+  'status.feature': 'Funktion',
+  'status.description': 'Beschreibung',
+  'status.docs': 'Docs'
 };

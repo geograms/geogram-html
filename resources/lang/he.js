@@ -5,6 +5,7 @@ translations.he = {
   'nav.apps': 'אפליקציות',
   'nav.platforms': 'פלטפורמות',
   'nav.download': 'הורדה',
+  'nav.status': 'סטטוס',
   // Hero
   'hero.title': 'תקשורת <span class="highlight">אוטונומית 100%</span>',
   'hero.subtitle': 'כשהאינטרנט נופל, רוב האפליקציות מפסיקות לעבוד. Geogram ממשיך. תקשורת ישירה בין מכשירים ללא שרתים, חשבונות או תשתית שאינך שולט בה.',
@@ -149,5 +150,26 @@ translations.he = {
   'footer.documentation': 'תיעוד',
   'footer.releases': 'שחרורים',
   'footer.issues': 'בעיות',
-  'footer.discussions': 'דיונים'
+  'footer.discussions': 'דיונים',
+  // דף סטטוס
+  'status.title': 'סטטוס מערכת',
+  'status.subtitle': 'בדוק את סטטוס שרתי התחנות ותכונות האפליקציות ברשת Geogram.',
+  'status.stations': 'תחנות אינטרנט',
+  'status.apps': 'סטטוס אפליקציות',
+  'status.add_station': 'הוסף את התחנה שלך',
+  'status.submit_pr': 'שלח PR',
+  'status.checking': 'בודק...',
+  'status.online': 'מחובר',
+  'status.offline': 'מנותק',
+  'status.devices_connected': 'מכשירים מחוברים',
+  'status.open': 'פתח',
+  'status.missing': 'חסר',
+  'status.local': 'עובד אופליין',
+  'status.internet': 'מסנכרן דרך האינטרנט',
+  'status.ble': 'מסנכרן דרך Bluetooth',
+  'status.feedback': 'יכול לקבל משוב',
+  'status.subscribe': 'הרשמה לעדכונים',
+  'status.feature': 'תכונה',
+  'status.description': 'תיאור',
+  'status.docs': 'מסמכים'
 };

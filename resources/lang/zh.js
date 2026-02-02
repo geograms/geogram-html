@@ -5,6 +5,7 @@ translations.zh = {
   'nav.apps': '应用',
   'nav.platforms': '平台',
   'nav.download': '下载',
+  'nav.status': '状态',
   // Hero
   'hero.title': '<span class="highlight">100%自主</span>通信',
   'hero.subtitle': '当互联网中断时，大多数应用程序停止工作。Geogram继续运行。无需服务器、账户或您无法控制的基础设施，设备之间直接通信。',
@@ -149,5 +150,26 @@ translations.zh = {
   'footer.documentation': '文档',
   'footer.releases': '版本',
   'footer.issues': '问题',
-  'footer.discussions': '讨论'
+  'footer.discussions': '讨论',
+  // 状态页面
+  'status.title': '系统状态',
+  'status.subtitle': '查看Geogram网络中站点服务器和应用功能的状态。',
+  'status.stations': '互联网站点',
+  'status.apps': '应用状态',
+  'status.add_station': '添加您的站点',
+  'status.submit_pr': '提交PR',
+  'status.checking': '检查中...',
+  'status.online': '在线',
+  'status.offline': '离线',
+  'status.devices_connected': '设备已连接',
+  'status.open': '打开',
+  'status.missing': '缺失',
+  'status.local': '离线可用',
+  'status.internet': '通过互联网同步',
+  'status.ble': '通过蓝牙同步',
+  'status.feedback': '可接收反馈',
+  'status.subscribe': '订阅更新',
+  'status.feature': '功能',
+  'status.description': '说明',
+  'status.docs': '文档'
 };

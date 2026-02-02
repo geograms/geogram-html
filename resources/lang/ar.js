@@ -5,6 +5,7 @@ translations.ar = {
   'nav.apps': 'التطبيقات',
   'nav.platforms': 'المنصات',
   'nav.download': 'تحميل',
+  'nav.status': 'الحالة',
   // Hero
   'hero.title': 'اتصال <span class="highlight">مستقل 100%</span>',
   'hero.subtitle': 'عندما ينقطع الإنترنت، تتوقف معظم التطبيقات عن العمل. جيوجرام يستمر. اتصال مباشر بين الأجهزة بدون خوادم أو حسابات أو بنية تحتية لا تتحكم فيها.',
@@ -149,5 +150,26 @@ translations.ar = {
   'footer.documentation': 'التوثيق',
   'footer.releases': 'الإصدارات',
   'footer.issues': 'المشاكل',
-  'footer.discussions': 'النقاشات'
+  'footer.discussions': 'النقاشات',
+  // صفحة الحالة
+  'status.title': 'حالة النظام',
+  'status.subtitle': 'تحقق من حالة خوادم المحطات وميزات التطبيقات في شبكة Geogram.',
+  'status.stations': 'محطات الإنترنت',
+  'status.apps': 'حالة التطبيقات',
+  'status.add_station': 'أضف محطتك',
+  'status.submit_pr': 'إرسال PR',
+  'status.checking': 'جارٍ التحقق...',
+  'status.online': 'متصل',
+  'status.offline': 'غير متصل',
+  'status.devices_connected': 'أجهزة متصلة',
+  'status.open': 'فتح',
+  'status.missing': 'مفقود',
+  'status.local': 'يعمل بدون إنترنت',
+  'status.internet': 'مزامنة عبر الإنترنت',
+  'status.ble': 'مزامنة عبر البلوتوث',
+  'status.feedback': 'يمكن تلقي التعليقات',
+  'status.subscribe': 'الاشتراك في التحديثات',
+  'status.feature': 'ميزة',
+  'status.description': 'الوصف',
+  'status.docs': 'المستندات'
 };

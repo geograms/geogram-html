@@ -5,6 +5,7 @@ translations.ko = {
   'nav.apps': '앱',
   'nav.platforms': '플랫폼',
   'nav.download': '다운로드',
+  'nav.status': '상태',
   // Hero
   'hero.title': '<span class="highlight">100% 자율적인</span> 통신',
   'hero.subtitle': '인터넷이 끊기면 대부분의 앱이 작동을 멈춥니다. Geogram은 계속됩니다. 서버, 계정 또는 제어할 수 없는 인프라 없이 기기 간 직접 통신.',
@@ -149,5 +150,26 @@ translations.ko = {
   'footer.documentation': '문서',
   'footer.releases': '릴리스',
   'footer.issues': '이슈',
-  'footer.discussions': '토론'
+  'footer.discussions': '토론',
+  // 상태 페이지
+  'status.title': '시스템 상태',
+  'status.subtitle': 'Geogram 네트워크의 스테이션 서버 및 앱 기능 상태를 확인하세요.',
+  'status.stations': '인터넷 스테이션',
+  'status.apps': '앱 상태',
+  'status.add_station': '스테이션 추가하기',
+  'status.submit_pr': 'PR 제출',
+  'status.checking': '확인 중...',
+  'status.online': '온라인',
+  'status.offline': '오프라인',
+  'status.devices_connected': '기기 연결됨',
+  'status.open': '열기',
+  'status.missing': '누락',
+  'status.local': '오프라인 작동',
+  'status.internet': '인터넷으로 동기화',
+  'status.ble': '블루투스로 동기화',
+  'status.feedback': '피드백 수신 가능',
+  'status.subscribe': '업데이트 구독',
+  'status.feature': '기능',
+  'status.description': '설명',
+  'status.docs': '문서'
 };
