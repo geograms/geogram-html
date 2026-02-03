@@ -2,15 +2,15 @@
 const appPostcards = {
   id: "postcards",
   title: "Postcards",
-  description: "Send digital postcards with photos",
-  missing: "Custom templates",
-  worksLocally: true,
-  reachableInternet: true,
-  reachableBLE: true,
+  description: "Send digital postcards with photos using sneakernet",
+  missing: "Not yet published",
+  worksLocally: false,
+  reachableInternet: false,
+  reachableBLE: false,
   feedback: {
-    like: true,
-    rate: true,
-    comment: true,
+    like: false,
+    rate: false,
+    comment: false,
     subscribe: false
   }
 };

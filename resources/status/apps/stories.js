@@ -2,15 +2,15 @@
 const appStories = {
   id: "stories",
   title: "Stories",
-  description: "Short-form content and status updates",
+  description: "Short videos/images and status updates",
   missing: "Media filters and effects",
   worksLocally: true,
-  reachableInternet: true,
-  reachableBLE: true,
+  reachableInternet: false,
+  reachableBLE: false,
   feedback: {
-    like: true,
+    like: false,
     rate: false,
-    comment: true,
-    subscribe: true
+    comment: false,
+    subscribe: false
   }
 };

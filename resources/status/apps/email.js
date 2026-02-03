@@ -3,9 +3,9 @@ const appEmail = {
   id: "email",
   title: "Email",
   description: "Email client with offline support and sync",
-  missing: "PGP encryption support",
+  missing: "Can send emails, but not yet receiving them",
   worksLocally: true,
-  reachableInternet: true,
+  reachableInternet: false,
   reachableBLE: false,
   feedback: {
     like: false,

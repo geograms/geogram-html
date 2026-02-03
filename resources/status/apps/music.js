@@ -3,14 +3,14 @@ const appMusic = {
   id: "music",
   title: "Music",
   description: "Music library and audio player",
-  missing: "Playlist sharing",
+  missing: "Music listening scoreboard/recommendations",
   worksLocally: true,
-  reachableInternet: true,
+  reachableInternet: false,
   reachableBLE: false,
   feedback: {
-    like: true,
-    rate: true,
+    like: false,
+    rate: false,
     comment: false,
-    subscribe: true
+    subscribe: false
   }
 };

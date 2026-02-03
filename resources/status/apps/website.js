@@ -8,9 +8,9 @@ const appWebsite = {
   reachableInternet: true,
   reachableBLE: false,
   feedback: {
-    like: true,
+    like: false,
     rate: false,
-    comment: true,
+    comment: false,
     subscribe: false
   }
 };

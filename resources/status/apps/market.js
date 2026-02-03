@@ -4,13 +4,13 @@ const appMarket = {
   title: "Market",
   description: "Buy and sell items locally",
   missing: "Payment integration",
-  worksLocally: true,
-  reachableInternet: true,
+  worksLocally: false,
+  reachableInternet: false,
   reachableBLE: false,
   feedback: {
-    like: true,
-    rate: true,
-    comment: true,
-    subscribe: true
+    like: false,
+    rate: false,
+    comment: false,
+    subscribe: false
   }
 };

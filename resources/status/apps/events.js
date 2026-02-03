@@ -3,13 +3,13 @@ const appEvents = {
   id: "events",
   title: "Events",
   description: "Community calendars with event details, locations, and participant tracking",
-  missing: "Recurring events support",
+  missing: "Support that other users can contribute pictures to same event",
   worksLocally: true,
   reachableInternet: true,
   reachableBLE: true,
   feedback: {
     like: true,
-    rate: false,
+    rate: true,
     comment: true,
     subscribe: true
   }

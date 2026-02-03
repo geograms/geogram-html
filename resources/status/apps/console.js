@@ -2,11 +2,11 @@
 const appConsole = {
   id: "console",
   title: "Console",
-  description: "Device administration and debugging console",
+  description: "Device administration and command prompt for text interfaces",
   missing: "Remote device access",
   worksLocally: true,
-  reachableInternet: true,
-  reachableBLE: true,
+  reachableInternet: false,
+  reachableBLE: false,
   feedback: {
     like: false,
     rate: false,

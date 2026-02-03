@@ -2,8 +2,8 @@
 const appFiles = {
   id: "files",
   title: "Files",
-  description: "File manager for local and shared storage",
-  missing: "Preview for more file types",
+  description: "Share folders on disk with other users",
+  missing: "Heavier testing, particularly on user permissions",
   worksLocally: true,
   reachableInternet: true,
   reachableBLE: true,

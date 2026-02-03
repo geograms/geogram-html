@@ -3,14 +3,14 @@ const appForum = {
   id: "forum",
   title: "Forum",
   description: "Discussion boards and threads",
-  missing: "Moderation tools",
-  worksLocally: true,
-  reachableInternet: true,
+  missing: "Basic features implemented, not yet released to public",
+  worksLocally: false,
+  reachableInternet: false,
   reachableBLE: false,
   feedback: {
-    like: true,
+    like: false,
     rate: false,
-    comment: true,
-    subscribe: true
+    comment: false,
+    subscribe: false
   }
 };

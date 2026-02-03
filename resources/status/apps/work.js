@@ -3,14 +3,14 @@ const appWork = {
   id: "work",
   title: "Work",
   description: "Offline Google Docs alternative with spreadsheets, documents, and presentations",
-  missing: "Conflict resolution for concurrent edits",
+  missing: "Just works locally, missing multiple party editing",
   worksLocally: true,
-  reachableInternet: true,
-  reachableBLE: true,
+  reachableInternet: false,
+  reachableBLE: false,
   feedback: {
-    like: true,
+    like: false,
     rate: false,
-    comment: true,
+    comment: false,
     subscribe: false
   }
 };

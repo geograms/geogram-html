@@ -2,10 +2,10 @@
 const appLog = {
   id: "log",
   title: "Log",
-  description: "Personal journal and activity logging",
-  missing: "Export to PDF",
+  description: "Logs system messages, used for reporting crashes on the platform",
+  missing: "One-click submit report directly to developers",
   worksLocally: true,
-  reachableInternet: true,
+  reachableInternet: false,
   reachableBLE: false,
   feedback: {
     like: false,

@@ -10,7 +10,7 @@ const appBlog = {
   feedback: {
     like: true,
     rate: false,
-    comment: true,
-    subscribe: true
+    comment: false,
+    subscribe: false
   }
 };

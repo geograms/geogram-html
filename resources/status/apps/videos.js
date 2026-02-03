@@ -3,14 +3,14 @@ const appVideos = {
   id: "videos",
   title: "Videos",
   description: "Video library and streaming player",
-  missing: "Offline transcoding",
+  missing: "Extract subtitles offline using Whisper, enable search of content",
   worksLocally: true,
-  reachableInternet: true,
+  reachableInternet: false,
   reachableBLE: false,
   feedback: {
-    like: true,
-    rate: true,
-    comment: true,
-    subscribe: true
+    like: false,
+    rate: false,
+    comment: false,
+    subscribe: false
   }
 };

@@ -2,11 +2,11 @@
 const appWallet = {
   id: "wallet",
   title: "Wallet",
-  description: "Track debts and IOUs with cryptographic receipts",
-  missing: "Multi-party debt splitting",
+  description: "Track debts between two parties with cryptographic receipts",
+  missing: "The signature process for debts is not well implemented, needs revision",
   worksLocally: true,
-  reachableInternet: true,
-  reachableBLE: true,
+  reachableInternet: false,
+  reachableBLE: false,
   feedback: {
     like: false,
     rate: false,

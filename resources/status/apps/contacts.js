@@ -3,10 +3,10 @@ const appContacts = {
   id: "contacts",
   title: "Contacts",
   description: "Address book with sync capabilities across devices",
-  missing: "Import from vCard format",
+  missing: "Make it easy to share contacts using BLE (QR code already available)",
   worksLocally: true,
-  reachableInternet: true,
-  reachableBLE: true,
+  reachableInternet: false,
+  reachableBLE: false,
   feedback: {
     like: false,
     rate: false,

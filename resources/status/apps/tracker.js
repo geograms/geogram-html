@@ -2,15 +2,15 @@
 const appTracker = {
   id: "tracker",
   title: "Tracker",
-  description: "Location tracking and position history",
-  missing: "Geofencing alerts",
+  description: "Location tracking for sport and travels, strava alternative",
+  missing: "Improve tracking during travels",
   worksLocally: true,
-  reachableInternet: true,
-  reachableBLE: true,
+  reachableInternet: false,
+  reachableBLE: false,
   feedback: {
-    like: true,
+    like: false,
     rate: false,
-    comment: true,
-    subscribe: true
+    comment: false,
+    subscribe: false
   }
 };

@@ -2,15 +2,15 @@
 const appFlasher = {
   id: "flasher",
   title: "Flasher",
-  description: "Flash ESP32 and Quansheng radios directly from your phone",
-  missing: "Firmware version comparison",
+  description: "Flash ESP32 devices directly from your phone",
+  missing: "Quansheng radio support",
   worksLocally: true,
   reachableInternet: false,
   reachableBLE: false,
   feedback: {
     like: false,
     rate: false,
-    comment: true,
+    comment: false,
     subscribe: false
   }
 };

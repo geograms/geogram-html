@@ -5,12 +5,12 @@ const appAlerts = {
   description: "Geographic alert system with severity classification and community verification",
   missing: "Push notifications on mobile",
   worksLocally: true,
-  reachableInternet: true,
+  reachableInternet: false,
   reachableBLE: true,
   feedback: {
-    like: false,
-    rate: false,
+    like: true,
+    rate: true,
     comment: true,
-    subscribe: true
+    subscribe: false
   }
 };

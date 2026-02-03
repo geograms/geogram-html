@@ -3,9 +3,9 @@ const appBackup = {
   id: "backup",
   title: "Backup",
   description: "Data backup and restore functionality",
-  missing: "Cloud storage integration",
+  missing: "Basic functionality works but needs better testing",
   worksLocally: true,
-  reachableInternet: true,
+  reachableInternet: false,
   reachableBLE: false,
   feedback: {
     like: false,
