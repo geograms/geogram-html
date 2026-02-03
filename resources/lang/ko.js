@@ -172,5 +172,6 @@ translations.ko = {
   'status.subscribe': '인터넷에서 접근 가능',
   'status.feature': '기능',
   'status.description': '설명',
-  'status.docs': '문서'
+  'status.docs': '문서',
+  'status.request_app': '원하는 앱이 보이지 않나요? <a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">팀에 요청해 주세요</a>. 개발을 검토하겠습니다.'
 };

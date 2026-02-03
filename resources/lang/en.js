@@ -172,5 +172,6 @@ translations.en = {
   'status.subscribe': 'Reachable from Internet',
   'status.feature': 'Feature',
   'status.description': 'Description',
-  'status.docs': 'Docs'
+  'status.docs': 'Docs',
+  'status.request_app': 'Don\'t see an app you\'d like to use? <a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">Request one from our team</a> and we\'ll consider building it.'
 };

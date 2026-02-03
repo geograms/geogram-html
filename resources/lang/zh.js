@@ -172,5 +172,6 @@ translations.zh = {
   'status.subscribe': '可从互联网访问',
   'status.feature': '功能',
   'status.description': '说明',
-  'status.docs': '文档'
+  'status.docs': '文档',
+  'status.request_app': '没有看到你想使用的应用？<a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">向我们的团队提出请求</a>，我们会考虑开发。'
 };

@@ -172,5 +172,6 @@ translations.tr = {
   'status.subscribe': 'İnternetten erişilebilir',
   'status.feature': 'Özellik',
   'status.description': 'Açıklama',
-  'status.docs': 'Docs'
+  'status.docs': 'Docs',
+  'status.request_app': 'Kullanmak istediğiniz bir uygulama görmüyor musunuz? <a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">Ekibimizden isteyin</a> ve geliştirmeyi değerlendirelim.'
 };

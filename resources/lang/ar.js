@@ -172,5 +172,6 @@ translations.ar = {
   'status.subscribe': 'يمكن الوصول إليه من الإنترنت',
   'status.feature': 'ميزة',
   'status.description': 'الوصف',
-  'status.docs': 'المستندات'
+  'status.docs': 'المستندات',
+  'status.request_app': 'لا ترى تطبيقًا تريد استخدامه؟ <a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">اطلبه من فريقنا</a> وسننظر في تطويره.'
 };

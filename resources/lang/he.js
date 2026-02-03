@@ -172,5 +172,6 @@ translations.he = {
   'status.subscribe': 'נגיש מהאינטרנט',
   'status.feature': 'תכונה',
   'status.description': 'תיאור',
-  'status.docs': 'מסמכים'
+  'status.docs': 'מסמכים',
+  'status.request_app': 'לא מוצא אפליקציה שהיית רוצה להשתמש בה? <a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">בקש אותה מהצוות שלנו</a> ונשקול לפתח אותה.'
 };
