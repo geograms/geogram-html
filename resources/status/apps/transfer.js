@@ -4,13 +4,13 @@ const appTransfer = {
   title: "Transfer",
   description: "Unified download and upload management with resume capability",
   missing: "Bandwidth throttling",
-  worksLocally: true,
-  reachableInternet: true,
-  reachableBLE: true,
+  worksLocally: "true",
+  reachableInternet: "true",
+  reachableBLE: "true",
   feedback: {
-    like: false,
-    rate: false,
-    comment: false,
-    subscribe: false
+    like: "n/a",
+    rate: "n/a",
+    comment: "n/a",
+    subscribe: "n/a"
   }
 };

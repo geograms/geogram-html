@@ -4,13 +4,13 @@ const appWallet = {
   title: "Wallet",
   description: "Track debts between two parties with cryptographic receipts",
   missing: "The signature process for debts is not well implemented, needs revision",
-  worksLocally: true,
-  reachableInternet: false,
-  reachableBLE: false,
+  worksLocally: "true",
+  reachableInternet: "false",
+  reachableBLE: "false",
   feedback: {
-    like: false,
-    rate: false,
-    comment: false,
-    subscribe: false
+    like: "n/a",
+    rate: "n/a",
+    comment: "n/a",
+    subscribe: "n/a"
   }
 };

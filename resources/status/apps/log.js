@@ -4,13 +4,13 @@ const appLog = {
   title: "Log",
   description: "Logs system messages, used for reporting crashes on the platform",
   missing: "One-click submit report directly to developers",
-  worksLocally: true,
-  reachableInternet: false,
-  reachableBLE: false,
+  worksLocally: "true",
+  reachableInternet: "n/a",
+  reachableBLE: "n/a",
   feedback: {
-    like: false,
-    rate: false,
-    comment: false,
-    subscribe: false
+    like: "n/a",
+    rate: "n/a",
+    comment: "n/a",
+    subscribe: "n/a"
   }
 };

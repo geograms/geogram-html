@@ -4,13 +4,13 @@ const appInventory = {
   title: "Inventory",
   description: "Asset tracking with 200+ item types for off-grid contexts",
   missing: "Barcode/QR scanning to recognize items. Send them to other users",
-  worksLocally: true,
-  reachableInternet: false,
-  reachableBLE: false,
+  worksLocally: "true",
+  reachableInternet: "false",
+  reachableBLE: "false",
   feedback: {
-    like: false,
-    rate: false,
-    comment: false,
-    subscribe: false
+    like: "n/a",
+    rate: "n/a",
+    comment: "n/a",
+    subscribe: "n/a"
   }
 };

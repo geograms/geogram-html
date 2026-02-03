@@ -4,13 +4,13 @@ const appReader = {
   title: "Reader",
   description: "Offline content library with RSS, manga, and ebooks support",
   missing: "Plugins for crawling external sites. NDF book support",
-  worksLocally: true,
-  reachableInternet: false,
-  reachableBLE: false,
+  worksLocally: "true",
+  reachableInternet: "false",
+  reachableBLE: "false",
   feedback: {
-    like: false,
-    rate: false,
-    comment: false,
-    subscribe: false
+    like: "false",
+    rate: "false",
+    comment: "false",
+    subscribe: "false"
   }
 };

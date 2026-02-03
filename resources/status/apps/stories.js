@@ -4,13 +4,13 @@ const appStories = {
   title: "Stories",
   description: "Short videos/images and status updates",
   missing: "Media filters and effects",
-  worksLocally: true,
-  reachableInternet: false,
-  reachableBLE: false,
+  worksLocally: "true",
+  reachableInternet: "false",
+  reachableBLE: "false",
   feedback: {
-    like: false,
-    rate: false,
-    comment: false,
-    subscribe: false
+    like: "false",
+    rate: "false",
+    comment: "false",
+    subscribe: "false"
   }
 };

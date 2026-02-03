@@ -254,6 +254,12 @@
       font-size: 1.1rem;
     }
 
+    .feature-na {
+      color: #9ca3af;
+      font-size: 0.85rem;
+      font-style: italic;
+    }
+
     .docs-link {
       color: var(--primary);
       text-decoration: none;
@@ -360,6 +366,7 @@
       <p style="margin-bottom: 2rem; color: var(--text-muted); max-width: 800px;">
         Each app is under intensive development. Not all features for each app are yet implemented, and feedback from users is important. The table below helps to understand what is already implemented in broad terms and what isn't. Please let us know if you find any bugs or have any feedback at: <a href="https://github.com/geograms/geogram/issues" target="_blank" style="color: var(--primary); text-decoration: underline;">https://github.com/geograms/geogram/issues</a>
       </p>
+      <div id="apps-progress" style="margin-bottom: 1.5rem; max-width: 800px;"></div>
       <div class="apps-table-wrapper">
         <table class="apps-comparison-table" id="apps-grid">
           <!-- Apps will be loaded dynamically -->
@@ -732,8 +739,8 @@
           if (feature.isCombinedSync) {
             // Combine Internet and BLE sync into one column
             const methods = [];
-            if (app.reachableInternet) methods.push('Internet');
-            if (app.reachableBLE) methods.push('BLE');
+            if (app.reachableInternet === "true") methods.push('Internet');
+            if (app.reachableBLE === "true") methods.push('BLE');
             if (methods.length > 0) {
               bodyRows += `<td><span class="sync-methods">${methods.join(', ')}</span></td>`;
             } else {
@@ -741,20 +748,56 @@
             }
             return;
           } else if (feature.isCombinedFeedback) {
-            value = app.feedback.like || app.feedback.rate || app.feedback.comment;
+            value = (app.feedback.like === "true" || app.feedback.rate === "true" || app.feedback.comment === "true") ? "true" : "false";
           } else if (feature.isFeedback) {
             value = app.feedback[feature.key];
           } else {
             value = app[feature.key];
           }
-          bodyRows += value
-            ? '<td><span class="feature-yes">&#10003;</span></td>'
-            : '<td><span class="feature-no">&#10005;</span></td>';
+          if (value === "true") {
+            bodyRows += '<td><span class="feature-yes">&#10003;</span></td>';
+          } else if (value === "n/a") {
+            bodyRows += '<td><span class="feature-na">N/A</span></td>';
+          } else {
+            bodyRows += '<td><span class="feature-no">&#10005;</span></td>';
+          }
         });
         bodyRows += '</tr>';
       });
 
       table.innerHTML = `<thead>${headerRow}</thead><tbody>${bodyRows}</tbody>`;
+
+      // Calculate and display development progress
+      const featureKeys = ['worksLocally', 'reachableInternet', 'reachableBLE'];
+      const feedbackKeys = ['like', 'rate', 'comment', 'subscribe'];
+      let implemented = 0;
+      let total = 0;
+      apps.forEach(app => {
+        featureKeys.forEach(key => {
+          if (app[key] !== "n/a") {
+            total++;
+            if (app[key] === "true") implemented++;
+          }
+        });
+        feedbackKeys.forEach(key => {
+          if (app.feedback[key] !== "n/a") {
+            total++;
+            if (app.feedback[key] === "true") implemented++;
+          }
+        });
+      });
+      const percent = total > 0 ? Math.round((implemented / total) * 100) : 0;
+      const progressEl = document.getElementById('apps-progress');
+      progressEl.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div style="flex: 1; background: var(--bg-card, #23232a); border-radius: 8px; height: 18px; overflow: hidden; border: 1px solid var(--border, #333);">
+            <div style="width: ${percent}%; height: 100%; background: linear-gradient(90deg, #4ade80, #22d3ee); border-radius: 7px; transition: width 0.3s;"></div>
+          </div>
+          <span style="color: var(--text-muted); font-size: 0.95rem; white-space: nowrap;">
+            <strong style="color: var(--text, #fff);">${percent}%</strong> implemented (${implemented}/${total} features)
+          </span>
+        </div>
+      `;
     }
 
     // Initialize on page load

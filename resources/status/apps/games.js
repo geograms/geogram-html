@@ -4,13 +4,13 @@ const appGames = {
   title: "Games",
   description: "Multiplayer and offline games",
   missing: "Only available inside the console, needs UI-based games",
-  worksLocally: true,
-  reachableInternet: false,
-  reachableBLE: false,
+  worksLocally: "true",
+  reachableInternet: "false",
+  reachableBLE: "false",
   feedback: {
-    like: false,
-    rate: false,
-    comment: false,
-    subscribe: false
+    like: "false",
+    rate: "false",
+    comment: "false",
+    subscribe: "false"
   }
 };

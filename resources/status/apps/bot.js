@@ -4,13 +4,13 @@ const appBot = {
   title: "Bot",
   description: "Automated assistants and chatbots",
   missing: "Custom bot scripting",
-  worksLocally: false,
-  reachableInternet: false,
-  reachableBLE: false,
+  worksLocally: "false",
+  reachableInternet: "false",
+  reachableBLE: "false",
   feedback: {
-    like: false,
-    rate: false,
-    comment: false,
-    subscribe: false
+    like: "n/a",
+    rate: "n/a",
+    comment: "n/a",
+    subscribe: "n/a"
   }
 };

@@ -4,13 +4,13 @@ const appPostcards = {
   title: "Postcards",
   description: "Send digital postcards with photos using sneakernet",
   missing: "Not yet published",
-  worksLocally: false,
-  reachableInternet: false,
-  reachableBLE: false,
+  worksLocally: "false",
+  reachableInternet: "false",
+  reachableBLE: "false",
   feedback: {
-    like: false,
-    rate: false,
-    comment: false,
-    subscribe: false
+    like: "n/a",
+    rate: "n/a",
+    comment: "n/a",
+    subscribe: "n/a"
   }
 };
