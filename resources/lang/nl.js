@@ -173,5 +173,8 @@ translations.nl = {
   'status.feature': 'Functie',
   'status.description': 'Beschrijving',
   'status.docs': 'Docs',
-  'status.request_app': 'Zie je geen app die je zou willen gebruiken? <a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">Vraag het aan ons team</a> en we overwegen deze te bouwen.'
+  'status.request_app': 'Zie je geen app die je zou willen gebruiken? <a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">Vraag het aan ons team</a> en we overwegen deze te bouwen.',
+  'status.implemented': 'geïmplementeerd',
+  'status.features': 'functies',
+  'status.na': 'N.v.t.'
 };

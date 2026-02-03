@@ -757,7 +757,7 @@
           if (value === "true") {
             bodyRows += '<td><span class="feature-yes">&#10003;</span></td>';
           } else if (value === "n/a") {
-            bodyRows += '<td><span class="feature-na">N/A</span></td>';
+            bodyRows += `<td><span class="feature-na">${t('status.na')}</span></td>`;
           } else {
             bodyRows += '<td><span class="feature-no">&#10005;</span></td>';
           }
@@ -794,7 +794,7 @@
             <div style="width: ${percent}%; height: 100%; background: linear-gradient(90deg, #4ade80, #22d3ee); border-radius: 7px; transition: width 0.3s;"></div>
           </div>
           <span style="color: var(--text-muted); font-size: 0.95rem; white-space: nowrap;">
-            <strong style="color: var(--text, #fff);">${percent}%</strong> implemented (${implemented}/${total} features)
+            <strong style="color: var(--text, #fff);">${percent}%</strong> ${t('status.implemented')} (${implemented}/${total} ${t('status.features')})
           </span>
         </div>
       `;

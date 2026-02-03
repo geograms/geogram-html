@@ -173,5 +173,8 @@ translations.de = {
   'status.feature': 'Funktion',
   'status.description': 'Beschreibung',
   'status.docs': 'Docs',
-  'status.request_app': 'Vermisst du eine App? <a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">Fordere sie bei unserem Team an</a> und wir prüfen, ob wir sie entwickeln.'
+  'status.request_app': 'Vermisst du eine App? <a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">Fordere sie bei unserem Team an</a> und wir prüfen, ob wir sie entwickeln.',
+  'status.implemented': 'implementiert',
+  'status.features': 'Funktionen',
+  'status.na': 'N/V'
 };

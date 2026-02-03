@@ -173,5 +173,8 @@ translations.ja = {
   'status.feature': '機能',
   'status.description': '説明',
   'status.docs': 'ドキュメント',
-  'status.request_app': '使いたいアプリが見つかりませんか？<a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">チームにリクエスト</a>してください。開発を検討します。'
+  'status.request_app': '使いたいアプリが見つかりませんか？<a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">チームにリクエスト</a>してください。開発を検討します。',
+  'status.implemented': '実装済み',
+  'status.features': '件の機能',
+  'status.na': '該当なし'
 };
