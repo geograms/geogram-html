@@ -153,7 +153,7 @@ translations.zh = {
   'footer.discussions': '讨论',
   // 状态页面
   'status.title': '系统状态',
-  'status.subtitle': '查看Geogram网络中站点服务器和应用功能的状态。',
+  'status.subtitle': '查看平台中geogram服务器和应用的状态。',
   'status.stations': '互联网站点',
   'status.apps': '应用状态',
   'status.add_station': '添加您的站点',
@@ -176,5 +176,6 @@ translations.zh = {
   'status.request_app': '没有看到你想使用的应用？<a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">向我们的团队提出请求</a>，我们会考虑开发。',
   'status.implemented': '已实现',
   'status.features': '项功能',
-  'status.na': '不适用'
+  'status.na': '不适用',
+  'status.install_station': '要安装你自己的互联网站点，请参阅文档 <a href="https://github.com/geograms/geogram/blob/main/docs/station-server-deployment.md" target="_blank" style="color: var(--primary); text-decoration: underline;">station-server-deployment.md</a>'
 };

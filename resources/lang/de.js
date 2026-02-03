@@ -153,7 +153,7 @@ translations.de = {
   'footer.discussions': 'Diskussionen',
   // Statusseite
   'status.title': 'Systemstatus',
-  'status.subtitle': 'Überprüfe den Status der Stationsserver und App-Funktionen im Geogram-Netzwerk.',
+  'status.subtitle': 'Überprüfe den Status der Geogram-Server und Apps auf der Plattform.',
   'status.stations': 'Internet-Stationen',
   'status.apps': 'App-Status',
   'status.add_station': 'Station Hinzufügen',
@@ -176,5 +176,6 @@ translations.de = {
   'status.request_app': 'Vermisst du eine App? <a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">Fordere sie bei unserem Team an</a> und wir prüfen, ob wir sie entwickeln.',
   'status.implemented': 'implementiert',
   'status.features': 'Funktionen',
-  'status.na': 'N/V'
+  'status.na': 'N/V',
+  'status.install_station': 'Um deine eigene Internet-Station zu installieren, folge bitte der Dokumentation unter <a href="https://github.com/geograms/geogram/blob/main/docs/station-server-deployment.md" target="_blank" style="color: var(--primary); text-decoration: underline;">station-server-deployment.md</a>'
 };

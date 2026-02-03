@@ -153,7 +153,7 @@ translations.ko = {
   'footer.discussions': '토론',
   // 상태 페이지
   'status.title': '시스템 상태',
-  'status.subtitle': 'Geogram 네트워크의 스테이션 서버 및 앱 기능 상태를 확인하세요.',
+  'status.subtitle': '플랫폼의 geogram 서버 및 앱 상태를 확인하세요.',
   'status.stations': '인터넷 스테이션',
   'status.apps': '앱 상태',
   'status.add_station': '스테이션 추가하기',
@@ -176,5 +176,6 @@ translations.ko = {
   'status.request_app': '원하는 앱이 보이지 않나요? <a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">팀에 요청해 주세요</a>. 개발을 검토하겠습니다.',
   'status.implemented': '구현됨',
   'status.features': '개 기능',
-  'status.na': '해당 없음'
+  'status.na': '해당 없음',
+  'status.install_station': '자체 인터넷 스테이션을 설치하려면 다음 문서를 참조하세요: <a href="https://github.com/geograms/geogram/blob/main/docs/station-server-deployment.md" target="_blank" style="color: var(--primary); text-decoration: underline;">station-server-deployment.md</a>'
 };

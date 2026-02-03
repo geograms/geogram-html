@@ -153,7 +153,7 @@ translations.tr = {
   'footer.discussions': 'Tartışmalar',
   // Durum sayfası
   'status.title': 'Sistem Durumu',
-  'status.subtitle': 'Geogram ağındaki istasyon sunucularının ve uygulama özelliklerinin durumunu kontrol edin.',
+  'status.subtitle': 'Platformdaki geogram sunucularının ve uygulamaların durumunu kontrol edin.',
   'status.stations': 'İnternet İstasyonları',
   'status.apps': 'Uygulama Durumu',
   'status.add_station': 'İstasyonunuzu Ekleyin',
@@ -176,5 +176,6 @@ translations.tr = {
   'status.request_app': 'Kullanmak istediğiniz bir uygulama görmüyor musunuz? <a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">Ekibimizden isteyin</a> ve geliştirmeyi değerlendirelim.',
   'status.implemented': 'uygulandı',
   'status.features': 'özellikler',
-  'status.na': 'Uygulanamaz'
+  'status.na': 'Uygulanamaz',
+  'status.install_station': 'Kendi internet istasyonunuzu kurmak için lütfen şu belgeleri takip edin: <a href="https://github.com/geograms/geogram/blob/main/docs/station-server-deployment.md" target="_blank" style="color: var(--primary); text-decoration: underline;">station-server-deployment.md</a>'
 };

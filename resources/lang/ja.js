@@ -153,7 +153,7 @@ translations.ja = {
   'footer.discussions': 'ディスカッション',
   // ステータスページ
   'status.title': 'システムステータス',
-  'status.subtitle': 'Geogramネットワークのステーションサーバーとアプリ機能のステータスを確認してください。',
+  'status.subtitle': 'プラットフォームのgeogramサーバーとアプリのステータスを確認してください。',
   'status.stations': 'インターネットステーション',
   'status.apps': 'アプリステータス',
   'status.add_station': 'ステーションを追加',
@@ -176,5 +176,6 @@ translations.ja = {
   'status.request_app': '使いたいアプリが見つかりませんか？<a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">チームにリクエスト</a>してください。開発を検討します。',
   'status.implemented': '実装済み',
   'status.features': '件の機能',
-  'status.na': '該当なし'
+  'status.na': '該当なし',
+  'status.install_station': '自分のインターネットステーションをインストールするには、次のドキュメントを参照してください: <a href="https://github.com/geograms/geogram/blob/main/docs/station-server-deployment.md" target="_blank" style="color: var(--primary); text-decoration: underline;">station-server-deployment.md</a>'
 };

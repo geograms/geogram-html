@@ -153,7 +153,7 @@ translations.he = {
   'footer.discussions': 'דיונים',
   // דף סטטוס
   'status.title': 'סטטוס מערכת',
-  'status.subtitle': 'בדוק את סטטוס שרתי התחנות ותכונות האפליקציות ברשת Geogram.',
+  'status.subtitle': 'בדוק את סטטוס שרתי geogram והאפליקציות בפלטפורמה.',
   'status.stations': 'תחנות אינטרנט',
   'status.apps': 'סטטוס אפליקציות',
   'status.add_station': 'הוסף את התחנה שלך',
@@ -176,5 +176,6 @@ translations.he = {
   'status.request_app': 'לא מוצא אפליקציה שהיית רוצה להשתמש בה? <a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">בקש אותה מהצוות שלנו</a> ונשקול לפתח אותה.',
   'status.implemented': 'מיושם',
   'status.features': 'תכונות',
-  'status.na': 'לא רלוונטי'
+  'status.na': 'לא רלוונטי',
+  'status.install_station': 'כדי להתקין תחנת אינטרנט משלך, עקוב אחר התיעוד ב-<a href="https://github.com/geograms/geogram/blob/main/docs/station-server-deployment.md" target="_blank" style="color: var(--primary); text-decoration: underline;">station-server-deployment.md</a>'
 };

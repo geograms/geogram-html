@@ -153,7 +153,7 @@ translations.sv = {
   'footer.discussions': 'Diskussioner',
   // Statussida
   'status.title': 'Systemstatus',
-  'status.subtitle': 'Kontrollera statusen för stationsservrar och appfunktioner i Geogram-nätverket.',
+  'status.subtitle': 'Kontrollera statusen för geogram-servrarna och apparna på plattformen.',
   'status.stations': 'Internetstationer',
   'status.apps': 'Appstatus',
   'status.add_station': 'Lägg Till Din Station',
@@ -176,5 +176,6 @@ translations.sv = {
   'status.request_app': 'Saknar du en app du skulle vilja använda? <a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">Föreslå den till vårt team</a> så överväger vi att bygga den.',
   'status.implemented': 'implementerat',
   'status.features': 'funktioner',
-  'status.na': 'Ej tillämpligt'
+  'status.na': 'Ej tillämpligt',
+  'status.install_station': 'För att installera din egen internetstation, följ dokumentationen på <a href="https://github.com/geograms/geogram/blob/main/docs/station-server-deployment.md" target="_blank" style="color: var(--primary); text-decoration: underline;">station-server-deployment.md</a>'
 };

@@ -153,7 +153,7 @@ translations.ar = {
   'footer.discussions': 'النقاشات',
   // صفحة الحالة
   'status.title': 'حالة النظام',
-  'status.subtitle': 'تحقق من حالة خوادم المحطات وميزات التطبيقات في شبكة Geogram.',
+  'status.subtitle': 'تحقق من حالة خوادم geogram والتطبيقات في المنصة.',
   'status.stations': 'محطات الإنترنت',
   'status.apps': 'حالة التطبيقات',
   'status.add_station': 'أضف محطتك',
@@ -176,5 +176,6 @@ translations.ar = {
   'status.request_app': 'لا ترى تطبيقًا تريد استخدامه؟ <a href="https://github.com/geograms/geogram/issues/new" target="_blank" style="color: var(--primary); text-decoration: underline;">اطلبه من فريقنا</a> وسننظر في تطويره.',
   'status.implemented': 'مُنفَّذ',
   'status.features': 'ميزات',
-  'status.na': 'غير متاح'
+  'status.na': 'غير متاح',
+  'status.install_station': 'لتثبيت محطة الإنترنت الخاصة بك، يرجى اتباع الوثائق على <a href="https://github.com/geograms/geogram/blob/main/docs/station-server-deployment.md" target="_blank" style="color: var(--primary); text-decoration: underline;">station-server-deployment.md</a>'
 };
