@@ -268,16 +268,16 @@
   <!-- Hero Section -->
   <section class="security-hero">
     <div class="container">
-      <h1>Privacy & Security</h1>
-      <p>Geogram is designed with privacy as a default. There are no accounts, no cloud storage, and no telemetry. This page documents exactly what happens with your data across every communication layer.</p>
+      <h1 data-i18n="security.title">Privacy & Security</h1>
+      <p data-i18n="security.subtitle">Geogram is designed with privacy as a default. There are no accounts, no cloud storage, and no telemetry. This page documents exactly what happens with your data across every communication layer.</p>
     </div>
   </section>
 
   <!-- GDPR Section -->
   <section class="security-section" id="gdpr">
     <div class="container">
-      <h2><a href="#gdpr" class="section-title">GDPR & Data Deletion</a></h2>
-      <p class="section-intro">Geogram's decentralized architecture means your data is primarily under your control. Here is how data rights and deletion work within the system.</p>
+      <h2><a href="#gdpr" class="section-title" data-i18n="security.gdpr.title">GDPR & Data Deletion</a></h2>
+      <p class="section-intro" data-i18n="security.gdpr.intro">Geogram's decentralized architecture means your data is primarily under your control. Here is how data rights and deletion work within the system.</p>
 
       <div class="security-grid">
         <div class="security-card">
@@ -285,14 +285,14 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             Data Residency
           </h4>
-          <p>By design, Geogram stores all user data locally on the user's own device. There are no Geogram-operated cloud servers, no user accounts, and no centralized databases. This means:</p>
-          <ul>
+          <p data-i18n="security.gdpr.residency.p1">By design, Geogram stores all user data locally on the user's own device. There are no Geogram-operated cloud servers, no user accounts, and no centralized databases. This means:</p>
+          <ul data-i18n="security.gdpr.residency.list" data-i18n-html="true">
             <li>No data controller exists beyond the user themselves for locally-stored data</li>
             <li>No personal data is collected by Geogram as an organization</li>
             <li>No analytics, tracking, or telemetry data is gathered</li>
             <li>No email address, phone number, or real name is required to use the software</li>
           </ul>
-          <p>The only personal identifier is a cryptographic keypair (npub/nsec) generated locally on the device.</p>
+          <p data-i18n="security.gdpr.residency.p2">The only personal identifier is a cryptographic keypair (npub/nsec) generated locally on the device.</p>
         </div>
 
         <div class="security-card">
@@ -300,14 +300,14 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
             Local Data Deletion
           </h4>
-          <p>Users have full control over local data deletion:</p>
-          <ul>
+          <p data-i18n="security.gdpr.deletion.p1">Users have full control over local data deletion:</p>
+          <ul data-i18n="security.gdpr.deletion.list" data-i18n-html="true">
             <li><strong>Delete Profile:</strong> Removes the entire profile directory and all associated data (messages, events, settings, contacts). Available from Profile Management.</li>
             <li><strong>Delete Working Folder:</strong> The storage folder can be located and deleted directly from the filesystem.</li>
             <li><strong>Clear Crash Logs:</strong> Diagnostic logs can be cleared from the Security settings (Android).</li>
             <li><strong>Uninstall:</strong> Removing the application and deleting <code>~/.local/share/geogram/</code> removes all data from the device.</li>
           </ul>
-          <p>Since all data is file-based and stored under a single directory, complete deletion is straightforward and verifiable.</p>
+          <p data-i18n="security.gdpr.deletion.p2">Since all data is file-based and stored under a single directory, complete deletion is straightforward and verifiable.</p>
         </div>
 
         <div class="security-card">
@@ -315,8 +315,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             Station-Side Data
           </h4>
-          <p>When you publish content to a station (alerts, places, events, emails, blog posts), copies of that data reside on the station server. Since stations are community-operated, data deletion depends on the station operator:</p>
-          <ul>
+          <p data-i18n="security.gdpr.station.p1">When you publish content to a station (alerts, places, events, emails, blog posts), copies of that data reside on the station server. Since stations are community-operated, data deletion depends on the station operator:</p>
+          <ul data-i18n="security.gdpr.station.list" data-i18n-html="true">
             <li><strong>NOSTR NIP-09 deletion:</strong> You can publish a Kind 5 deletion event referencing the event IDs you want removed. Compliant relays will delete the referenced events.</li>
             <li><strong>Email cache expiry:</strong> Cached emails on stations auto-expire after 24 hours.</li>
             <li><strong>Blossom blob pruning:</strong> File storage is pruned oldest-first when the station exceeds its storage cap.</li>
@@ -329,8 +329,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
             Right to Portability
           </h4>
-          <p>All Geogram data is stored in open, human-readable formats (NOSTR event JSON, markdown files, plain text). The export feature allows you to export all profiles to a file at any time.</p>
-          <p>Since data lives on your filesystem under <code>~/.local/share/geogram/</code>, you can always access, copy, or move your data using standard file management tools. There is no vendor lock-in and no proprietary database format.</p>
+          <p data-i18n="security.gdpr.portability.p1">All Geogram data is stored in open, human-readable formats (NOSTR event JSON, markdown files, plain text). The export feature allows you to export all profiles to a file at any time.</p>
+          <p data-i18n="security.gdpr.portability.p2" data-i18n-html="true">Since data lives on your filesystem under <code>~/.local/share/geogram/</code>, you can always access, copy, or move your data using standard file management tools. There is no vendor lock-in and no proprietary database format.</p>
         </div>
 
         <div class="security-card">
@@ -338,8 +338,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
             Identity Pseudonymity
           </h4>
-          <p>Geogram identifies users by cryptographic keys (npub/nsec), not by real names, email addresses, or phone numbers. A callsign (e.g. "X3ABCD") serves as a human-readable identifier.</p>
-          <p>Users can generate a new identity at any time from the Profile settings, which produces a fresh keypair and callsign. There is no link between old and new identities unless the user explicitly establishes one.</p>
+          <p data-i18n="security.gdpr.pseudonymity.p1">Geogram identifies users by cryptographic keys (npub/nsec), not by real names, email addresses, or phone numbers. A callsign (e.g. "X3ABCD") serves as a human-readable identifier.</p>
+          <p data-i18n="security.gdpr.pseudonymity.p2">Users can generate a new identity at any time from the Profile settings, which produces a fresh keypair and callsign. There is no link between old and new identities unless the user explicitly establishes one.</p>
         </div>
 
         <div class="security-card">
@@ -347,14 +347,14 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
             GDPR Considerations for Station Operators
           </h4>
-          <p>If you operate a public station that stores data from other users, you may be considered a data controller under GDPR. Station operators should consider:</p>
-          <ul>
+          <p data-i18n="security.gdpr.operators.p1">If you operate a public station that stores data from other users, you may be considered a data controller under GDPR. Station operators should consider:</p>
+          <ul data-i18n="security.gdpr.operators.list" data-i18n-html="true">
             <li>Implementing NIP-09 deletion event handling (supported by default in the relay)</li>
             <li>Configuring reasonable Blossom storage limits and expiry policies</li>
             <li>Setting email cache auto-expiry (default: 24 hours)</li>
             <li>Documenting a privacy policy for users connecting to your station</li>
           </ul>
-          <p>For personal/family stations, GDPR's household exemption typically applies.</p>
+          <p data-i18n="security.gdpr.operators.p2">For personal/family stations, GDPR's household exemption typically applies.</p>
         </div>
       </div>
     </div>
@@ -363,8 +363,8 @@
   <!-- Connection Routing Section -->
   <section class="security-section" id="routing">
     <div class="container">
-      <h2><a href="#routing" class="section-title">Connection Routing</a></h2>
-      <p class="section-intro">Geogram continuously evaluates all available transports to find the most optimal path to reach each device. The connection manager acts as a transport-agnostic messaging hub that selects the best route based on configurable routing strategies.</p>
+      <h2><a href="#routing" class="section-title" data-i18n="security.routing.title">Connection Routing</a></h2>
+      <p class="section-intro" data-i18n="security.routing.intro">Geogram continuously evaluates all available transports to find the most optimal path to reach each device. The connection manager acts as a transport-agnostic messaging hub that selects the best route based on configurable routing strategies.</p>
 
       <div class="security-grid">
         <div class="security-card">
@@ -372,8 +372,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><line x1="8.7" y1="10.7" x2="15.3" y2="7.3"/><line x1="8.7" y1="13.3" x2="15.3" y2="16.7"/></svg>
             Optimal Path Selection
           </h4>
-          <p>When sending a message, the <code>ConnectionManager</code> queries the active routing strategy to rank available transports. It performs parallel reachability checks (with a 2-second timeout) across all transports and sends through the first one that can reach the target device.</p>
-          <p>If the selected transport fails, the system automatically falls back to the next available one. If all transports fail and the message is queued, a background processor retries every 30 seconds. The message queue holds up to 1000 pending messages.</p>
+          <p data-i18n="security.routing.optimal.p1" data-i18n-html="true">When sending a message, the <code>ConnectionManager</code> queries the active routing strategy to rank available transports. It performs parallel reachability checks (with a 2-second timeout) across all transports and sends through the first one that can reach the target device.</p>
+          <p data-i18n="security.routing.optimal.p2">If the selected transport fails, the system automatically falls back to the next available one. If all transports fail and the message is queued, a background processor retries every 30 seconds. The message queue holds up to 1000 pending messages.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/connection/connection_manager.dart" target="_blank">lib/connection/connection_manager.dart</a></span>
         </div>
 
@@ -382,8 +382,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
             Routing Strategies
           </h4>
-          <p>Four routing strategies are available, with <strong>PriorityRoutingStrategy</strong> as the default:</p>
-          <ul>
+          <p data-i18n="security.routing.strategies.p1" data-i18n-html="true">Four routing strategies are available, with <strong>PriorityRoutingStrategy</strong> as the default:</p>
+          <ul data-i18n="security.routing.strategies.list" data-i18n-html="true">
             <li><strong>Priority:</strong> Selects by transport priority number (lower = preferred). Falls back to all available if none are directly reachable.</li>
             <li><strong>Quality:</strong> Selects based on historical metrics including average latency and success rate per device.</li>
             <li><strong>Failover:</strong> Uses an explicit transport ordering with sequential fallback.</li>
@@ -397,8 +397,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             Transport Priority Order
           </h4>
-          <p>Each transport has a fixed priority value. Lower numbers are preferred:</p>
-          <ul>
+          <p data-i18n="security.routing.priority.p1">Each transport has a fixed priority value. Lower numbers are preferred:</p>
+          <ul data-i18n="security.routing.priority.list" data-i18n-html="true">
             <li><strong>Priority 5 &mdash; USB:</strong> Wired connection. Fastest, most reliable, zero interference.</li>
             <li><strong>Priority 10 &mdash; LAN:</strong> Direct HTTP on local network. Low latency.</li>
             <li><strong>Priority 15 &mdash; WebRTC:</strong> Direct P2P over internet. No relay bandwidth cost.</li>
@@ -406,7 +406,7 @@
             <li><strong>Priority 35 &mdash; Bluetooth Classic:</strong> SPP profile for legacy devices.</li>
             <li><strong>Priority 40 &mdash; BLE:</strong> Bluetooth Low Energy. Lowest bandwidth, works fully offline.</li>
           </ul>
-          <p>Message ID tracking ensures no duplicates are delivered when a message is attempted across multiple transports.</p>
+          <p data-i18n="security.routing.priority.p2">Message ID tracking ensures no duplicates are delivered when a message is attempted across multiple transports.</p>
         </div>
       </div>
     </div>
@@ -415,8 +415,8 @@
   <!-- Internet Section -->
   <section class="security-section" id="internet">
     <div class="container">
-      <h2><a href="#internet" class="section-title">Internet</a></h2>
-      <p class="section-intro">When internet connectivity is available, Geogram can connect to station servers to relay messages, synchronize data, and enable peer-to-peer connections between devices that aren't on the same local network.</p>
+      <h2><a href="#internet" class="section-title" data-i18n="security.internet.title">Internet</a></h2>
+      <p class="section-intro" data-i18n="security.internet.intro">When internet connectivity is available, Geogram can connect to station servers to relay messages, synchronize data, and enable peer-to-peer connections between devices that aren't on the same local network.</p>
 
       <div class="security-grid">
         <div class="security-card">
@@ -424,9 +424,9 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             Station Servers
           </h4>
-          <p>Stations are community-owned servers. Any device can be a station: a phone, a laptop, a Raspberry Pi, or an ESP32 microcontroller. Geogram does not operate centralized servers.</p>
-          <p>Connections use WebSocket on the default port <code>3456</code>, though stations may also listen on ports <code>8080</code>, <code>80</code>, <code>8081</code>, <code>3000</code>, or <code>5000</code>.</p>
-          <p>Each station runs a local NOSTR relay (NIP-01 compatible) and optionally a Blossom file storage service for media attachments.</p>
+          <p data-i18n="security.internet.stations.p1">Stations are community-owned servers. Any device can be a station: a phone, a laptop, a Raspberry Pi, or an ESP32 microcontroller. Geogram does not operate centralized servers.</p>
+          <p data-i18n="security.internet.stations.p2" data-i18n-html="true">Connections use WebSocket on the default port <code>3456</code>, though stations may also listen on ports <code>8080</code>, <code>80</code>, <code>8081</code>, <code>3000</code>, or <code>5000</code>.</p>
+          <p data-i18n="security.internet.stations.p3">Each station runs a local NOSTR relay (NIP-01 compatible) and optionally a Blossom file storage service for media attachments.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/station_server_service.dart" target="_blank">lib/services/station_server_service.dart</a></span>
         </div>
 
@@ -435,9 +435,9 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
             Connection Frequency
           </h4>
-          <p>Once connected to a station, the server sends a <code>PING</code> every 30-45 seconds and expects a <code>PONG</code> response to maintain the connection.</p>
-          <p>On disconnection, the client automatically reconnects using exponential backoff. A 5-second grace period allows brief network interruptions without triggering reconnection.</p>
-          <p>There is no background polling, no heartbeat to external servers, and no "phone home" behavior. Connections only happen to stations you explicitly connect to.</p>
+          <p data-i18n="security.internet.frequency.p1" data-i18n-html="true">Once connected to a station, the server sends a <code>PING</code> every 30-45 seconds and expects a <code>PONG</code> response to maintain the connection.</p>
+          <p data-i18n="security.internet.frequency.p2">On disconnection, the client automatically reconnects using exponential backoff. A 5-second grace period allows brief network interruptions without triggering reconnection.</p>
+          <p data-i18n="security.internet.frequency.p3">There is no background polling, no heartbeat to external servers, and no "phone home" behavior. Connections only happen to stations you explicitly connect to.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/websocket_service.dart" target="_blank">lib/services/websocket_service.dart</a></span>
         </div>
 
@@ -446,8 +446,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
             NOSTR Relay Authentication
           </h4>
-          <p>Station relays support NIP-42 authentication for write operations. When a relay is restricted (associated with a specific callsign path like <code>wss://station/x1abcd</code>), only the profile owner and their followed contacts can write events.</p>
-          <p>Open relays (root path) accept events from any authenticated author. Authentication uses a cryptographic challenge-response based on NOSTR signatures.</p>
+          <p data-i18n="security.internet.auth.p1" data-i18n-html="true">Station relays support NIP-42 authentication for write operations. When a relay is restricted (associated with a specific callsign path like <code>wss://station/x1abcd</code>), only the profile owner and their followed contacts can write events.</p>
+          <p data-i18n="security.internet.auth.p2">Open relays (root path) accept events from any authenticated author. Authentication uses a cryptographic challenge-response based on NOSTR signatures.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/nostr_relay_service.dart" target="_blank">lib/services/nostr_relay_service.dart</a></span>
         </div>
 
@@ -456,9 +456,9 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
             Blossom File Storage
           </h4>
-          <p>Stations can serve as file storage nodes using the Blossom protocol. Files are uploaded as raw bytes or multipart, stored locally on the station, and identified by content hash.</p>
-          <p>Default limits: <code>1024 MB</code> total storage, <code>10 MB</code> per file. Blobs from followed authors are automatically replicated from NOSTR event tags.</p>
-          <p>Files never leave the station unless explicitly requested by a connected device. There is no replication to external cloud services.</p>
+          <p data-i18n="security.internet.blossom.p1">Stations can serve as file storage nodes using the Blossom protocol. Files are uploaded as raw bytes or multipart, stored locally on the station, and identified by content hash.</p>
+          <p data-i18n="security.internet.blossom.p2" data-i18n-html="true">Default limits: <code>1024 MB</code> total storage, <code>10 MB</code> per file. Blobs from followed authors are automatically replicated from NOSTR event tags.</p>
+          <p data-i18n="security.internet.blossom.p3">Files never leave the station unless explicitly requested by a connected device. There is no replication to external cloud services.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/nostr_blossom_service.dart" target="_blank">lib/services/nostr_blossom_service.dart</a></span>
         </div>
       </div>
@@ -468,8 +468,8 @@
   <!-- LAN Section -->
   <section class="security-section" id="lan">
     <div class="container">
-      <h2><a href="#lan" class="section-title">Local Network (LAN)</a></h2>
-      <p class="section-intro">On a local network, Geogram discovers other devices by scanning for stations on known ports. LAN has transport priority 10 due to its low latency and direct connectivity.</p>
+      <h2><a href="#lan" class="section-title" data-i18n="security.lan.title">Local Network (LAN)</a></h2>
+      <p class="section-intro" data-i18n="security.lan.intro">On a local network, Geogram discovers other devices by scanning for stations on known ports. LAN has transport priority 10 due to its low latency and direct connectivity.</p>
 
       <div class="security-grid">
         <div class="security-card">
@@ -477,8 +477,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             Network Scanning
           </h4>
-          <p>Discovery uses a phased HTTP scan approach. Primary ports <code>3456</code> and <code>8080</code> are scanned first. If needed, secondary ports <code>80</code>, <code>8081</code>, <code>3000</code>, and <code>5000</code> are tried.</p>
-          <p>Scans run every 5 minutes after an initial 5-second startup delay. Each request has a 400ms timeout. Maximum 50 concurrent connection attempts to avoid flooding the network.</p>
+          <p data-i18n="security.lan.scanning.p1" data-i18n-html="true">Discovery uses a phased HTTP scan approach. Primary ports <code>3456</code> and <code>8080</code> are scanned first. If needed, secondary ports <code>80</code>, <code>8081</code>, <code>3000</code>, and <code>5000</code> are tried.</p>
+          <p data-i18n="security.lan.scanning.p2">Scans run every 5 minutes after an initial 5-second startup delay. Each request has a 400ms timeout. Maximum 50 concurrent connection attempts to avoid flooding the network.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/station_discovery_service.dart" target="_blank">lib/services/station_discovery_service.dart</a></span>
         </div>
 
@@ -487,15 +487,15 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             Data Shared on LAN
           </h4>
-          <p>When a device responds to a discovery scan at <code>/api/status</code>, it returns:</p>
-          <ul>
+          <p data-i18n="security.lan.data.p1" data-i18n-html="true">When a device responds to a discovery scan at <code>/api/status</code>, it returns:</p>
+          <ul data-i18n="security.lan.data.list" data-i18n-html="true">
             <li>Callsign (APRS-style identifier, e.g. "X3ABCD")</li>
             <li>Device type: station, desktop, client, or unknown</li>
             <li>Device name, software version</li>
             <li>Connected device count</li>
             <li>Latitude and longitude (if location sharing is enabled)</li>
           </ul>
-          <p>No authentication is required for discovery reads.</p>
+          <p data-i18n="security.lan.data.p2">No authentication is required for discovery reads.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/connection/transports/lan_transport.dart" target="_blank">lib/connection/transports/lan_transport.dart</a></span>
         </div>
       </div>
@@ -505,8 +505,8 @@
   <!-- BLE Section -->
   <section class="security-section" id="ble">
     <div class="container">
-      <h2><a href="#ble" class="section-title">Bluetooth Low Energy (BLE)</a></h2>
-      <p class="section-intro">BLE enables device discovery and communication within a 10-100 meter range without any network infrastructure. It serves as the last-resort transport (priority 40) when no WiFi or internet is available.</p>
+      <h2><a href="#ble" class="section-title" data-i18n="security.ble.title">Bluetooth Low Energy (BLE)</a></h2>
+      <p class="section-intro" data-i18n="security.ble.intro">BLE enables device discovery and communication within a 10-100 meter range without any network infrastructure. It serves as the last-resort transport (priority 40) when no WiFi or internet is available.</p>
 
       <div class="security-grid">
         <div class="security-card">
@@ -514,9 +514,9 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/></svg>
             BLE Discovery
           </h4>
-          <p>Geogram devices advertise using BLE service UUID <code>0000ffe0-...</code> with a marker byte <code>0x3E</code> ('>') in the advertising data to identify themselves as Geogram nodes.</p>
-          <p>When two devices discover each other, they perform a HELLO handshake through GATT characteristics:</p>
-          <ul>
+          <p data-i18n="security.ble.discovery.p1" data-i18n-html="true">Geogram devices advertise using BLE service UUID <code>0000ffe0-...</code> with a marker byte <code>0x3E</code> ('>') in the advertising data to identify themselves as Geogram nodes.</p>
+          <p data-i18n="security.ble.discovery.p2">When two devices discover each other, they perform a HELLO handshake through GATT characteristics:</p>
+          <ul data-i18n="security.ble.discovery.list" data-i18n-html="true">
             <li>Write characteristic (HELLO): <code>0000fff1-...</code></li>
             <li>Notify characteristic (HELLO_ACK): <code>0000fff2-...</code></li>
           </ul>
@@ -528,8 +528,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
             HELLO Handshake Data
           </h4>
-          <p>The HELLO event is a NOSTR-signed message containing identity information. The following data is transmitted during the handshake:</p>
-          <ul>
+          <p data-i18n="security.ble.hello.p1">The HELLO event is a NOSTR-signed message containing identity information. The following data is transmitted during the handshake:</p>
+          <ul data-i18n="security.ble.hello.list" data-i18n-html="true">
             <li>Callsign (device identifier)</li>
             <li>npub (NOSTR public key)</li>
             <li>Nickname (user display name)</li>
@@ -537,7 +537,7 @@
             <li>Device capabilities (hello, data, broadcast, chat, compression)</li>
             <li>Classic Bluetooth MAC address (Android only, for BLE+ pairing)</li>
           </ul>
-          <p>The HELLO event is cryptographically signed, preventing identity spoofing.</p>
+          <p data-i18n="security.ble.hello.p2">The HELLO event is cryptographically signed, preventing identity spoofing.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/ble_message_service.dart" target="_blank">lib/services/ble_message_service.dart</a></span>
         </div>
 
@@ -546,8 +546,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
             Platform Support
           </h4>
-          <p>BLE message service supports data transfer, broadcast messaging, chat, and deflate compression. Messages larger than the BLE MTU are chunked automatically.</p>
-          <ul>
+          <p data-i18n="security.ble.platform.p1">BLE message service supports data transfer, broadcast messaging, chat, and deflate compression. Messages larger than the BLE MTU are chunked automatically.</p>
+          <ul data-i18n="security.ble.platform.list" data-i18n-html="true">
             <li><span class="tag-green">Full support</span> Android, iOS (GATT server + client)</li>
             <li><span class="tag-orange">Client only</span> Linux, macOS, Windows</li>
             <li><span class="tag-red">Not supported</span> Web browsers</li>
@@ -560,8 +560,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             Device Identification
           </h4>
-          <p>Each device is identified by a callsign-deviceId pair (e.g. "X3ABCD-7"), compatible with APRS SSID format from amateur radio. The device ID ranges from 1-15.</p>
-          <p>This stable identification scheme works even when BLE MAC addresses change (which happens regularly on most platforms for privacy). Identity is always verified through NOSTR signature on the HELLO event.</p>
+          <p data-i18n="security.ble.identity.p1">Each device is identified by a callsign-deviceId pair (e.g. "X3ABCD-7"), compatible with APRS SSID format from amateur radio. The device ID ranges from 1-15.</p>
+          <p data-i18n="security.ble.identity.p2">This stable identification scheme works even when BLE MAC addresses change (which happens regularly on most platforms for privacy). Identity is always verified through NOSTR signature on the HELLO event.</p>
         </div>
       </div>
     </div>
@@ -570,8 +570,8 @@
   <!-- USB Section -->
   <section class="security-section" id="usb">
     <div class="container">
-      <h2><a href="#usb" class="section-title">USB-C (Wired)</a></h2>
-      <p class="section-intro">Geogram devices can connect directly via USB-C cable using the Android Open Accessory (AOA) protocol. This is the highest-priority transport (priority 5) &mdash; the fastest, most reliable, and fully offline connection method.</p>
+      <h2><a href="#usb" class="section-title" data-i18n="security.usb.title">USB-C (Wired)</a></h2>
+      <p class="section-intro" data-i18n="security.usb.intro">Geogram devices can connect directly via USB-C cable using the Android Open Accessory (AOA) protocol. This is the highest-priority transport (priority 5) &mdash; the fastest, most reliable, and fully offline connection method.</p>
 
       <div class="security-grid">
         <div class="security-card">
@@ -579,8 +579,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><line x1="9" y1="2" x2="9" y2="4"/><line x1="15" y1="2" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="22"/><line x1="15" y1="20" x2="15" y2="22"/></svg>
             Android Open Accessory Protocol
           </h4>
-          <p>When two devices are connected via USB-C, one acts as the "host" (initiates the AOA handshake) and the other as the "accessory". The host sends control transfers to identify itself as a Geogram device (manufacturer: "Geogram", model: "Geogram Device"), then the accessory re-enumerates with Google's USB accessory VID/PID.</p>
-          <p>Once connected, both devices open bulk endpoints for bidirectional data transfer. Messages use a 4-byte length-prefix framing with JSON UTF-8 payloads, supporting API requests, direct messages, chat messages, and system pings.</p>
+          <p data-i18n="security.usb.aoa.p1">When two devices are connected via USB-C, one acts as the "host" (initiates the AOA handshake) and the other as the "accessory". The host sends control transfers to identify itself as a Geogram device (manufacturer: "Geogram", model: "Geogram Device"), then the accessory re-enumerates with Google's USB accessory VID/PID.</p>
+          <p data-i18n="security.usb.aoa.p2">Once connected, both devices open bulk endpoints for bidirectional data transfer. Messages use a 4-byte length-prefix framing with JSON UTF-8 payloads, supporting API requests, direct messages, chat messages, and system pings.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/connection/transports/usb_aoa_transport.dart" target="_blank">lib/connection/transports/usb_aoa_transport.dart</a></span>
         </div>
 
@@ -589,8 +589,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
             Performance & Reliability
           </h4>
-          <p>USB AOA provides practical throughput of 30-40 MB/s over USB 2.0 High Speed with latency under 5ms. The wired connection has zero packet loss and no radio interference, making it ideal for large file transfers.</p>
-          <p>Auto-reconnect with exponential backoff (1s, 2s, 4s) handles cable disconnections gracefully. A callsign exchange during the initial handshake establishes device identity.</p>
+          <p data-i18n="security.usb.performance.p1">USB AOA provides practical throughput of 30-40 MB/s over USB 2.0 High Speed with latency under 5ms. The wired connection has zero packet loss and no radio interference, making it ideal for large file transfers.</p>
+          <p data-i18n="security.usb.performance.p2">Auto-reconnect with exponential backoff (1s, 2s, 4s) handles cable disconnections gracefully. A callsign exchange during the initial handshake establishes device identity.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/usb_aoa_service.dart" target="_blank">lib/services/usb_aoa_service.dart</a></span>
         </div>
 
@@ -599,12 +599,12 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
             Platform Support
           </h4>
-          <ul>
+          <ul data-i18n="security.usb.platform.list" data-i18n-html="true">
             <li><span class="tag-green">Full support</span> Android (accessory mode via UsbManager)</li>
             <li><span class="tag-green">Full support</span> Linux (host mode via pure Dart FFI with libc ioctl)</li>
             <li><span class="tag-red">Not supported</span> iOS, Web, Windows</li>
           </ul>
-          <p>On Linux, the implementation uses <code>USBDEVFS_CONTROL</code> and <code>USBDEVFS_BULK</code> ioctls with poll-based async reads. On Android, broadcast receivers handle USB attachment, detachment, and permission events.</p>
+          <p data-i18n="security.usb.platform.p1" data-i18n-html="true">On Linux, the implementation uses <code>USBDEVFS_CONTROL</code> and <code>USBDEVFS_BULK</code> ioctls with poll-based async reads. On Android, broadcast receivers handle USB attachment, detachment, and permission events.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/usb_aoa_linux.dart" target="_blank">lib/services/usb_aoa_linux.dart</a> &middot; <a href="https://github.com/geograms/geogram/blob/main/android/app/src/main/kotlin/dev/geogram/UsbAoaPlugin.kt" target="_blank">android/.../UsbAoaPlugin.kt</a></span>
         </div>
 
@@ -613,8 +613,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             Security Characteristics
           </h4>
-          <p>USB connections are inherently private: data travels through a physical cable and cannot be intercepted over the air. No network stack is involved, which eliminates an entire class of remote attack vectors.</p>
-          <p>All messages transmitted over USB still carry NOSTR signatures for identity verification and integrity, maintaining the same trust guarantees as wireless transports.</p>
+          <p data-i18n="security.usb.security.p1">USB connections are inherently private: data travels through a physical cable and cannot be intercepted over the air. No network stack is involved, which eliminates an entire class of remote attack vectors.</p>
+          <p data-i18n="security.usb.security.p2">All messages transmitted over USB still carry NOSTR signatures for identity verification and integrity, maintaining the same trust guarantees as wireless transports.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/docs/connections/geogram-usb-aoa-briefing.md" target="_blank">docs/connections/geogram-usb-aoa-briefing.md</a></span>
         </div>
       </div>
@@ -624,8 +624,8 @@
   <!-- WebRTC Section -->
   <section class="security-section" id="webrtc">
     <div class="container">
-      <h2><a href="#webrtc" class="section-title">WebRTC</a></h2>
-      <p class="section-intro">WebRTC enables direct peer-to-peer connections between devices over the internet, without routing data through a relay server. Both devices must be connected to the same station for signaling.</p>
+      <h2><a href="#webrtc" class="section-title" data-i18n="security.webrtc.title">WebRTC</a></h2>
+      <p class="section-intro" data-i18n="security.webrtc.intro">WebRTC enables direct peer-to-peer connections between devices over the internet, without routing data through a relay server. Both devices must be connected to the same station for signaling.</p>
 
       <div class="security-grid">
         <div class="security-card">
@@ -633,8 +633,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><line x1="8.7" y1="10.7" x2="15.3" y2="7.3"/><line x1="8.7" y1="13.3" x2="15.3" y2="16.7"/></svg>
             How WebRTC Is Used
           </h4>
-          <p>WebRTC is used for direct device-to-device data transfer over the internet. It has medium-high transport priority (15), preferred over station relay but below LAN and USB.</p>
-          <p>The data channel is labeled <code>geogram</code> with protocol <code>geogram-p2p</code>, configured for ordered, reliable delivery. All data in transit is encrypted by WebRTC's built-in DTLS encryption.</p>
+          <p data-i18n="security.webrtc.usage.p1">WebRTC is used for direct device-to-device data transfer over the internet. It has medium-high transport priority (15), preferred over station relay but below LAN and USB.</p>
+          <p data-i18n="security.webrtc.usage.p2" data-i18n-html="true">The data channel is labeled <code>geogram</code> with protocol <code>geogram-p2p</code>, configured for ordered, reliable delivery. All data in transit is encrypted by WebRTC's built-in DTLS encryption.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/connection/transports/webrtc_transport.dart" target="_blank">lib/connection/transports/webrtc_transport.dart</a></span>
         </div>
 
@@ -643,14 +643,14 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
             Signaling Process
           </h4>
-          <p>To establish a WebRTC connection, both devices must be connected to the same station. The station acts as a signaling relay, forwarding:</p>
-          <ul>
+          <p data-i18n="security.webrtc.signaling.p1">To establish a WebRTC connection, both devices must be connected to the same station. The station acts as a signaling relay, forwarding:</p>
+          <ul data-i18n="security.webrtc.signaling.list" data-i18n-html="true">
             <li><code>webrtc_offer</code> - SDP offer (connection proposal)</li>
             <li><code>webrtc_answer</code> - SDP answer (acceptance)</li>
             <li><code>webrtc_ice</code> - ICE candidates (network paths)</li>
             <li><code>webrtc_bye</code> - Connection teardown</li>
           </ul>
-          <p>Signaling messages are wrapped in NOSTR events. Once the P2P connection is established, data flows directly between devices without passing through the station.</p>
+          <p data-i18n="security.webrtc.signaling.p2">Signaling messages are wrapped in NOSTR events. Once the P2P connection is established, data flows directly between devices without passing through the station.</p>
         </div>
 
         <div class="security-card">
@@ -658,9 +658,9 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
             Self-Hosted STUN Server
           </h4>
-          <p>Geogram takes a privacy-first approach to STUN. Instead of using third-party STUN servers (Google, Twilio, Mozilla), each station runs its own STUN server on UDP port <code>3478</code>.</p>
-          <p>The STUN server implements RFC 5389 Binding requests and responds with XOR-MAPPED-ADDRESS. It does not log client IP addresses. XOR encoding of addresses prevents packet spoofing attacks.</p>
-          <p>By default, the STUN server list is empty. Your IP address is never leaked to third-party infrastructure for NAT traversal.</p>
+          <p data-i18n="security.webrtc.stun.p1" data-i18n-html="true">Geogram takes a privacy-first approach to STUN. Instead of using third-party STUN servers (Google, Twilio, Mozilla), each station runs its own STUN server on UDP port <code>3478</code>.</p>
+          <p data-i18n="security.webrtc.stun.p2">The STUN server implements RFC 5389 Binding requests and responds with XOR-MAPPED-ADDRESS. It does not log client IP addresses. XOR encoding of addresses prevents packet spoofing attacks.</p>
+          <p data-i18n="security.webrtc.stun.p3">By default, the STUN server list is empty. Your IP address is never leaked to third-party infrastructure for NAT traversal.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/stun_server_service.dart" target="_blank">lib/services/stun_server_service.dart</a> &middot; <a href="https://github.com/geograms/geogram/blob/main/lib/services/webrtc_config.dart" target="_blank">lib/services/webrtc_config.dart</a></span>
         </div>
 
@@ -669,13 +669,13 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             Connection Timeouts
           </h4>
-          <p>WebRTC connections are established with strict timeouts to prevent hanging:</p>
-          <ul>
+          <p data-i18n="security.webrtc.timeouts.p1">WebRTC connections are established with strict timeouts to prevent hanging:</p>
+          <ul data-i18n="security.webrtc.timeouts.list" data-i18n-html="true">
             <li>ICE gathering timeout: 5 seconds</li>
             <li>Connection establishment: 15 seconds</li>
             <li>Offer response: 10 seconds</li>
           </ul>
-          <p>Trickle ICE is used (candidates sent as gathered) for faster connection establishment.</p>
+          <p data-i18n="security.webrtc.timeouts.p2">Trickle ICE is used (candidates sent as gathered) for faster connection establishment.</p>
         </div>
       </div>
     </div>
@@ -684,8 +684,8 @@
   <!-- Server-Side Storage Section -->
   <section class="security-section" id="server-storage">
     <div class="container">
-      <h2><a href="#server-storage" class="section-title">Server-Side Storage</a></h2>
-      <p class="section-intro">When you connect to a station and publish content, some data is stored on the station to make it accessible to other users. Each user can designate a preferred station for their primary data sync.</p>
+      <h2><a href="#server-storage" class="section-title" data-i18n="security.storage.title">Server-Side Storage</a></h2>
+      <p class="section-intro" data-i18n="security.storage.intro">When you connect to a station and publish content, some data is stored on the station to make it accessible to other users. Each user can designate a preferred station for their primary data sync.</p>
 
       <div class="security-grid">
         <div class="security-card">
@@ -693,8 +693,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             Preferred Station
           </h4>
-          <p>Each user designates a preferred station for data sync. This is the primary station to which alerts, places, events, emails, and other content are published. The default preferred station is <code>wss://p2p.radio</code>.</p>
-          <p>Station preference is stored in your profile configuration. Apps call <code>StationService().getPreferredStation()</code> before any sync operation to determine where data should go.</p>
+          <p data-i18n="security.storage.preferred.p1" data-i18n-html="true">Each user designates a preferred station for data sync. This is the primary station to which alerts, places, events, emails, and other content are published. The default preferred station is <code>wss://p2p.radio</code>.</p>
+          <p data-i18n="security.storage.preferred.p2" data-i18n-html="true">Station preference is stored in your profile configuration. Apps call <code>StationService().getPreferredStation()</code> before any sync operation to determine where data should go.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/station_service.dart" target="_blank">lib/services/station_service.dart</a></span>
         </div>
 
@@ -703,9 +703,9 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             Email Relay & Storage
           </h4>
-          <p>Stations act as email relays with an SMTP server and client. Emails for online recipients are delivered immediately via WebSocket. For offline recipients, emails are encrypted with the recipient's npub (ECIES encryption) and cached in an <code>email-cache/</code> directory on the station.</p>
-          <p>Cached emails are limited to 10 MB per recipient and auto-expire after 24 hours. When external emails are sent (to non-station addresses), they enter a three-tier approval queue: blocklist, pending review, or allowlist. DKIM signing is supported for domain reputation.</p>
-          <p>Email storage uses thread-based organization with <code>inbox/</code>, <code>outbox/</code>, <code>sent/</code>, <code>spam/</code>, <code>garbage/</code>, <code>drafts/</code>, <code>archive/</code>, and <code>labels/</code> directories, each organized by year.</p>
+          <p data-i18n="security.storage.email.p1" data-i18n-html="true">Stations act as email relays with an SMTP server and client. Emails for online recipients are delivered immediately via WebSocket. For offline recipients, emails are encrypted with the recipient's npub (ECIES encryption) and cached in an <code>email-cache/</code> directory on the station.</p>
+          <p data-i18n="security.storage.email.p2">Cached emails are limited to 10 MB per recipient and auto-expire after 24 hours. When external emails are sent (to non-station addresses), they enter a three-tier approval queue: blocklist, pending review, or allowlist. DKIM signing is supported for domain reputation.</p>
+          <p data-i18n="security.storage.email.p3" data-i18n-html="true">Email storage uses thread-based organization with <code>inbox/</code>, <code>outbox/</code>, <code>sent/</code>, <code>spam/</code>, <code>garbage/</code>, <code>drafts/</code>, <code>archive/</code>, and <code>labels/</code> directories, each organized by year.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/email_relay_service.dart" target="_blank">lib/services/email_relay_service.dart</a> &middot; <a href="https://github.com/geograms/geogram/blob/main/lib/services/email_service.dart" target="_blank">lib/services/email_service.dart</a></span>
         </div>
 
@@ -714,8 +714,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             Alerts & Places
           </h4>
-          <p>When you create an alert or place, it is signed as a NOSTR event (kind 30078) and published to your preferred station. The station stores the event in its relay database and makes it queryable by other connected users.</p>
-          <p>Places are uploaded with their description and images via HTTP to the station. Alerts include share summaries with confirmed/failed/skipped counts so you know exactly what was delivered.</p>
+          <p data-i18n="security.storage.alerts.p1">When you create an alert or place, it is signed as a NOSTR event (kind 30078) and published to your preferred station. The station stores the event in its relay database and makes it queryable by other connected users.</p>
+          <p data-i18n="security.storage.alerts.p2">Places are uploaded with their description and images via HTTP to the station. Alerts include share summaries with confirmed/failed/skipped counts so you know exactly what was delivered.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/alert_sharing_service.dart" target="_blank">lib/services/alert_sharing_service.dart</a> &middot; <a href="https://github.com/geograms/geogram/blob/main/lib/services/place_sharing_service.dart" target="_blank">lib/services/place_sharing_service.dart</a></span>
         </div>
 
@@ -724,15 +724,15 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
             Sync Flow
           </h4>
-          <p>The general pattern for all user-contributed data is:</p>
-          <ul>
+          <p data-i18n="security.storage.sync.p1">The general pattern for all user-contributed data is:</p>
+          <ul data-i18n="security.storage.sync.list" data-i18n-html="true">
             <li>Content is created and stored locally on your device first</li>
             <li>The content is signed with your NOSTR private key</li>
             <li>The signed event is published to your preferred station</li>
             <li>The station stores it in its database and notifies subscribed clients</li>
             <li>For offline recipients, the station queues delivery for when they reconnect</li>
           </ul>
-          <p>You always retain your local copy. Station storage is a relay &mdash; it distributes your content but does not hold the only copy.</p>
+          <p data-i18n="security.storage.sync.p2">You always retain your local copy. Station storage is a relay &mdash; it distributes your content but does not hold the only copy.</p>
         </div>
       </div>
     </div>
@@ -741,8 +741,8 @@
   <!-- Cache & Storage Section -->
   <section class="security-section" id="cache">
     <div class="container">
-      <h2><a href="#cache" class="section-title">Cache & Local Storage</a></h2>
-      <p class="section-intro">All data in Geogram is stored locally on your device. There is no cloud sync, no remote backup service, and no data leaving your device unless you explicitly send it to another device or station.</p>
+      <h2><a href="#cache" class="section-title" data-i18n="security.cache.title">Cache & Local Storage</a></h2>
+      <p class="section-intro" data-i18n="security.cache.intro">All data in Geogram is stored locally on your device. There is no cloud sync, no remote backup service, and no data leaving your device unless you explicitly send it to another device or station.</p>
 
       <div class="security-grid">
         <div class="security-card">
@@ -750,13 +750,13 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
             Storage Layout
           </h4>
-          <p>All data lives under <code>~/.local/share/geogram/</code>:</p>
-          <ul>
+          <p data-i18n="security.cache.layout.p1" data-i18n-html="true">All data lives under <code>~/.local/share/geogram/</code>:</p>
+          <ul data-i18n="security.cache.layout.list" data-i18n-html="true">
             <li><code>profiles/{callsign}/</code> - Per-profile data (events, places, blogs, contacts, settings)</li>
             <li><code>chat/</code> - Chat messages, shared across profiles</li>
             <li><code>station/</code> - Station relay data when running as a server</li>
           </ul>
-          <p>Each app stores its data in human-readable formats (mostly NOSTR event JSON) within the profile directory.</p>
+          <p data-i18n="security.cache.layout.p2">Each app stores its data in human-readable formats (mostly NOSTR event JSON) within the profile directory.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/storage_config.dart" target="_blank">lib/services/storage_config.dart</a></span>
         </div>
 
@@ -765,8 +765,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
             Encrypted Archive
           </h4>
-          <p>Sensitive data can be stored in an encrypted archive using AES-256-GCM encryption. The encryption key is derived from your NOSTR private key (nsec) using HKDF key derivation.</p>
-          <p>The archive is a SQLite database with a <code>files</code> table for metadata and a <code>chunks</code> table for encrypted file content. Data is flushed every 30 seconds and archive connections are reused for performance.</p>
+          <p data-i18n="security.cache.encrypted.p1">Sensitive data can be stored in an encrypted archive using AES-256-GCM encryption. The encryption key is derived from your NOSTR private key (nsec) using HKDF key derivation.</p>
+          <p data-i18n="security.cache.encrypted.p2" data-i18n-html="true">The archive is a SQLite database with a <code>files</code> table for metadata and a <code>chunks</code> table for encrypted file content. Data is flushed every 30 seconds and archive connections are reused for performance.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/encrypted_storage_service.dart" target="_blank">lib/services/encrypted_storage_service.dart</a></span>
         </div>
 
@@ -775,8 +775,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
             Message Cache
           </h4>
-          <p>Chat messages are cached in memory with a 5-second TTL to avoid repeated file I/O. Each conversation (identified by callsign) has a separate cache.</p>
-          <p>Direct messages are stored as files in the <code>chat/</code> directory in NOSTR event format. Unsent messages are queued in a DM queue with exponential backoff retry, and stored locally until delivery is confirmed (up to 30 days).</p>
+          <p data-i18n="security.cache.messages.p1">Chat messages are cached in memory with a 5-second TTL to avoid repeated file I/O. Each conversation (identified by callsign) has a separate cache.</p>
+          <p data-i18n="security.cache.messages.p2" data-i18n-html="true">Direct messages are stored as files in the <code>chat/</code> directory in NOSTR event format. Unsent messages are queued in a DM queue with exponential backoff retry, and stored locally until delivery is confirmed (up to 30 days).</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/direct_message_service.dart" target="_blank">lib/services/direct_message_service.dart</a></span>
         </div>
 
@@ -785,8 +785,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
             Map Tiles & Media
           </h4>
-          <p>Map tiles are cached locally for offline access. Stations can cache regional tiles so nearby devices can fetch them without internet access.</p>
-          <p>Media files (images, voice messages, attachments) are stored in the profile directory alongside the events that reference them. Station Blossom storage is separate and subject to its configured size limits.</p>
+          <p data-i18n="security.cache.maps.p1">Map tiles are cached locally for offline access. Stations can cache regional tiles so nearby devices can fetch them without internet access.</p>
+          <p data-i18n="security.cache.maps.p2">Media files (images, voice messages, attachments) are stored in the profile directory alongside the events that reference them. Station Blossom storage is separate and subject to its configured size limits.</p>
         </div>
       </div>
     </div>
@@ -795,8 +795,8 @@
   <!-- Geolocation Section -->
   <section class="security-section" id="geolocation">
     <div class="container">
-      <h2><a href="#geolocation" class="section-title">Geolocation</a></h2>
-      <p class="section-intro">Location is used for placing content on maps, discovering nearby devices, and providing context for events and alerts. Location sharing can be disabled entirely, and granularity can be controlled from the Security settings panel.</p>
+      <h2><a href="#geolocation" class="section-title" data-i18n="security.geo.title">Geolocation</a></h2>
+      <p class="section-intro" data-i18n="security.geo.intro">Location is used for placing content on maps, discovering nearby devices, and providing context for events and alerts. Location sharing can be disabled entirely, and granularity can be controlled from the Security settings panel.</p>
 
       <div class="security-grid">
         <div class="security-card">
@@ -804,13 +804,13 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             When Location Is Requested
           </h4>
-          <p>Location detection varies by platform:</p>
-          <ul>
+          <p data-i18n="security.geo.when.p1">Location detection varies by platform:</p>
+          <ul data-i18n="security.geo.when.list" data-i18n-html="true">
             <li><strong>Android/iOS:</strong> Device GPS/location services (continuous when the app is active)</li>
             <li><strong>Windows/Linux:</strong> IP-based geolocation using an offline DB-IP database, updated every 10 minutes. No external queries are made.</li>
             <li><strong>Web:</strong> Browser Geolocation API (requires explicit permission)</li>
           </ul>
-          <p>If no location source is available, the app falls back to the location stored in your profile settings.</p>
+          <p data-i18n="security.geo.when.p2">If no location source is available, the app falls back to the location stored in your profile settings.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/user_location_service.dart" target="_blank">lib/services/user_location_service.dart</a></span>
         </div>
 
@@ -819,8 +819,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             Who Sees Your Location
           </h4>
-          <p>When location sharing is enabled, your coordinates (subject to your granularity setting) are visible to:</p>
-          <ul>
+          <p data-i18n="security.geo.who.p1">When location sharing is enabled, your coordinates (subject to your granularity setting) are visible to:</p>
+          <ul data-i18n="security.geo.who.list" data-i18n-html="true">
             <li><strong>LAN devices:</strong> Any device scanning the local network receives location in the <code>/api/status</code> response</li>
             <li><strong>BLE devices:</strong> Any device within Bluetooth range receives location in the HELLO handshake</li>
             <li><strong>Connected stations:</strong> Station relays receive location if shared during HELLO</li>
@@ -833,14 +833,14 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
             Location Granularity
           </h4>
-          <p>The Security settings panel provides a location granularity slider that controls how precisely your coordinates are shared. The <code>SecurityService.applyLocationGranularity()</code> method rounds coordinates before they are transmitted:</p>
-          <ul>
+          <p data-i18n="security.geo.granularity.p1" data-i18n-html="true">The Security settings panel provides a location granularity slider that controls how precisely your coordinates are shared. The <code>SecurityService.applyLocationGranularity()</code> method rounds coordinates before they are transmitted:</p>
+          <ul data-i18n="security.geo.granularity.list" data-i18n-html="true">
             <li><span class="tag-red">Precise (&lt;50m)</span> Street-level accuracy</li>
             <li><span class="tag-orange">Neighborhood (50m - 5km)</span> Block-level</li>
             <li><span class="tag-green">City (5km - 40km)</span> City-level only</li>
             <li><span class="tag-green">Region (&gt;40km)</span> Regional level</li>
           </ul>
-          <p>Default is 50 km (city level). The Tracker app also stores proximity history locally only.</p>
+          <p data-i18n="security.geo.granularity.p2">Default is 50 km (city level). The Tracker app also stores proximity history locally only.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/security_service.dart" target="_blank">lib/services/security_service.dart</a></span>
         </div>
       </div>
@@ -850,8 +850,8 @@
   <!-- Encryption Section -->
   <section class="security-section" id="encryption">
     <div class="container">
-      <h2><a href="#encryption" class="section-title">Encryption & NOSTR</a></h2>
-      <p class="section-intro">Geogram uses the NOSTR protocol for identity, message signing, and relay communication. All identity is based on public-key cryptography, with no accounts, emails, or usernames required.</p>
+      <h2><a href="#encryption" class="section-title" data-i18n="security.encryption.title">Encryption & NOSTR</a></h2>
+      <p class="section-intro" data-i18n="security.encryption.intro">Geogram uses the NOSTR protocol for identity, message signing, and relay communication. All identity is based on public-key cryptography, with no accounts, emails, or usernames required.</p>
 
       <div class="security-grid">
         <div class="security-card">
@@ -859,12 +859,12 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             Key Generation & Curve
           </h4>
-          <p>Geogram uses secp256k1 elliptic curve cryptography (the same curve used by Bitcoin). Key generation produces:</p>
-          <ul>
+          <p data-i18n="security.encryption.keygen.p1">Geogram uses secp256k1 elliptic curve cryptography (the same curve used by Bitcoin). Key generation produces:</p>
+          <ul data-i18n="security.encryption.keygen.list" data-i18n-html="true">
             <li><strong>Private key (nsec):</strong> 256-bit random value, bech32-encoded for display</li>
             <li><strong>Public key (npub):</strong> X-only public key derived from the private key, bech32-encoded</li>
           </ul>
-          <p>Keys are generated locally on your device. The private key never leaves your device and is never transmitted over any network.</p>
+          <p data-i18n="security.encryption.keygen.p2">Keys are generated locally on your device. The private key never leaves your device and is never transmitted over any network.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/util/nostr_crypto.dart" target="_blank">lib/util/nostr_crypto.dart</a> &middot; <a href="https://github.com/geograms/geogram/blob/main/lib/util/nostr_key_generator.dart" target="_blank">lib/util/nostr_key_generator.dart</a></span>
         </div>
 
@@ -873,13 +873,13 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
             Message Signing
           </h4>
-          <p>Every message, event, and reaction is signed with a 64-byte Schnorr signature (BIP-340) using your private key. This provides:</p>
-          <ul>
+          <p data-i18n="security.encryption.signing.p1">Every message, event, and reaction is signed with a 64-byte Schnorr signature (BIP-340) using your private key. This provides:</p>
+          <ul data-i18n="security.encryption.signing.list" data-i18n-html="true">
             <li><strong>Authentication:</strong> Proof that the message came from the claimed sender</li>
             <li><strong>Integrity:</strong> Any modification to the content invalidates the signature</li>
             <li><strong>Non-repudiation:</strong> Sender cannot deny having created the message</li>
           </ul>
-          <p>On the web platform, signing can optionally use a NIP-07 browser extension, allowing the private key to never be stored in the browser.</p>
+          <p data-i18n="security.encryption.signing.p2">On the web platform, signing can optionally use a NIP-07 browser extension, allowing the private key to never be stored in the browser.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/services/signing_service.dart" target="_blank">lib/services/signing_service.dart</a></span>
         </div>
 
@@ -888,8 +888,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
             Private Key Storage
           </h4>
-          <p>The private key is stored in your profile as an <code>nsec</code> (bech32-encoded). When encrypted storage is enabled, the key is protected at rest using AES-256-GCM with a key derived via HKDF.</p>
-          <p>The public key (<code>npub</code>) is freely shared during HELLO handshakes, NOSTR events, and discovery responses. It is used by other devices to verify your signatures.</p>
+          <p data-i18n="security.encryption.storage.p1" data-i18n-html="true">The private key is stored in your profile as an <code>nsec</code> (bech32-encoded). When encrypted storage is enabled, the key is protected at rest using AES-256-GCM with a key derived via HKDF.</p>
+          <p data-i18n="security.encryption.storage.p2" data-i18n-html="true">The public key (<code>npub</code>) is freely shared during HELLO handshakes, NOSTR events, and discovery responses. It is used by other devices to verify your signatures.</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/lib/util/backup_encryption.dart" target="_blank">lib/util/backup_encryption.dart</a></span>
         </div>
 
@@ -898,23 +898,23 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
             Supported NIPs
           </h4>
-          <p>Geogram's NOSTR relay implementation supports:</p>
-          <ul>
+          <p data-i18n="security.encryption.nips.p1">Geogram's NOSTR relay implementation supports:</p>
+          <ul data-i18n="security.encryption.nips.list" data-i18n-html="true">
             <li><strong>NIP-01:</strong> Core protocol (EVENT, REQ, CLOSE, EOSE)</li>
             <li><strong>NIP-09:</strong> Event deletion (Kind 5)</li>
             <li><strong>NIP-16:</strong> Replaceable and parameterized replaceable events</li>
             <li><strong>NIP-25:</strong> Reactions (Kind 7)</li>
             <li><strong>NIP-42:</strong> Authentication for relay writes</li>
           </ul>
-          <p>The relay stores events in a local SQLite database (<code>nostr/relay.sqlite3</code>).</p>
+          <p data-i18n="security.encryption.nips.p2" data-i18n-html="true">The relay stores events in a local SQLite database (<code>nostr/relay.sqlite3</code>).</p>
           <span class="source-ref"><a href="https://github.com/geograms/geogram/blob/main/NOSTR.md" target="_blank">NOSTR.md</a></span>
         </div>
       </div>
 
       <div class="detail-block" style="margin-top: 1.5rem;">
-        <h4>Transport Encryption Summary</h4>
-        <p>Different transports provide different levels of encryption:</p>
-        <ul class="detail-list">
+        <h4 data-i18n="security.encryption.summary.title">Transport Encryption Summary</h4>
+        <p data-i18n="security.encryption.summary.p1">Different transports provide different levels of encryption:</p>
+        <ul class="detail-list" data-i18n="security.encryption.summary.list" data-i18n-html="true">
           <li><span class="arrow">→</span> <strong>USB:</strong> Physically private (wired). No over-the-air interception possible.</li>
           <li><span class="arrow">→</span> <strong>WebRTC:</strong> DTLS encryption on the data channel (encrypted in transit).</li>
           <li><span class="arrow">→</span> <strong>Station (WSS):</strong> TLS encryption when using wss:// URLs.</li>
@@ -922,7 +922,7 @@
           <li><span class="arrow">→</span> <strong>BLE:</strong> BLE link-layer encryption when paired, plus NOSTR signatures.</li>
           <li><span class="arrow">→</span> <strong>Local storage:</strong> Optional AES-256-GCM encryption for the archive.</li>
         </ul>
-        <p>Regardless of transport encryption, all messages carry NOSTR Schnorr signatures that guarantee authenticity and integrity end-to-end.</p>
+        <p data-i18n="security.encryption.summary.p2">Regardless of transport encryption, all messages carry NOSTR Schnorr signatures that guarantee authenticity and integrity end-to-end.</p>
       </div>
     </div>
   </section>
@@ -930,8 +930,8 @@
   <!-- Security Settings UI Section -->
   <section class="security-section" id="settings">
     <div class="container">
-      <h2><a href="#settings" class="section-title">Security Settings Panel</a></h2>
-      <p class="section-intro">The Security tab in Geogram's settings provides user-facing controls for privacy and security. These options are accessible from the app's settings screen on all platforms.</p>
+      <h2><a href="#settings" class="section-title" data-i18n="security.settings.title">Security Settings Panel</a></h2>
+      <p class="section-intro" data-i18n="security.settings.intro">The Security tab in Geogram's settings provides user-facing controls for privacy and security. These options are accessible from the app's settings screen on all platforms.</p>
 
       <div class="security-grid">
         <div class="security-card">
@@ -939,8 +939,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/></svg>
             BLE-Only Mode
           </h4>
-          <p>A toggle that restricts all connectivity to Bluetooth Low Energy only, completely disabling internet and LAN transports. Useful for maximum privacy when you only want to communicate with physically nearby devices.</p>
-          <p>Marked as <span class="tag-red">Restrictive</span> in the UI to indicate its impact on connectivity.</p>
+          <p data-i18n="security.settings.ble.p1">A toggle that restricts all connectivity to Bluetooth Low Energy only, completely disabling internet and LAN transports. Useful for maximum privacy when you only want to communicate with physically nearby devices.</p>
+          <p data-i18n="security.settings.ble.p2" data-i18n-html="true">Marked as <span class="tag-red">Restrictive</span> in the UI to indicate its impact on connectivity.</p>
         </div>
 
         <div class="security-card">
@@ -948,8 +948,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             API Access Controls
           </h4>
-          <p>Two toggles control API exposure:</p>
-          <ul>
+          <p data-i18n="security.settings.api.p1">Two toggles control API exposure:</p>
+          <ul data-i18n="security.settings.api.list" data-i18n-html="true">
             <li><strong>HTTP API:</strong> Enables/disables the local HTTP API server. When enabled, shows the local IP address and port for external access.</li>
             <li><strong>Debug API:</strong> Enables advanced debugging endpoints. Marked as <span class="tag-orange">Advanced</span>.</li>
           </ul>
@@ -960,8 +960,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             Location Granularity
           </h4>
-          <p>A slider (0.0 to 1.0) that controls how precisely your location is shared with others. The <code>SecurityService</code> applies this granularity by rounding coordinates before they are transmitted.</p>
-          <p>The UI displays the current precision (e.g. "2.5 km") with a visual privacy level indicator: Precise, Neighborhood, City, or Region.</p>
+          <p data-i18n="security.settings.location.p1" data-i18n-html="true">A slider (0.0 to 1.0) that controls how precisely your location is shared with others. The <code>SecurityService</code> applies this granularity by rounding coordinates before they are transmitted.</p>
+          <p data-i18n="security.settings.location.p2">The UI displays the current precision (e.g. "2.5 km") with a visual privacy level indicator: Precise, Neighborhood, City, or Region.</p>
         </div>
 
         <div class="security-card">
@@ -969,8 +969,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
             Encrypted Storage
           </h4>
-          <p>A toggle to enable full-profile encryption using AES-256-GCM. Requires an active nsec (private key). When toggled, a real-time progress indicator shows files processed, total files, and the current file being encrypted or decrypted.</p>
-          <p>A confirmation dialog is presented before enabling or disabling, as the operation processes all profile files.</p>
+          <p data-i18n="security.settings.encrypted.p1">A toggle to enable full-profile encryption using AES-256-GCM. Requires an active nsec (private key). When toggled, a real-time progress indicator shows files processed, total files, and the current file being encrypted or decrypted.</p>
+          <p data-i18n="security.settings.encrypted.p2">A confirmation dialog is presented before enabling or disabling, as the operation processes all profile files.</p>
         </div>
 
         <div class="security-card">
@@ -978,7 +978,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
             Working Folder
           </h4>
-          <p>Displays and allows changing the storage path for all Geogram data (desktop and mobile only). When changed, all files are automatically migrated to the new location. Includes copy-to-clipboard and open-in-file-manager options.</p>
+          <p data-i18n="security.settings.folder.p1">Displays and allows changing the storage path for all Geogram data (desktop and mobile only). When changed, all files are automatically migrated to the new location. Includes copy-to-clipboard and open-in-file-manager options.</p>
         </div>
 
         <div class="security-card">
@@ -986,8 +986,8 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
             Identity & Profile Management
           </h4>
-          <p>Available from the Profile settings page (separate from Security tab):</p>
-          <ul>
+          <p data-i18n="security.settings.identity.p1">Available from the Profile settings page (separate from Security tab):</p>
+          <ul data-i18n="security.settings.identity.list" data-i18n-html="true">
             <li><strong>View npub/nsec:</strong> Copy your public and private keys. The nsec is displayed with a red warning label.</li>
             <li><strong>Reset Identity:</strong> Regenerates a new keypair with a confirmation dialog.</li>
             <li><strong>Delete Profile:</strong> Removes entire profile and all associated data (with confirmation; the last profile cannot be deleted).</li>
@@ -1002,17 +1002,17 @@
   <!-- No External Calls Section -->
   <section class="security-section" id="external">
     <div class="container">
-      <h2><a href="#external" class="section-title">No External Calls</a></h2>
-      <p class="section-intro">Geogram makes no network requests you didn't initiate.</p>
+      <h2><a href="#external" class="section-title" data-i18n="security.external.title">No External Calls</a></h2>
+      <p class="section-intro" data-i18n="security.external.intro">Geogram makes no network requests you didn't initiate.</p>
 
       <div class="detail-block">
-        <p>There are no analytics, no telemetry, no crash reporting services, no update checks to external servers, and no third-party API calls baked into the application.</p>
-        <p>The only outbound connections are:</p>
-        <ul class="detail-list">
+        <p data-i18n="security.external.p1">There are no analytics, no telemetry, no crash reporting services, no update checks to external servers, and no third-party API calls baked into the application.</p>
+        <p data-i18n="security.external.p2">The only outbound connections are:</p>
+        <ul class="detail-list" data-i18n="security.external.list" data-i18n-html="true">
           <li><span class="arrow">→</span> Stations you explicitly connect to (your preferred station or stations you visit)</li>
           <li><span class="arrow">→</span> Optional GitHub API calls for release information on the downloads page of this website</li>
         </ul>
-        <p>Everything else &mdash; AI inference, speech recognition, geolocation, map rendering &mdash; runs locally on your device using bundled models and databases.</p>
+        <p data-i18n="security.external.p3">Everything else &mdash; AI inference, speech recognition, geolocation, map rendering &mdash; runs locally on your device using bundled models and databases.</p>
       </div>
     </div>
   </section>
