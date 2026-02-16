@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>People - Geogram</title>
+  <meta name="description" content="The people behind Geogram: origin story, presentations, and funding model.">
+  <link rel="icon" type="image/x-icon" href="resources/favicon.ico">
+  <link rel="stylesheet" href="resources/style.css">
+  <link rel="stylesheet" href="resources/fonts.css">
+  <style>
+    .people-hero {
+      padding: 8rem 0 4rem;
+      text-align: center;
+    }
+
+    .people-hero h1 {
+      margin-bottom: 1rem;
+    }
+
+    .people-hero p {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .people-section {
+      padding: 4rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .people-section:last-of-type {
+      border-bottom: none;
+    }
+
+    .people-section h2 {
+      margin-bottom: 0.5rem;
+    }
+
+    .section-intro {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      max-width: 800px;
+    }
+
+    .people-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .people-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .people-card:hover {
+      border-color: var(--border-accent);
+    }
+
+    .people-card h4 {
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .people-card h4 svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .people-card p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+
+    .people-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .people-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .people-card ul li {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      padding: 0.3rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .people-card ul li::before {
+      content: '\2192';
+      color: var(--primary);
+      position: absolute;
+      left: 0;
+    }
+
+    .media-image {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .media-image-small {
+      max-width: 360px;
+    }
+
+    .media-video {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Anchor links on section titles */
+    .section-title {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .section-title:hover {
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      .people-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="container">
+      <a href="index.html" class="logo">Geogram</a>
+      <ul class="nav-links">
+        <li><a href="index.html#features" data-i18n="nav.features">Features</a></li>
+        <li><a href="index.html#apps" data-i18n="nav.apps">Apps</a></li>
+        <li><a href="index.html#platforms" data-i18n="nav.platforms">Platforms</a></li>
+        <li><a href="index.html#downloads" class="nav-cta" data-i18n="nav.download">Download</a></li>
+        <li><a href="status.html" data-i18n="nav.status">Status</a></li>
+        <li><a href="security.html" data-i18n="nav.security">Security</a></li>
+        <li><a href="people.html" data-i18n="nav.people">People</a></li>
+      </ul>
+      <div class="lang-selector">
+        <button class="lang-btn" onclick="toggleLangMenu()">
+          <span class="lang-current">EN</span>
+          <span class="lang-arrow">&#9662;</span>
+        </button>
+        <div class="lang-dropdown">
+          <a href="#" onclick="setLanguage('en'); return false;">English</a>
+          <a href="#" onclick="setLanguage('de'); return false;">Deutsch</a>
+          <a href="#" onclick="setLanguage('es'); return false;">Espa&ntilde;ol</a>
+          <a href="#" onclick="setLanguage('pt'); return false;">Portugu&ecirc;s</a>
+          <a href="#" onclick="setLanguage('fr'); return false;">Fran&ccedil;ais</a>
+          <a href="#" onclick="setLanguage('it'); return false;">Italiano</a>
+          <a href="#" onclick="setLanguage('nl'); return false;">Nederlands</a>
+          <a href="#" onclick="setLanguage('sv'); return false;">Svenska</a>
+          <a href="#" onclick="setLanguage('he'); return false;">&#1506;&#1489;&#1512;&#1497;&#1514;</a>
+          <a href="#" onclick="setLanguage('ar'); return false;">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</a>
+          <a href="#" onclick="setLanguage('tr'); return false;">T&uuml;rk&ccedil;e</a>
+          <a href="#" onclick="setLanguage('zh'); return false;">&#20013;&#25991;</a>
+          <a href="#" onclick="setLanguage('ko'); return false;">&#54620;&#44397;&#50612;</a>
+          <a href="#" onclick="setLanguage('ja'); return false;">&#26085;&#26412;&#35486;</a>
+        </div>
+      </div>
+      <button class="mobile-menu-btn" onclick="toggleMenu()">&#9776;</button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="people-hero">
+    <div class="container">
+      <h1>People</h1>
+      <p>Who we are, how this got started, and where it's going.</p>
+    </div>
+  </section>
+
+  <!-- Origin Story Section -->
+  <section class="people-section" id="origin">
+    <div class="container">
+      <h2><a href="#origin" class="section-title">How it started</a></h2>
+      <p class="section-intro">Phones are powerful computers. They shouldn't become useless just because there's no cell tower nearby.</p>
+
+      <div class="people-grid">
+        <div class="people-card">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Brito
+          </h4>
+          <p>I'm a Portuguese software engineer living in Germany. In 2024 I started wondering why two phones sitting right next to each other can't talk to each other without going through some server on the other side of the planet. That felt broken. So I started building something about it.</p>
+          <p>Find me on <a href="https://primal.net/p/nprofile1qqst55g4cdaslyg72v8dd3y8ej7ekuma5vlafwy2navsscph3sr27cslz9cna" target="_blank" rel="noopener">NOSTR</a>.</p>
+        </div>
+
+        <div class="people-card">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/></svg>
+            The early days
+          </h4>
+          <p>The first version was Android-only, Bluetooth-only. Two phones finding each other, swapping identities, sending messages. No WiFi, no mobile data, no servers. Just two devices doing what they should've been able to do all along.</p>
+          <p>It grew from there &mdash; more platforms, more transports, more apps.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Long Range Communications Section -->
+  <section class="people-section" id="long-range">
+    <div class="container">
+      <h2><a href="#long-range" class="section-title">Long range</a></h2>
+      <p class="section-intro">Bluetooth and WiFi only go so far. For everything else, there's radio and satellite.</p>
+
+      <div class="people-grid">
+        <div class="people-card">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            Radio &amp; Satellite
+          </h4>
+          <p>Geogram speaks APRS &mdash; a protocol used by ham radio operators for decades. That means messages can travel over amateur radio frequencies or bounce off satellites. Hundreds, sometimes thousands of kilometers, with zero internet involved.</p>
+          <img src="media/sat-communications.jpg" alt="Satellite communications setup" class="media-image media-image-small">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Presentations Section -->
+  <section class="people-section" id="presentations">
+    <div class="container">
+      <h2><a href="#presentations" class="section-title">Talks &amp; events</a></h2>
+      <p class="section-intro">Places where we've shown up and demoed the thing.</p>
+
+      <div class="people-grid">
+        <div class="people-card">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            Cypherpunks Germany (2025)
+          </h4>
+          <p>Showed Geogram at a Cypherpunks meetup in Germany. Good crowd &mdash; people who actually care about privacy and know their way around cryptographic tools. Got solid feedback on the offline-first approach.</p>
+          <img src="media/cypherpunks-germany.png" alt="Cypherpunks event in Germany" class="media-image">
+        </div>
+
+        <div class="people-card">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            NOSTR-02 Portugal
+          </h4>
+          <p>Demoed at the Embaixada during NOSTR-02 in Portugal. Geogram uses NOSTR for identity and relay communication, so this was a good fit. Lots of interesting conversations about decentralized protocols.</p>
+          <img src="media/photo_2025-10-14_15-40-36.jpg" alt="NOSTR-02 event in Portugal" class="media-image media-image-small">
+        </div>
+      </div>
+
+      <div style="max-width: 800px; margin-top: 1.5rem;">
+        <h4 style="margin-bottom: 0.75rem; color: var(--text-primary);">NOSTR-02 Embaixada Geogram</h4>
+        <video controls class="media-video">
+          <source src="media/NOSTR-02_Embaixada_Geogram.mp4" type="video/mp4">
+          Your browser does not support the video element.
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <!-- Funding & Sustainability Section -->
+  <section class="people-section" id="funding">
+    <div class="container">
+      <h2><a href="#funding" class="section-title">Money &amp; sustainability</a></h2>
+      <p class="section-intro">How this project stays alive.</p>
+
+      <div class="people-grid">
+        <div class="people-card">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Built by volunteers
+          </h4>
+          <p>So far, everything &mdash; code, hardware prototypes, event travel &mdash; has been paid for out of pocket by people who think this matters. No sponsors, no grants, just people chipping in.</p>
+        </div>
+
+        <div class="people-card">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V5a4 4 0 0 0-8 0v2"/></svg>
+            Becoming a company
+          </h4>
+          <p>We'll probably register a company in 2026. Not because we want to &mdash; paperwork is nobody's idea of fun &mdash; but because having a legal entity makes it easier to hire people and sign contracts. Base of operations split between Portugal and Germany.</p>
+        </div>
+
+        <div class="people-card">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Everything is open
+          </h4>
+          <ul>
+            <li><strong>Software:</strong> Fully open source &mdash; server and client</li>
+            <li><strong>Hardware:</strong> Open designs, cheap components, build instructions included so you can put together your own station</li>
+          </ul>
+        </div>
+
+        <div class="people-card">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            How we plan to make money
+          </h4>
+          <p>Consulting. Help communities, organizations, and town halls set up and run their own geogram networks. The software stays free.</p>
+        </div>
+
+        <div class="people-card">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            EU grants &amp; VC
+          </h4>
+          <p>We'll apply for EU grants when it makes sense. VC money? Almost certainly not. Investors want returns, and that pressure tends to wreck projects like this one.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Volunteers Section -->
+  <section class="people-section" id="volunteers">
+    <div class="container">
+      <h2><a href="#volunteers" class="section-title">Volunteers</a></h2>
+      <p class="section-intro">People who've been testing, breaking things, and helping make Geogram better.</p>
+
+      <div class="people-grid">
+        <div class="people-card">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Memo
+          </h4>
+          <p>One of the earliest testers. Memo has been putting Geogram through its paces on ESP32 devices, testing mesh communication, and reporting bugs since the early days. He set up a German-language Matrix room to bring more people into the conversation and has been hands-on with everything from direct messages to local mesh setups.</p>
+          <p>When he's not testing comms gear, he's usually out in nature with a camera.</p>
+          <p>Find him on <a href="https://primal.net/p/nprofile1qqst8qzkmmn6hxfxc0ryr5tk0nwsq0w3us5yggf4p806zpdcznnqxssk5q6g2" target="_blank" rel="noopener">NOSTR</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Get Involved Section -->
+  <section class="people-section" id="get-involved">
+    <div class="container">
+      <h2><a href="#get-involved" class="section-title">Get involved</a></h2>
+      <p class="section-intro">Geogram is a small project and we could use the help. Here's what we need.</p>
+
+      <div class="people-grid">
+        <div class="people-card">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            Translations
+          </h4>
+          <p>The website and apps need translations into more languages. If you speak something other than English and want to help, we'd appreciate it.</p>
+        </div>
+
+        <div class="people-card">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            Code
+          </h4>
+          <p>The whole thing is open source. If you want to fix something, add something, or just poke around, the code is on <a href="https://github.com/geograms/geogram" target="_blank" rel="noopener">GitHub</a>.</p>
+        </div>
+
+        <div class="people-card">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Ideas &amp; feedback
+          </h4>
+          <p>Got a feature you'd like to see? Something that doesn't work the way it should? Open an <a href="https://github.com/geograms/geogram/issues" target="_blank" rel="noopener">issue</a> or start a <a href="https://github.com/geograms/geogram/discussions" target="_blank" rel="noopener">discussion</a> on GitHub.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">Geogram</a>
+          <p data-i18n="footer.brand">Built for communities that need to communicate when things get difficult: remote areas, disaster response, places where the network is censored or unreliable.</p>
+        </div>
+        <div class="footer-links">
+          <h4 data-i18n="footer.product">Product</h4>
+          <ul>
+            <li><a href="index.html#features" data-i18n="nav.features">Features</a></li>
+            <li><a href="index.html#apps" data-i18n="nav.apps">Apps</a></li>
+            <li><a href="index.html#platforms" data-i18n="nav.platforms">Platforms</a></li>
+            <li><a href="https://github.com/geograms/geogram/releases" data-i18n="nav.download">Download</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4 data-i18n="footer.resources">Resources</h4>
+          <ul>
+            <li><a href="https://github.com/geograms/geogram">GitHub</a></li>
+            <li><a href="status.html" data-i18n="nav.status">Status</a></li>
+            <li><a href="security.html" data-i18n="nav.security">Security</a></li>
+            <li><a href="https://github.com/geograms/geogram/blob/main/docs/technical.md" data-i18n="footer.documentation">Documentation</a></li>
+            <li><a href="https://github.com/geograms/geogram/releases" data-i18n="footer.releases">Releases</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4 data-i18n="footer.community">Community</h4>
+          <ul>
+            <li><a href="https://github.com/geograms/geogram/issues" data-i18n="footer.issues">Issues</a></li>
+            <li><a href="https://github.com/geograms/geogram/discussions" data-i18n="footer.discussions">Discussions</a></li>
+            <li><a href="people.html" data-i18n="nav.people">People</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>Apache-2.0 License</span>
+        <a href="https://github.com/geograms">geogram</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Load translations -->
+  <script src="resources/translations.js"></script>
+
+  <script>
+    let currentLang = 'en';
+
+    function applyTranslations(lang) {
+      currentLang = lang;
+      const trans = translations[lang];
+      if (!trans) return;
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (trans[key]) {
+          if (el.getAttribute('data-i18n-html') === 'true') {
+            el.innerHTML = trans[key];
+          } else {
+            el.textContent = trans[key];
+          }
+        }
+      });
+
+      document.querySelector('.lang-current').textContent = lang.toUpperCase();
+      document.documentElement.lang = lang;
+      localStorage.setItem('geogram-lang', lang);
+    }
+
+    function setLanguage(lang) {
+      loadLanguage(lang, function() {
+        applyTranslations(lang);
+      });
+      toggleLangMenu();
+    }
+
+    function toggleLangMenu() {
+      document.querySelector('.lang-dropdown').classList.toggle('active');
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.lang-selector')) {
+        document.querySelector('.lang-dropdown')?.classList.remove('active');
+      }
+    });
+
+    function toggleMenu() {
+      document.querySelector('.nav-links').classList.toggle('active');
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      const lang = detectLanguage();
+      loadLanguage(lang, function() {
+        applyTranslations(lang);
+      });
+    });
+  </script>
+</body>
+</html>
