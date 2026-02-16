@@ -126,6 +126,28 @@
       background: currentColor;
     }
 
+    .station-info {
+      margin-top: 0.5rem;
+    }
+
+    .station-location {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .station-devices {
+      font-size: 0.7rem;
+      color: #4ade80;
+      margin-bottom: 0.2rem;
+    }
+
+    .station-description {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
     .station-link {
       font-size: 0.75rem;
       color: var(--primary);
@@ -481,6 +503,7 @@
   <script src="resources/status/apps/maps.js"></script>
   <script src="resources/status/apps/market.js"></script>
   <script src="resources/status/apps/postcards.js"></script>
+  <script src="resources/status/apps/qrcodes.js"></script>
   <script src="resources/status/apps/website.js"></script>
 
   <script>
@@ -505,6 +528,7 @@
       maps: '<svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>',
       market: '<svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',
       postcards: '<svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg>',
+      qrcodes: '<svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="5" y="5" width="2" height="2"/><rect x="17" y="5" width="2" height="2"/><rect x="5" y="17" width="2" height="2"/><path d="M14 14h2v2h-2z"/><path d="M20 14h2v2h-2z"/><path d="M14 20h2v2h-2z"/><path d="M17 17h3v3h-3z"/></svg>',
       contacts: '<svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
       email: '<svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
       log: '<svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>',
@@ -524,7 +548,7 @@
       appAlerts, appBackup, appBlog, appBot, appChat, appConsole, appContacts,
       appEmail, appEvents, appFiles, appFlasher, appForum, appGames, appGroups,
       appInventory, appLog, appMaps, appMarket, appMusic, appPlaces, appPostcards,
-      appReader, appStories, appTracker, appTransfer, appVideos, appWallet,
+      appQrcodes, appReader, appStories, appTracker, appTransfer, appVideos, appWallet,
       appWebsite, appWork
     ];
 
@@ -589,15 +613,17 @@
       const stationIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>';
 
       stations.forEach(station => {
+        const safeId = station.name.replace(/[^a-zA-Z0-9]/g, '-');
         const card = document.createElement('div');
         card.className = 'station-card';
         card.innerHTML = `
           <div class="station-icon">${stationIcon}</div>
           <div class="station-name">${station.name}</div>
-          <span class="station-status checking" id="status-${station.name.replace(/\./g, '-')}">
+          <span class="station-status checking" id="status-${safeId}">
             <span class="station-status-dot"></span>
             ${t('status.checking')}
           </span>
+          <div class="station-info" id="info-${safeId}"></div>
         `;
         card.onclick = () => window.open(station.url, '_blank');
         grid.appendChild(card);
@@ -620,8 +646,9 @@
 
     // Check station status
     async function checkStationStatus(station) {
-      const statusId = `status-${station.name.replace(/\./g, '-')}`;
-      const statusEl = document.getElementById(statusId);
+      const safeId = station.name.replace(/[^a-zA-Z0-9]/g, '-');
+      const statusEl = document.getElementById(`status-${safeId}`);
+      const infoEl = document.getElementById(`info-${safeId}`);
 
       try {
         const controller = new AbortController();
@@ -634,8 +661,22 @@
         clearTimeout(timeoutId);
 
         if (response.ok) {
+          const data = await response.json();
           statusEl.className = 'station-status online';
           statusEl.innerHTML = `<span class="station-status-dot"></span> ${t('status.online')}`;
+
+          // Populate location, description and connected devices from API
+          let infoHtml = '';
+          if (data.location) {
+            infoHtml += `<div class="station-location">${data.location}</div>`;
+          }
+          if (data.connected_devices != null) {
+            infoHtml += `<div class="station-devices">${data.connected_devices} ${data.connected_devices === 1 ? t('status.device') : t('status.devices')}</div>`;
+          }
+          if (data.description) {
+            infoHtml += `<div class="station-description">${data.description}</div>`;
+          }
+          infoEl.innerHTML = infoHtml;
         } else {
           throw new Error('Not OK');
         }
@@ -703,6 +744,7 @@
         forum: 'forum-format-specification.md',
         market: 'market-format-specification.md',
         postcards: 'postcards-format-specification.md',
+        qrcodes: null,
         website: null
       };
 
