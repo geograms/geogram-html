@@ -1,0 +1,75 @@
+name: sync
+
+# Keep geogram.radio in sync with the source repos by COPYING their published
+# files into this repo — no deploy keys / secrets. Uses only the automatic
+# GITHUB_TOKEN (write access to THIS repo; read access to the public source
+# repos). Runs on a schedule and on demand.
+#
+#   wapps/    <- geograms/wapps   : binaries/  (the wapp store catalog)
+#   updates/  <- geograms/aurora  : updates/   (the app update feed, if present)
+#
+# Pushing this repo publishes it (GitHub Pages → geogram.radio).
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'   # every 3 hours
+  workflow_dispatch:        # manual "Run workflow" button
+
+permissions:
+  contents: write           # push the synced files back to THIS repo
+
+concurrency:
+  group: sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout website (this repo)
+        uses: actions/checkout@v4
+
+      - name: Checkout wapps source
+        uses: actions/checkout@v4
+        with:
+          repository: geograms/wapps
+          path: .src/wapps
+
+      - name: Checkout aurora source
+        uses: actions/checkout@v4
+        with:
+          repository: geograms/aurora
+          path: .src/aurora
+
+      - name: Copy published files
+        run: |
+          set -e
+          # Wapp store catalog: mirror binaries/ -> wapps/ (keep our README).
+          if [ -f .src/wapps/binaries/index.json ]; then
+            mkdir -p wapps
+            rsync -a --delete --exclude README.md .src/wapps/binaries/ wapps/
+            echo "synced wapps: $(grep -c '"file"' wapps/index.json) entries"
+          else
+            echo "no wapps/binaries/index.json in source — skipping wapps"
+          fi
+          # App update feed: mirror aurora's updates/ -> updates/ (keep README).
+          if [ -d .src/aurora/updates ]; then
+            mkdir -p updates
+            rsync -a --delete --exclude README.md .src/aurora/updates/ updates/
+            echo "synced updates feed"
+          else
+            echo "no updates/ in aurora source — skipping updates"
+          fi
+          rm -rf .src
+
+      - name: Commit & push if changed
+        run: |
+          git config user.name 'geogram-sync'
+          git config user.email 'sync@geogram.radio'
+          git add wapps updates
+          if git diff --cached --quiet; then
+            echo "nothing to sync"
+          else
+            git commit -m "sync: mirror wapps catalog + update feed from source repos"
+            git push
+          fi
