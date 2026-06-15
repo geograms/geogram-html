@@ -1,25 +1,25 @@
 {
-  "version": "1.0.3-beta.1",
-  "tagName": "v1.0.3-beta.1",
-  "name": "Geogram Aurora 1.0.3-beta.1",
+  "version": "1.0.3-beta.2",
+  "tagName": "v1.0.3-beta.2",
+  "name": "Geogram Aurora 1.0.3-beta.2",
   "body": "",
-  "publishedAt": "2026-06-15T14:11:29Z",
+  "publishedAt": "2026-06-15T15:59:24Z",
   "prerelease": true,
   "assets": [
     {
       "name": "aurora-linux-x64.tar.gz",
-      "url": "v1.0.3-beta.1/aurora-linux-x64.tar.gz",
-      "size": 21400619
+      "url": "v1.0.3-beta.2/aurora-linux-x64.tar.gz",
+      "size": 21385458
     },
     {
       "name": "aurora-windows-x64-setup.exe",
-      "url": "v1.0.3-beta.1/aurora-windows-x64-setup.exe",
-      "size": 16819239
+      "url": "v1.0.3-beta.2/aurora-windows-x64-setup.exe",
+      "size": 16809613
     },
     {
       "name": "aurora.apk",
-      "url": "v1.0.3-beta.1/aurora.apk",
-      "size": 102910805
+      "url": "v1.0.3-beta.2/aurora.apk",
+      "size": 102763349
     }
   ]
 }
