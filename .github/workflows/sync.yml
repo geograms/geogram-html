@@ -4,9 +4,10 @@ name: sync
 # only the automatic GITHUB_TOKEN (write to THIS repo; read public source repos).
 #
 #   wapps/    <- geograms/wapps : binaries/ (committed .wapp catalog), copied
-#   updates/  <- geograms/aurora GitHub *Release assets* (binaries are NOT in the
-#               aurora git repo — they're release assets, so the source repo stays
-#               lean). This job downloads them and builds the feed JSON here.
+#   updates/  <- geograms/aurora GitHub Release assets, downloaded and HOSTED
+#               here under updates/v<ver>/ (per-ABI split APKs + desktop builds,
+#               each <100 MB) with a relative-URL feed JSON. The app fetches only
+#               from geogram.radio — no github.com at runtime (F-Droid policy).
 #
 # Pushing this repo publishes it (GitHub Pages -> geogram.radio).
 
@@ -52,29 +53,46 @@ jobs:
         run: |
           set -e
           mkdir -p updates
-          # The update feed points at the binaries hosted as GitHub *Release
-          # assets* (absolute asset.url). We do NOT copy them into this repo:
-          # the APK exceeds GitHub's 100 MB per-file blob limit, which rejects
-          # the whole push. The website download page reads the GitHub API
-          # directly; the in-app updater fetches over Reticulum. This feed is
-          # just a self-hosted mirror of the latest tags with download URLs.
-          gen() {  # $1 = tag (e.g. v1.0.3)   $2 = output json
+          # Host the per-version binaries ON this site so the app never contacts
+          # github.com (F-Droid policy). Each hosted file is <100 MB (per-ABI
+          # split APKs + desktop builds); the universal aurora.apk (~107 MB)
+          # exceeds the GitHub Pages git blob limit and is intentionally NOT
+          # hosted here. Feed asset URLs are RELATIVE (v<ver>/<file>), resolved
+          # by the app against https://geogram.radio/updates.
+          WANT='aurora-android-arm64-v8a.apk aurora-android-armeabi-v7a.apk aurora-android-x86_64.apk aurora-linux-x64.tar.gz aurora-windows-x64-setup.exe'
+
+          publish() {  # $1 = tag (e.g. v1.0.5)   $2 = channel json
             local tag="$1" out="$2"
             [ -z "$tag" ] && return 0
-            gh release view "$tag" -R geograms/aurora \
-              --json tagName,name,body,publishedAt,isPrerelease,assets \
-              --jq '{
-                version: (.tagName | ltrimstr("v")),
-                tagName: .tagName,
-                name: .name,
-                body: (.body // ""),
-                publishedAt: .publishedAt,
-                prerelease: .isPrerelease,
-                assets: [.assets[] | {name: .name, url: .url, size: .size}]
-              }' > "$out"
-            echo "wrote $out ($tag)"
+            local dir="updates/$tag"
+            mkdir -p "$dir"
+            rm -rf .dl && mkdir -p .dl
+            for f in $WANT; do
+              gh release download "$tag" -R geograms/aurora -D .dl -p "$f" \
+                --clobber 2>/dev/null || true
+              [ -f ".dl/$f" ] && cp -f ".dl/$f" "$dir/$f"
+            done
+            rm -rf .dl
+            # Feed metadata from the release; asset list from what we actually
+            # hosted, with relative URLs + real sizes.
+            local meta assets
+            meta=$(gh release view "$tag" -R geograms/aurora \
+              --json tagName,name,body,publishedAt,isPrerelease)
+            assets='[]'
+            for f in "$dir"/*; do
+              [ -f "$f" ] || continue
+              local bn sz; bn=$(basename "$f"); sz=$(stat -c%s "$f")
+              assets=$(printf '%s' "$assets" | jq \
+                --arg n "$bn" --arg u "$tag/$bn" --argjson s "$sz" \
+                '. + [{name:$n,url:$u,size:$s}]')
+            done
+            printf '%s' "$meta" | jq --argjson a "$assets" '{
+              version:(.tagName|ltrimstr("v")), tagName:.tagName, name:.name,
+              body:(.body // ""), publishedAt:.publishedAt,
+              prerelease:.isPrerelease, assets:$a }' > "$out"
+            echo "hosted $tag -> $dir ($(printf '%s' "$assets" | jq length) assets)"
           }
-          # Channel tags from aurora's GitHub Releases.
+
           STABLE=$(gh release list -R geograms/aurora --exclude-drafts -L 50 \
                      --json tagName,isPrerelease \
                      --jq 'map(select(.isPrerelease|not))|.[0].tagName // ""')
@@ -84,13 +102,25 @@ jobs:
           if [ -z "$STABLE" ] && [ -z "$BETA" ]; then
             echo "no releases yet — nothing to publish"; exit 0
           fi
-          [ -n "$STABLE" ] && gen "$STABLE" updates/stable.json
+          [ -n "$STABLE" ] && publish "$STABLE" updates/stable.json
           # Beta channel tracks the newest build (falls back to stable).
-          gen "${BETA:-$STABLE}" updates/beta.json
-          # Drop any previously-committed in-repo binary dirs (over the 100 MB
-          # limit) — the feed now references the release assets directly.
-          git rm -r --quiet --ignore-unmatch 'updates/v*' 2>/dev/null || true
-          rm -rf updates/v*
+          publish "${BETA:-$STABLE}" updates/beta.json
+
+          # Prune updates/v* to only the tags the channel feeds reference (keeps
+          # the Pages repo small — at most the stable + beta versions).
+          keep=" "
+          for j in updates/stable.json updates/beta.json; do
+            [ -f "$j" ] && keep="$keep$(jq -r '.tagName' "$j") "
+          done
+          for d in updates/v*/; do
+            [ -d "$d" ] || continue
+            t=$(basename "$d")
+            case "$keep" in
+              *" $t "*) : ;;
+              *) git rm -r --quiet --ignore-unmatch "$d" 2>/dev/null || true
+                 rm -rf "$d" ;;
+            esac
+          done
 
       - name: Clean up checkouts
         run: rm -rf .src
