@@ -38,14 +38,6 @@ jobs:
           repository: geograms/wapps
           path: .src/wapps
 
-      - name: Checkout aurora source (for the publish tool)
-        uses: actions/checkout@v4
-        with:
-          repository: geograms/aurora
-          path: .src/aurora
-
-      - uses: dart-lang/setup-dart@v1
-
       - name: Sync wapp store catalog
         run: |
           if [ -f .src/wapps/binaries/index.json ]; then
@@ -60,7 +52,28 @@ jobs:
         run: |
           set -e
           mkdir -p updates
-          TOOL=.src/aurora/tool/publish_release.dart
+          # The update feed points at the binaries hosted as GitHub *Release
+          # assets* (absolute asset.url). We do NOT copy them into this repo:
+          # the APK exceeds GitHub's 100 MB per-file blob limit, which rejects
+          # the whole push. The website download page reads the GitHub API
+          # directly; the in-app updater fetches over Reticulum. This feed is
+          # just a self-hosted mirror of the latest tags with download URLs.
+          gen() {  # $1 = tag (e.g. v1.0.3)   $2 = output json
+            local tag="$1" out="$2"
+            [ -z "$tag" ] && return 0
+            gh release view "$tag" -R geograms/aurora \
+              --json tagName,name,body,publishedAt,isPrerelease,assets \
+              --jq '{
+                version: (.tagName | ltrimstr("v")),
+                tagName: .tagName,
+                name: .name,
+                body: (.body // ""),
+                publishedAt: .publishedAt,
+                prerelease: .isPrerelease,
+                assets: [.assets[] | {name: .name, url: .url, size: .size}]
+              }' > "$out"
+            echo "wrote $out ($tag)"
+          }
           # Channel tags from aurora's GitHub Releases.
           STABLE=$(gh release list -R geograms/aurora --exclude-drafts -L 50 \
                      --json tagName,isPrerelease \
@@ -71,27 +84,13 @@ jobs:
           if [ -z "$STABLE" ] && [ -z "$BETA" ]; then
             echo "no releases yet — nothing to publish"; exit 0
           fi
-          # Skip the (expensive) download if the feed already matches.
-          CUR_STABLE=$(jq -r '.version // ""' updates/stable.json 2>/dev/null || echo "")
-          CUR_BETA=$(jq -r '.version // ""' updates/beta.json 2>/dev/null || echo "")
-          if [ "v$CUR_STABLE" = "$STABLE" ] && [ "v$CUR_BETA" = "$BETA" ]; then
-            echo "feed already current (stable=$CUR_STABLE beta=$CUR_BETA)"; exit 0
-          fi
-          publish() {  # $1 = tag (e.g. v1.0.2)
-            local tag="$1" ver="${1#v}"
-            [ -z "$tag" ] && return 0
-            local date
-            date=$(gh release view "$tag" -R geograms/aurora --json publishedAt --jq .publishedAt)
-            rm -rf .dl && mkdir -p .dl
-            gh release download "$tag" -R geograms/aurora -D .dl --clobber
-            dart "$TOOL" --site . --version "$ver" \
-              --name "Geogram Aurora $ver" --date "$date" --keep 3 .dl/*
-          }
-          # Stable first (writes stable.json + beta.json), then beta overrides
-          # beta.json only if a newer pre-release exists.
-          [ -n "$STABLE" ] && publish "$STABLE"
-          [ -n "$BETA" ] && [ "$BETA" != "$STABLE" ] && publish "$BETA"
-          rm -rf .dl
+          [ -n "$STABLE" ] && gen "$STABLE" updates/stable.json
+          # Beta channel tracks the newest build (falls back to stable).
+          gen "${BETA:-$STABLE}" updates/beta.json
+          # Drop any previously-committed in-repo binary dirs (over the 100 MB
+          # limit) — the feed now references the release assets directly.
+          git rm -r --quiet --ignore-unmatch 'updates/v*' 2>/dev/null || true
+          rm -rf updates/v*
 
       - name: Clean up checkouts
         run: rm -rf .src
