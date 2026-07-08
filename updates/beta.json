@@ -1,35 +1,35 @@
 {
-  "version": "1.0.8-beta.3",
-  "tagName": "v1.0.8-beta.3",
-  "name": "v1.0.8-beta.3",
-  "body": "**Full Changelog**: https://github.com/geograms/aurora/compare/v1.0.8-beta.2...v1.0.8-beta.3",
-  "publishedAt": "2026-07-05T15:09:27Z",
+  "version": "1.0.8-beta.4",
+  "tagName": "v1.0.8-beta.4",
+  "name": "v1.0.8-beta.4",
+  "body": "**Full Changelog**: https://github.com/geograms/aurora/compare/v1.0.8-beta.3...v1.0.8-beta.4",
+  "publishedAt": "2026-07-08T10:23:46Z",
   "prerelease": true,
   "assets": [
     {
       "name": "aurora-android-arm64-v8a.apk",
-      "url": "v1.0.8-beta.3/aurora-android-arm64-v8a.apk",
-      "size": 40475223
+      "url": "v1.0.8-beta.4/aurora-android-arm64-v8a.apk",
+      "size": 40696852
     },
     {
       "name": "aurora-android-armeabi-v7a.apk",
-      "url": "v1.0.8-beta.3/aurora-android-armeabi-v7a.apk",
-      "size": 31796807
+      "url": "v1.0.8-beta.4/aurora-android-armeabi-v7a.apk",
+      "size": 32034816
     },
     {
       "name": "aurora-android-x86_64.apk",
-      "url": "v1.0.8-beta.3/aurora-android-x86_64.apk",
-      "size": 43687373
+      "url": "v1.0.8-beta.4/aurora-android-x86_64.apk",
+      "size": 43909002
     },
     {
       "name": "aurora-linux-x64.tar.gz",
-      "url": "v1.0.8-beta.3/aurora-linux-x64.tar.gz",
-      "size": 23323257
+      "url": "v1.0.8-beta.4/aurora-linux-x64.tar.gz",
+      "size": 23416175
     },
     {
       "name": "aurora-windows-x64-setup.exe",
-      "url": "v1.0.8-beta.3/aurora-windows-x64-setup.exe",
-      "size": 18473266
+      "url": "v1.0.8-beta.4/aurora-windows-x64-setup.exe",
+      "size": 18544337
     }
   ]
 }
